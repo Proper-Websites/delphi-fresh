@@ -159,7 +159,10 @@ export async function fetchSalesOutreach() {
   return (data ?? []) as SalesOutreachRow[];
 }
 
-export async function replaceSalesOutreach(items: SalesOutreachRecord[]) {
+export async function replaceSalesOutreach(
+  items: SalesOutreachRecord[],
+  options?: { allowEmptyDelete?: boolean }
+) {
   if (!supabase) return;
   const payload = items.map((item, index) => ({
     id: item.id,
@@ -206,6 +209,10 @@ export async function replaceSalesOutreach(items: SalesOutreachRecord[]) {
     const ids = payload.map((item) => item.id);
     const { error: pruneError } = await supabase.from("sales_outreach").delete().not("id", "in", `(${ids.join(",")})`);
     if (pruneError) throw pruneError;
+    return;
+  }
+
+  if (!options?.allowEmptyDelete) {
     return;
   }
 

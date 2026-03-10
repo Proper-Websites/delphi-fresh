@@ -386,6 +386,7 @@ export default function Sales() {
     note: "",
   });
   const hasLoadedFromSupabase = useRef(false);
+  const hasRemoteRowsFromSupabase = useRef(false);
   const suppressNextSync = useRef(false);
   const hasLoadedPageStateFromSupabase = useRef(false);
   const suppressNextPageStateSync = useRef(false);
@@ -524,6 +525,7 @@ export default function Sales() {
         const rows = await fetchSalesOutreach();
         if (cancelled) return;
         if (rows.length > 0) {
+          hasRemoteRowsFromSupabase.current = true;
           setSupabaseLoadCount(rows.length);
           suppressNextSync.current = true;
           setOutreachData(
@@ -536,6 +538,7 @@ export default function Sales() {
             })
           );
         } else {
+          hasRemoteRowsFromSupabase.current = false;
           setSupabaseLoadCount(0);
           if (outreachData.length > 0) {
             await replaceSalesOutreach(outreachData);
@@ -669,6 +672,7 @@ export default function Sales() {
 
   useEffect(() => {
     if (!isSupabaseConfigured || !hasLoadedFromSupabase.current) return;
+    if (!hasRemoteRowsFromSupabase.current && outreachData.length === 0) return;
     if (suppressNextSync.current) {
       suppressNextSync.current = false;
       return;
