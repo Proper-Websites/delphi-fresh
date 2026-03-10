@@ -561,14 +561,18 @@ const App = () => {
         const development = readLocalArray("delphi_development_projects_v2");
         const subscriptions = readLocalArray("delphi_subscriptions_clients_v2");
 
-        const results = await Promise.allSettled([
+        const syncOperations = [
           replaceMyWorkTasks(myWork as Parameters<typeof replaceMyWorkTasks>[0]),
           replaceCalendarEvents(calendar as Parameters<typeof replaceCalendarEvents>[0]),
-          replaceSalesOutreach(sales as Parameters<typeof replaceSalesOutreach>[0]),
+          sales.length > 0
+            ? replaceSalesOutreach(sales as Parameters<typeof replaceSalesOutreach>[0])
+            : Promise.resolve(),
           replaceSalesPageState(salesPageState),
           replaceDevelopmentProjects(development as Parameters<typeof replaceDevelopmentProjects>[0]),
           replaceSubscriptionClients(subscriptions as Parameters<typeof replaceSubscriptionClients>[0]),
-        ]);
+        ];
+
+        const results = await Promise.allSettled(syncOperations);
 
         const failures = results
           .map((result, index) => ({ result, index }))
