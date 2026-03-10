@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Oracle crystal sphere">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#c7fbff"/>
+      <stop offset="40%" stop-color="#70d6ff"/>
+      <stop offset="72%" stop-color="#2b79e2"/>
+      <stop offset="100%" stop-color="#132e75"/>
+    </radialGradient>
+    <radialGradient id="rainbowTint" cx="66%" cy="72%" r="68%">
+      <stop offset="0%" stop-color="#69f2ff" stop-opacity=".2"/>
+      <stop offset="35%" stop-color="#86f5c8" stop-opacity=".13"/>
+      <stop offset="56%" stop-color="#ffd37a" stop-opacity=".09"/>
+      <stop offset="76%" stop-color="#ff9ecc" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#8da1ff" stop-opacity=".08"/>
+    </radialGradient>
+    <radialGradient id="nebulaBlue" cx="18%" cy="82%" r="72%">
+      <stop offset="0%" stop-color="#7de3ff" stop-opacity=".34"/>
+      <stop offset="48%" stop-color="#55b7ff" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#55b7ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebulaViolet" cx="82%" cy="22%" r="58%">
+      <stop offset="0%" stop-color="#a9a6ff" stop-opacity=".2"/>
+      <stop offset="46%" stop-color="#8a88ff" stop-opacity=".1"/>
+      <stop offset="100%" stop-color="#8a88ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rainbowRim" x1="12%" y1="8%" x2="88%" y2="92%">
+      <stop offset="0%" stop-color="#8af8ff" stop-opacity=".72"/>
+      <stop offset="30%" stop-color="#87b8ff" stop-opacity=".62"/>
+      <stop offset="52%" stop-color="#9cd8b5" stop-opacity=".55"/>
+      <stop offset="70%" stop-color="#ffd58a" stop-opacity=".48"/>
+      <stop offset="86%" stop-color="#ff9cc9" stop-opacity=".46"/>
+      <stop offset="100%" stop-color="#9ab5ff" stop-opacity=".55"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="35%" cy="28%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".9"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity=".08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="orbClip">
+      <circle r="74"/>
+    </clipPath>
+    <linearGradient id="base" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f57bf"/>
+      <stop offset="100%" stop-color="#112857"/>
+    </linearGradient>
+    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M10 0H0V10" fill="none" stroke="#c8f7ff" stroke-opacity=".26" stroke-width=".8"/>
+    </pattern>
+  </defs>
+  <g transform="translate(128 112)">
+    <circle r="74" fill="url(#bg)" stroke="url(#rainbowRim)" stroke-width="4"/>
+    <g clip-path="url(#orbClip)">
+      <rect x="-74" y="-74" width="148" height="148" fill="url(#grid)" opacity=".18"/>
+      <ellipse cx="-10" cy="30" rx="84" ry="54" fill="url(#nebulaBlue)"/>
+      <ellipse cx="24" cy="-16" rx="62" ry="48" fill="url(#nebulaViolet)"/>
+      <ellipse cx="8" cy="38" rx="76" ry="46" fill="url(#rainbowTint)"/>
+    </g>
+    <circle r="74" fill="url(#shine)"/>
+    <path d="M-40 16C-18-8 18-10 42 6" stroke="#d5fbff" stroke-opacity=".7" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <circle cx="-24" cy="-26" r="12" fill="#fff" fill-opacity=".45"/>
+  </g>
+  <g transform="translate(128 208)">
+    <ellipse rx="62" ry="13" fill="#0f2f77" fill-opacity=".45"/>
+    <path d="M-72-20h144l-16 20h-112z" fill="url(#base)" stroke="#9bdfff" stroke-opacity=".42" stroke-width="3"/>
+  </g>
+</svg>
