@@ -230,6 +230,7 @@ type OptionalSalesColumn =
   | "follow_up_type"
   | "company_name"
   | "prospect_name"
+  | "role"
   | "industry"
   | "email"
   | "secondary_email"

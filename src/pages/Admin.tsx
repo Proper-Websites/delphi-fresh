@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,7 @@ import { getSupabaseErrorMessage } from "@/lib/supabase-errors";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { replaceMyWorkTasks } from "@/lib/supabase-my-work";
 import { replaceSalesOutreach } from "@/lib/supabase-sales-outreach";
+import { fetchSalesPageState, replaceSalesPageState } from "@/lib/supabase-sales-page-state";
 import { replaceSubscriptionClients } from "@/lib/supabase-subscriptions-clients";
 import { replaceDevelopmentProjects } from "@/lib/supabase-development-projects";
 import {
@@ -134,6 +135,7 @@ const SYNC_TABLES = [
   { key: "my_work_tasks", label: "My Work" },
   { key: "calendar_events", label: "Calendar" },
   { key: "sales_outreach", label: "Sales" },
+  { key: "sales_page_state", label: "Shared State" },
   { key: "development_projects", label: "Development" },
   { key: "subscription_clients", label: "Subscriptions" },
 ] as const;
@@ -245,6 +247,8 @@ const resolveAdminView = (value: string | null): AdminView => {
 };
 
 export default function Admin() {
+  const hasLoadedReviewPinsFromSupabase = useRef(false);
+  const suppressNextReviewPinsSync = useRef(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<AdminView>(() => resolveAdminView(searchParams.get("tab")));
   const [financeTab, setFinanceTab] = useState<"recurring" | "one-time">("recurring");
@@ -389,6 +393,44 @@ export default function Admin() {
 
   useEffect(() => {
     localStorage.setItem(REVIEW_PINS_KEY, JSON.stringify(reviewPins));
+  }, [reviewPins]);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    let cancelled = false;
+    const loadReviewPinsFromSupabase = async () => {
+      try {
+        const rows = await fetchSalesPageState();
+        if (cancelled) return;
+        const pinsRow = rows.find((row) => row.key === "admin_review_pins");
+        if (Array.isArray(pinsRow?.payload)) {
+          suppressNextReviewPinsSync.current = true;
+          setReviewPins(pinsRow.payload as ReviewPin[]);
+        } else if (reviewPins.length > 0) {
+          await replaceSalesPageState({ admin_review_pins: reviewPins });
+        }
+        hasLoadedReviewPinsFromSupabase.current = true;
+      } catch {
+        if (cancelled) return;
+        hasLoadedReviewPinsFromSupabase.current = true;
+      }
+    };
+    void loadReviewPinsFromSupabase();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !hasLoadedReviewPinsFromSupabase.current) return;
+    if (suppressNextReviewPinsSync.current) {
+      suppressNextReviewPinsSync.current = false;
+      return;
+    }
+    void replaceSalesPageState({ admin_review_pins: reviewPins }).catch(() => {
+      // Keep local admin review pins even if Supabase sync fails.
+    });
   }, [reviewPins]);
 
   const historyRows = useMemo(

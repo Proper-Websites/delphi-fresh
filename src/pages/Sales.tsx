@@ -1973,11 +1973,11 @@ export default function Sales() {
   }, [folderView, handleAddSalesTask, handleAddTactic]);
 
   return (
-    <div className="app-atmosphere-page app-light-page min-h-screen relative overflow-hidden">
+    <div className="sales-cosmos-page app-atmosphere-page app-light-page min-h-screen relative overflow-hidden">
       <div className="absolute top-32 right-16 w-80 h-80 bg-primary/5 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-20 left-16 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2.5s" }} />
 
-      <div className="app-light-frame relative space-y-8">
+      <div className="sales-cosmos-frame app-light-frame relative space-y-8">
         <div className="flex items-center justify-between animate-fade-in-up">
           <div>
             <AnimatedTitle text="Sales" className="app-light-title" />
@@ -1990,7 +1990,7 @@ export default function Sales() {
             <LinkedSyncStatusLine className="mt-1" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="glass-chip-rail app-light-toolbar flex items-center gap-1.5 p-1.5">
+            <div className="sales-toolbar glass-chip-rail app-light-toolbar flex items-center gap-1.5 p-1.5">
               <TooltipProvider delayDuration={80}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -2035,7 +2035,7 @@ export default function Sales() {
             </div>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button onClick={handleAdaptiveAdd} className="add-action add-action-icon h-11 w-11 rounded-full px-0" aria-label={addButtonLabel.replace(/^\+\s*/, "")}>
+                <Button onClick={handleAdaptiveAdd} className="sales-add-action add-action add-action-icon h-11 w-11 rounded-full px-0" aria-label={addButtonLabel.replace(/^\+\s*/, "")}>
                   <Plus className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
@@ -2050,8 +2050,8 @@ export default function Sales() {
         </div>
 
         {folderView === "leads" && (
-          <div className="content-glass-surface space-y-6 p-4 text-[15px] md:p-5">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+          <div className="sales-leads-shell content-glass-surface space-y-6 p-4 text-[15px] md:p-5">
+            <div className="sales-stats-grid grid grid-cols-1 gap-6 md:grid-cols-4">
               <StatCard
                 title="Top Prospects"
                 value={String(topProspects.length)}
@@ -2082,13 +2082,13 @@ export default function Sales() {
               />
             </div>
 
-            <Card className="glass-hero-panel p-6 animate-fade-in-up">
-              <div className="mb-4 flex items-center justify-between">
+            <Card className="sales-showcase-panel glass-hero-panel p-6 animate-fade-in-up">
+              <div className="sales-panel-header mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-foreground">Top Prospects</h2>
                 <Button
                   variant={topOnly ? "secondary" : "outline"}
                   size="default"
-                  className="h-10 px-4 text-base font-medium !text-[hsl(220_38%_48%)] dark:!text-white"
+                  className="sales-focus-button h-10 px-4 text-base font-medium !text-[hsl(220_38%_48%)] dark:!text-white"
                   onClick={() => setTopOnly((value) => !value)}
                 >
                   {topOnly ? "Showing Top Only" : "Focus Top Only"}
@@ -2115,7 +2115,7 @@ export default function Sales() {
                     return (
                   <div
                     key={item.id}
-                    className="liquid-cyan-hover glass-list-surface flex min-h-[236px] w-[min(88vw,320px)] flex-shrink-0 snap-start flex-col rounded-[30px] p-4 cursor-pointer transition-all duration-300 sm:w-[300px] md:w-[292px]"
+                    className="sales-top-prospect-card liquid-cyan-hover glass-list-surface flex min-h-[236px] w-[min(88vw,320px)] flex-shrink-0 snap-start flex-col rounded-[30px] p-4 cursor-pointer transition-all duration-300 sm:w-[300px] md:w-[292px]"
                     onClick={() => setViewProspect(item)}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -2146,12 +2146,12 @@ export default function Sales() {
                       <span className={websiteTypeBadgeClass}>{getWebsiteTypeLabel(item.planMode)}</span>
                       {item.budgetTier ? <span className={budgetTierBadgeClass}>{getBudgetTierLabel(item.budgetTier)}</span> : null}
                     </div>
-                    <div className="mt-3 rounded-[20px] border border-[var(--glass-stroke-soft)] bg-[linear-gradient(180deg,hsl(220_28%_100%/.12),hsl(220_28%_100%/.04))] px-3 py-2.5">
+                    <div className="sales-next-task mt-3 rounded-[20px] border border-[var(--glass-stroke-soft)] bg-[linear-gradient(180deg,hsl(220_28%_100%/.12),hsl(220_28%_100%/.04))] px-3 py-2.5">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Next Task</p>
                       <p className="mt-1 text-sm font-medium text-foreground">{formatNextFollowUp(item.nextFollowUpDate, item.nextFollowUpTime)}</p>
                     </div>
                     {item.specialNotes ? (
-                      <div className="mt-2 rounded-xl border border-primary/28 bg-primary/10 px-3 py-2.5 shadow-[inset_0_1px_0_hsl(0_0%_100%/.45)] dark:border-primary/35 dark:bg-primary/12">
+                      <div className="sales-special-note mt-2 rounded-xl border border-primary/28 bg-primary/10 px-3 py-2.5 shadow-[inset_0_1px_0_hsl(0_0%_100%/.45)] dark:border-primary/35 dark:bg-primary/12">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-primary/80">Special Notes</p>
                         <p className="mt-1 line-clamp-2 min-h-[38px] text-sm leading-snug text-foreground/88">
                           {item.specialNotes}
@@ -2167,12 +2167,12 @@ export default function Sales() {
             </Card>
 
             <Card
-              className="flex h-[68vh] min-h-[28rem] flex-col overflow-hidden p-6 animate-fade-in-up hover:shadow-xl transition-all duration-300"
+              className="sales-tracker-panel flex h-[68vh] min-h-[28rem] flex-col overflow-hidden p-6 animate-fade-in-up hover:shadow-xl transition-all duration-300"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="mb-3 flex items-center justify-between">
+              <div className="sales-panel-header mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-foreground">Outreach Tracker</h2>
-                <div className="relative">
+                <div className="sales-search relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     placeholder="Search prospects..."
@@ -2188,7 +2188,7 @@ export default function Sales() {
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      className="inline-flex h-9 items-center gap-1.5 px-1 text-sm font-semibold text-foreground/90 transition-colors hover:text-foreground"
+                      className="sales-filter-toggle inline-flex h-9 items-center gap-1.5 px-1 text-sm font-semibold text-foreground/90 transition-colors hover:text-foreground"
                       onClick={() => setIsFilterBarOpen((value) => !value)}
                     >
                       <SlidersHorizontal className="h-4 w-4" />
@@ -2215,7 +2215,7 @@ export default function Sales() {
                   </div>
                 </div>
                 {isFilterBarOpen ? (
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <div className="sales-filters-row mt-3 flex flex-wrap items-center gap-2">
                     <Button size="sm" className={getFilterButtonClass(statusFilter === "all")} variant="ghost" onClick={() => setStatusFilter("all")}>All</Button>
                     <Button size="sm" className={getFilterButtonClass(statusFilter === "interested")} variant="ghost" onClick={() => setStatusFilter("interested")}>Interested</Button>
                     <Button size="sm" className={getFilterButtonClass(statusFilter === "follow_up")} variant="ghost" onClick={() => setStatusFilter("follow_up")}>Follow-up</Button>
@@ -2264,7 +2264,7 @@ export default function Sales() {
                     return (
                   <div
                     key={prospect.id}
-                    className="group entity-card-hover glass-list-surface relative flex items-start justify-between rounded-[30px] p-5 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_30px_60px_-24px_hsl(var(--foreground)/0.42)] animate-fade-in-up cursor-grab active:cursor-grabbing"
+                    className="sales-prospect-row group entity-card-hover glass-list-surface relative flex items-start justify-between rounded-[30px] p-5 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_30px_60px_-24px_hsl(var(--foreground)/0.42)] animate-fade-in-up cursor-grab active:cursor-grabbing"
                     style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                     draggable
                     onDragStart={(event) => {
@@ -2327,7 +2327,7 @@ export default function Sales() {
                       </div>
 
                       <div className="flex items-start gap-3 pt-1">
-                        <div className="min-w-[220px] rounded-[20px] border border-[var(--glass-stroke-soft)] bg-[linear-gradient(180deg,hsl(220_28%_100%/.12),hsl(220_28%_100%/.04))] px-3 py-2.5">
+                        <div className="sales-next-task min-w-[220px] rounded-[20px] border border-[var(--glass-stroke-soft)] bg-[linear-gradient(180deg,hsl(220_28%_100%/.12),hsl(220_28%_100%/.04))] px-3 py-2.5">
                           <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Next Task</p>
                           <p className="mt-1 text-sm font-medium text-foreground">{formatNextFollowUp(prospect.nextFollowUpDate, prospect.nextFollowUpTime)}</p>
                         </div>
@@ -2455,8 +2455,8 @@ export default function Sales() {
               </GlassScrollArea>
             </Card>
 
-            <Card className="flex max-h-[38vh] min-h-[18rem] flex-col overflow-hidden p-6 animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
-              <div className="mb-3 flex items-center justify-between">
+            <Card className="sales-limbo-panel flex max-h-[38vh] min-h-[18rem] flex-col overflow-hidden p-6 animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
+              <div className="sales-panel-header mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-foreground">Limbo</h2>
                 <Button
                   size="sm"
@@ -2514,9 +2514,9 @@ export default function Sales() {
         )}
 
         {folderView === "strategy" && (
-          <div className="content-glass-surface p-4 md:p-5">
-          <Card className="p-6 animate-fade-in-up">
-            <div className="mb-6 flex items-center justify-between">
+          <div className="sales-folder-shell content-glass-surface p-4 md:p-5">
+          <Card className="sales-folder-panel p-6 animate-fade-in-up">
+            <div className="sales-panel-header mb-6 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">Sales Strategy</h2>
               <Badge variant="secondary">Folder</Badge>
             </div>
@@ -2540,9 +2540,9 @@ export default function Sales() {
         )}
 
         {folderView === "tasks" && (
-          <div className="content-glass-surface p-4 md:p-5">
-          <Card className="p-6 animate-fade-in-up">
-            <div className="mb-6 flex items-center justify-between">
+          <div className="sales-folder-shell content-glass-surface p-4 md:p-5">
+          <Card className="sales-folder-panel p-6 animate-fade-in-up">
+            <div className="sales-panel-header mb-6 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">Sales Tasks</h2>
               <Badge variant="secondary">Folder</Badge>
             </div>

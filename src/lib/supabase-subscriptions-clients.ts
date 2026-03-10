@@ -90,7 +90,9 @@ export async function replaceSubscriptionClients(items: SubscriptionClientRecord
 
   const getMissingOptionalColumn = (error: unknown): "contact_name" | "contact_phone" | "contact_email" | "client_since" | null => {
     const message = String((error as { message?: unknown })?.message || "").toLowerCase();
-    if (!message.includes("schema cache") || !message.includes("could not find")) return null;
+    const isSchemaCacheMiss = message.includes("schema cache") && message.includes("could not find");
+    const isMissingColumn = message.includes("does not exist");
+    if (!isSchemaCacheMiss && !isMissingColumn) return null;
     if (message.includes("contact_name")) return "contact_name";
     if (message.includes("contact_phone")) return "contact_phone";
     if (message.includes("contact_email")) return "contact_email";

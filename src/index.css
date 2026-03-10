@@ -376,17 +376,18 @@ All colors MUST be HSL.
 
   .dark .glass-hero-panel {
     background:
-      radial-gradient(circle at 80% 10%, hsl(266 72% 72% / 0.1), transparent 26%),
-      radial-gradient(circle at 16% 82%, hsl(207 100% 74% / 0.08), transparent 20%),
-      linear-gradient(180deg, hsl(231 42% 14% / 0.84), hsl(229 68% 8% / 0.92));
+      radial-gradient(circle at 86% 62%, hsl(207 100% 74% / 0.18), transparent 24%),
+      radial-gradient(circle at 56% 18%, hsl(267 72% 74% / 0.14), transparent 30%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.68)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.06), transparent 42%, hsl(266 72% 72% / 0.05));
     border-color: hsl(228 84% 82% / 0.14);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
       inset 0 -1px 0 hsl(222 100% 72% / 0.03),
-      0 30px 74px -42px hsl(230 92% 3% / 0.9),
-      0 0 24px hsl(223 100% 58% / 0.06);
-    backdrop-filter: blur(30px) saturate(1.22);
-    -webkit-backdrop-filter: blur(30px) saturate(1.22);
+      0 30px 90px -46px hsl(231 82% 3% / 0.9),
+      0 0 30px hsl(223 100% 58% / 0.08);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
   }
 
   .dark .app-light-title,
@@ -448,13 +449,17 @@ All colors MUST be HSL.
   .dark .app-atmosphere-page .content-glass-surface {
     border-color: hsl(228 84% 82% / 0.14) !important;
     background:
-      linear-gradient(180deg, hsl(232 22% 22% / 0.72), hsl(231 24% 14% / 0.5)),
-      linear-gradient(145deg, hsl(224 100% 72% / 0.05), transparent 52%, hsl(266 72% 72% / 0.04)) !important;
+      radial-gradient(circle at 86% 62%, hsl(207 100% 74% / 0.08), transparent 24%),
+      radial-gradient(circle at 56% 18%, hsl(267 72% 74% / 0.06), transparent 30%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.66)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.05), transparent 48%, hsl(266 72% 72% / 0.04)) !important;
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.08),
       inset 0 -1px 0 hsl(222 100% 72% / 0.03),
-      0 28px 72px -40px hsl(230 92% 3% / 0.86),
-      0 0 24px hsl(223 100% 58% / 0.06) !important;
+      0 24px 64px -36px hsl(231 82% 3% / 0.82),
+      0 0 22px hsl(223 100% 58% / 0.08) !important;
+    backdrop-filter: blur(20px) saturate(1.16);
+    -webkit-backdrop-filter: blur(20px) saturate(1.16);
   }
 
   .dark .app-atmosphere-page .bg-secondary,
@@ -1467,7 +1472,7 @@ All colors MUST be HSL.
     color: hsl(214 76% 64%) !important;
   }
 
-  .schedule-light-page .delphi-fc-shell {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell {
     border: 1px solid hsl(0 0% 100% / 0.46);
     border-radius: 2rem;
     background:
@@ -1482,78 +1487,78 @@ All colors MUST be HSL.
     -webkit-backdrop-filter: blur(16px) saturate(1.04);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc {
     --fc-border-color: hsl(214 44% 79% / 0.34);
     --fc-neutral-bg-color: hsl(212 100% 97% / 0.68);
     --fc-neutral-text-color: hsl(219 26% 61%);
     color: hsl(221 42% 36%);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-theme-standard td,
-  .schedule-light-page .delphi-fc-shell .fc-theme-standard th,
-  .schedule-light-page .delphi-fc-shell .fc-scrollgrid,
-  .schedule-light-page .delphi-fc-shell .fc-scrollgrid-section > * {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-theme-standard td,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-theme-standard th,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-scrollgrid,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-scrollgrid-section > * {
     border-color: hsl(214 38% 76% / 0.42);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-scrollgrid,
-  .schedule-light-page .delphi-fc-shell .fc-scrollgrid table,
-  .schedule-light-page .delphi-fc-shell .fc-col-header,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-body,
-  .schedule-light-page .delphi-fc-shell .fc-daygrid-body {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-scrollgrid,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-scrollgrid table,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-body,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-daygrid-body {
     background: transparent;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-col-header-cell,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot,
-  .schedule-light-page .delphi-fc-shell .fc-daygrid-day-frame,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header-cell,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-daygrid-day-frame,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
     background: hsl(0 0% 100% / 0.72) !important;
     background-image: none !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-col-header-cell {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header-cell {
     background:
       linear-gradient(180deg, hsl(0 0% 100% / 0.78), hsl(210 100% 97% / 0.62)),
       linear-gradient(135deg, hsl(211 100% 95% / 0.26), hsl(215 100% 94% / 0.1));
     box-shadow: inset 0 -1px 0 hsl(214 38% 76% / 0.22);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-col-header-cell:not(:first-child) {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header-cell:not(:first-child) {
     border-left-color: hsl(214 38% 74% / 0.28) !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-col {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-col {
     border-right-color: hsl(214 38% 74% / 0.28) !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot {
     border-top-color: hsl(214 34% 76% / 0.28);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-minor,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-minor td,
-  .schedule-light-page .delphi-fc-shell td.fc-timegrid-slot.fc-timegrid-slot-minor,
-  .schedule-light-page .delphi-fc-shell tr.fc-timegrid-slot-minor > td {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-minor,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-minor td,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell tr.fc-timegrid-slot-minor > td {
     border-top-color: transparent !important;
     background: transparent !important;
     box-shadow: none !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-col-header-cell-cushion,
-  .schedule-light-page .delphi-fc-shell .fc-daygrid-day-number,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-cushion,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header-cell-cushion,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-daygrid-day-number,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-cushion,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion {
     color: hsl(220 34% 56%);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-col-header-cell-cushion {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-col-header-cell-cushion {
     font-weight: 700;
     letter-spacing: 0.08em;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-col.fc-day-today {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-col.fc-day-today {
     box-shadow:
       inset 0 0 0 1px hsl(214 78% 68% / 0.16),
       inset 0 1px 0 hsl(0 0% 100% / 0.28);
@@ -1561,25 +1566,25 @@ All colors MUST be HSL.
       linear-gradient(180deg, hsl(214 100% 97% / 0.3), hsl(212 100% 95% / 0.14)) !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
     background:
       linear-gradient(180deg, hsl(214 100% 97% / 0.82), hsl(211 100% 95% / 0.46)),
       linear-gradient(135deg, hsl(212 100% 93% / 0.18), transparent) !important;
   }
 
-  .schedule-light-page .delphi-fc-day-header-weekday {
+  :root:not(.dark) .schedule-light-page .delphi-fc-day-header-weekday {
     color: hsl(221 20% 68%);
   }
 
-  .schedule-light-page .delphi-fc-day-header-weekday--today {
+  :root:not(.dark) .schedule-light-page .delphi-fc-day-header-weekday--today {
     color: hsl(218 74% 48%);
   }
 
-  .schedule-light-page .delphi-fc-day-header-date {
+  :root:not(.dark) .schedule-light-page .delphi-fc-day-header-date {
     color: hsl(220 38% 40%);
   }
 
-  .schedule-light-page .delphi-fc-day-header-date--today {
+  :root:not(.dark) .schedule-light-page .delphi-fc-day-header-date--today {
     background: linear-gradient(180deg, hsl(212 84% 68%), hsl(214 78% 62%));
     color: hsl(220 30% 32%);
     box-shadow:
@@ -1587,24 +1592,24 @@ All colors MUST be HSL.
       0 10px 18px -14px hsl(214 78% 62% / 0.28);
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-highlight {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-highlight {
     background: linear-gradient(180deg, hsl(214 100% 88% / 0.2), hsl(214 100% 86% / 0.1));
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-frame,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-frame,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-axis,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-frame,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-axis,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
     background: hsl(0 0% 100% / 0.72) !important;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-cushion,
-  .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-axis-cushion,
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion {
     color: hsl(220 30% 54%);
     font-weight: 600;
   }
 
-  .schedule-light-page .delphi-fc-shell .fc-day-other .fc-daygrid-day-number {
+  :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-day-other .fc-daygrid-day-number {
     color: hsl(220 20% 72%);
     opacity: 0.72;
   }
@@ -1719,7 +1724,31 @@ All colors MUST be HSL.
       url("../Dark Background.png") center / cover no-repeat !important;
   }
 
+  .dark .app-light-page {
+    color: hsl(220 100% 96%) !important;
+    background:
+      linear-gradient(180deg, hsl(229 88% 5% / 0.12), hsl(229 88% 5% / 0.36)),
+      url("../Dark Background.png") center / cover no-repeat !important;
+  }
+
   .dark .schedule-light-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 18% 16%, hsl(0 0% 100% / 0.16) 0 1px, transparent 2px),
+      radial-gradient(circle at 48% 12%, hsl(213 100% 86% / 0.16) 0 1px, transparent 2px),
+      radial-gradient(circle at 76% 20%, hsl(0 0% 100% / 0.12) 0 1px, transparent 2px),
+      radial-gradient(circle at 24% 78%, hsl(205 100% 84% / 0.12) 0 1px, transparent 2px),
+      radial-gradient(circle at 86% 82%, hsl(0 0% 100% / 0.1) 0 1px, transparent 2px),
+      linear-gradient(110deg, transparent 26%, hsl(220 100% 86% / 0.1) 48%, transparent 66%);
+    background-size: 280px 220px, 360px 260px, 320px 240px, 360px 260px, 300px 220px, 100% 100%;
+    opacity: 0.96;
+    z-index: -2;
+  }
+
+  .dark .app-light-page::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -1749,7 +1778,61 @@ All colors MUST be HSL.
     z-index: -1;
   }
 
+  .dark .app-light-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(103deg, transparent 18%, hsl(214 100% 92% / 0.05) 42%, hsl(260 88% 86% / 0.24) 57%, transparent 76%),
+      radial-gradient(circle at 84% 70%, hsl(203 100% 78% / 0.22), transparent 16%),
+      radial-gradient(circle at 16% 58%, hsl(0 0% 100% / 0.08), transparent 12%);
+    opacity: 1;
+    z-index: -1;
+  }
+
   .dark .schedule-light-title {
+    color: hsl(220 100% 97%) !important;
+    text-shadow:
+      0 0 18px hsl(225 100% 88% / 0.08),
+      0 10px 28px hsl(228 100% 4% / 0.42);
+  }
+
+  .dark .app-light-frame {
+    position: relative;
+  }
+
+  .dark .app-light-frame::before {
+    content: "";
+    position: absolute;
+    inset: 1rem 1.25rem auto;
+    height: 180px;
+    border-radius: 44px;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 24% 12%, hsl(220 100% 86% / 0.08), transparent 28%),
+      radial-gradient(circle at 72% 22%, hsl(267 72% 74% / 0.12), transparent 26%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.04), transparent 72%);
+    filter: blur(8px);
+    opacity: 0.95;
+  }
+
+  .dark .app-light-frame::after {
+    content: "";
+    position: absolute;
+    left: 1.6rem;
+    right: 1.6rem;
+    top: 9.2rem;
+    height: 1px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 2%, hsl(220 100% 84% / 0.18) 16%, hsl(0 0% 100% / 0.78) 30%, hsl(266 72% 78% / 0.72) 72%, hsl(220 100% 84% / 0.16) 90%, transparent 98%);
+    box-shadow:
+      0 0 14px hsl(0 0% 100% / 0.18),
+      0 0 28px hsl(259 76% 74% / 0.14);
+    opacity: 0.8;
+  }
+
+  .dark .app-light-title {
     color: hsl(220 100% 97%) !important;
     text-shadow:
       0 0 18px hsl(225 100% 88% / 0.08),
@@ -1762,9 +1845,26 @@ All colors MUST be HSL.
     color: hsl(226 22% 72%) !important;
   }
 
+  .dark .app-light-subtitle,
+  .dark .app-light-page .text-muted-foreground,
+  .dark .app-light-page .text-foreground\/90,
+  .dark .app-light-page .text-foreground\/85 {
+    color: hsl(226 22% 72%) !important;
+  }
+
   .dark .schedule-light-greeting,
   .dark .schedule-light-section-header,
   .dark .schedule-light-section-label {
+    color: hsl(220 100% 96%) !important;
+    text-shadow: none;
+  }
+
+  .dark .app-light-page h2,
+  .dark .app-light-page h3,
+  .dark .app-light-page h4,
+  .dark .app-light-page label,
+  .dark .app-light-page .font-semibold,
+  .dark .app-light-page .font-bold {
     color: hsl(220 100% 96%) !important;
     text-shadow: none;
   }
@@ -1786,9 +1886,35 @@ All colors MUST be HSL.
     -webkit-backdrop-filter: blur(22px) saturate(1.16);
   }
 
+  .dark .app-light-toolbar,
+  .dark .app-light-page .glass-toolbar,
+  .dark .app-light-page .glass-chip-rail,
+  .dark .app-light-page [role="tablist"] {
+    background:
+      linear-gradient(180deg, hsl(234 25% 28% / 0.56), hsl(233 22% 18% / 0.3)),
+      linear-gradient(145deg, hsl(217 100% 72% / 0.08), transparent 50%, hsl(267 72% 74% / 0.06));
+    border: 1px solid hsl(226 92% 82% / 0.14);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.04),
+      0 24px 56px -32px hsl(231 82% 3% / 0.82),
+      0 0 18px hsl(226 100% 58% / 0.08);
+    backdrop-filter: blur(22px) saturate(1.16);
+    -webkit-backdrop-filter: blur(22px) saturate(1.16);
+  }
+
   .dark .schedule-light-pill,
   .dark .schedule-light-top-controls button,
   .dark .schedule-light-shell-toggle button {
+    color: hsl(226 18% 76%) !important;
+    background: transparent !important;
+    border-color: transparent;
+  }
+
+  .dark .app-light-toolbar button,
+  .dark .app-light-page .glass-toolbar button,
+  .dark .app-light-page .glass-chip-rail button,
+  .dark .app-light-page [role="tablist"] button {
     color: hsl(226 18% 76%) !important;
     background: transparent !important;
     border-color: transparent;
@@ -1805,11 +1931,42 @@ All colors MUST be HSL.
       0 0 14px hsl(223 100% 58% / 0.08);
   }
 
+  .dark .app-light-toolbar button:hover,
+  .dark .app-light-page .glass-toolbar button:hover,
+  .dark .app-light-page .glass-chip-rail button:hover,
+  .dark .app-light-page [role="tablist"] button:hover {
+    color: hsl(220 100% 97%) !important;
+    background: hsl(0 0% 100% / 0.06) !important;
+    border-color: hsl(225 92% 82% / 0.12);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      0 0 14px hsl(223 100% 58% / 0.08);
+  }
+
   .dark .schedule-light-pill-active,
   .dark .schedule-light-top-controls button[data-state="active"],
   .dark .schedule-light-top-controls .bg-secondary,
   .dark .schedule-light-shell-toggle button[data-state="active"],
   .dark .schedule-light-shell-toggle .bg-secondary {
+    color: hsl(220 100% 98%) !important;
+    border-color: hsl(220 100% 88% / 0.18);
+    background:
+      linear-gradient(180deg, hsl(224 42% 26% / 0.9), hsl(227 54% 18% / 0.68)),
+      linear-gradient(135deg, hsl(214 100% 68% / 0.18), transparent 52%, hsl(267 72% 74% / 0.08)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      0 14px 28px -18px hsl(224 100% 54% / 0.26),
+      0 0 18px hsl(218 100% 68% / 0.16);
+  }
+
+  .dark .app-light-toolbar button[data-state="active"],
+  .dark .app-light-toolbar .bg-secondary,
+  .dark .app-light-page .glass-toolbar button[data-state="active"],
+  .dark .app-light-page .glass-toolbar .bg-secondary,
+  .dark .app-light-page .glass-chip-rail button[data-state="active"],
+  .dark .app-light-page .glass-chip-rail .bg-secondary,
+  .dark .app-light-page [role="tablist"] button[data-state="active"],
+  .dark .app-light-page [role="tablist"] .bg-secondary {
     color: hsl(220 100% 98%) !important;
     border-color: hsl(220 100% 88% / 0.18);
     background:
@@ -1867,6 +2024,141 @@ All colors MUST be HSL.
       0 0 24px hsl(223 100% 58% / 0.08) !important;
   }
 
+  .dark .app-light-page .glass-hero-panel,
+  .dark .app-light-page .content-glass-surface {
+    color: hsl(220 100% 96%) !important;
+    border-color: hsl(226 92% 82% / 0.14) !important;
+    background:
+      radial-gradient(circle at 84% 12%, hsl(269 72% 72% / 0.14), transparent 28%),
+      radial-gradient(circle at 92% 76%, hsl(207 100% 74% / 0.14), transparent 20%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.68)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.06), transparent 42%, hsl(266 72% 72% / 0.05));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.03),
+      0 30px 90px -46px hsl(231 82% 3% / 0.9),
+      0 0 30px hsl(223 100% 58% / 0.08) !important;
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  }
+
+  .dark .app-light-page .glass-list-surface,
+  .dark .app-light-page .bg-card,
+  .dark .app-light-page .bg-card\/60,
+  .dark .app-light-page .bg-card\/75,
+  .dark .app-light-page .bg-card\/80,
+  .dark .app-light-page .bg-card\/85,
+  .dark .app-light-page .bg-card\/70 {
+    color: hsl(220 100% 96%) !important;
+    border-color: hsl(226 92% 82% / 0.14) !important;
+    background:
+      radial-gradient(circle at 82% 12%, hsl(267 72% 74% / 0.08), transparent 26%),
+      radial-gradient(circle at 92% 78%, hsl(207 100% 74% / 0.08), transparent 22%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.66)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.05), transparent 48%, hsl(266 72% 72% / 0.04)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.03),
+      0 24px 64px -36px hsl(231 82% 3% / 0.82),
+      0 0 22px hsl(223 100% 58% / 0.08) !important;
+    backdrop-filter: blur(20px) saturate(1.16);
+    -webkit-backdrop-filter: blur(20px) saturate(1.16);
+  }
+
+  .dark .app-light-page .glass-list-surface:hover,
+  .dark .app-light-page .entity-card-hover:hover,
+  .dark .app-light-page .liquid-cyan-hover:hover,
+  .dark .app-light-page .bg-card:hover {
+    border-color: hsl(220 100% 82% / 0.26) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.04),
+      0 26px 60px -30px hsl(224 100% 56% / 0.22),
+      0 0 18px hsl(220 100% 72% / 0.14) !important;
+  }
+
+  .dark .app-light-page .glass-control,
+  .dark .app-light-page .bg-secondary,
+  .dark .app-light-page .bg-secondary\/80 {
+    background:
+      linear-gradient(180deg, hsl(234 25% 28% / 0.56), hsl(233 22% 18% / 0.3)),
+      linear-gradient(145deg, hsl(217 100% 72% / 0.08), transparent 50%, hsl(267 72% 74% / 0.06)) !important;
+    border-color: hsl(225 92% 82% / 0.18) !important;
+    color: hsl(220 100% 94%) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.04),
+      0 24px 56px -32px hsl(231 82% 3% / 0.82),
+      0 0 18px hsl(226 100% 58% / 0.08);
+  }
+
+  .dark .app-light-page input,
+  .dark .app-light-page textarea,
+  .dark .app-light-page select,
+  .dark .app-light-page [role="combobox"],
+  .dark .app-light-page [data-slot="select-trigger"] {
+    color: hsl(220 100% 96%);
+    background:
+      linear-gradient(180deg, hsl(232 26% 28% / 0.72), hsl(232 26% 18% / 0.38)),
+      linear-gradient(145deg, hsl(219 100% 70% / 0.06), transparent 56%) !important;
+    border-color: hsl(226 92% 82% / 0.14) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.03),
+      0 18px 34px -24px hsl(231 82% 3% / 0.62);
+    backdrop-filter: blur(18px) saturate(1.14);
+    -webkit-backdrop-filter: blur(18px) saturate(1.14);
+  }
+
+  .dark .app-light-page .glass-hero-panel,
+  .dark .app-light-page .content-glass-surface,
+  .dark .app-light-page .glass-list-surface,
+  .dark .app-light-page .bg-card,
+  .dark .app-light-page .bg-card\/60,
+  .dark .app-light-page .bg-card\/75,
+  .dark .app-light-page .bg-card\/80,
+  .dark .app-light-page .bg-card\/85,
+  .dark .app-light-page .bg-card\/70 {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .app-light-page .glass-hero-panel::before,
+  .dark .app-light-page .content-glass-surface::before,
+  .dark .app-light-page .glass-list-surface::before,
+  .dark .app-light-page .bg-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.08), transparent 12%),
+      radial-gradient(circle at 22% 8%, hsl(0 0% 100% / 0.06), transparent 18%),
+      radial-gradient(circle at 78% 10%, hsl(267 72% 74% / 0.12), transparent 18%);
+  }
+
+  .dark .app-light-page .glass-hero-panel::after,
+  .dark .app-light-page .content-glass-surface::after,
+  .dark .app-light-page .glass-list-surface::after,
+  .dark .app-light-page .bg-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 1.5px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 2%, hsl(220 100% 84% / 0.22) 16%, hsl(0 0% 100% / 0.96) 30%, hsl(266 72% 78% / 0.88) 72%, hsl(220 100% 84% / 0.18) 90%, transparent 98%);
+    box-shadow:
+      0 0 14px hsl(0 0% 100% / 0.24),
+      0 0 30px hsl(259 76% 74% / 0.18);
+  }
+
+  .dark .app-light-page input::placeholder,
+  .dark .app-light-page textarea::placeholder {
+    color: hsl(226 18% 66%);
+  }
+
   .dark .schedule-light-shell {
     background:
       radial-gradient(circle at 84% 12%, hsl(269 72% 72% / 0.14), transparent 28%),
@@ -1903,6 +2195,132 @@ All colors MUST be HSL.
       radial-gradient(circle at 56% 18%, hsl(267 72% 74% / 0.14) 0%, transparent 30%);
     opacity: 0.72;
     filter: blur(18px);
+  }
+
+  .dark .calendar-light-page .schedule-light-shell,
+  .dark .calendar-light-page .glass-hero-panel,
+  .dark .calendar-light-page .content-glass-surface {
+    border-color: hsl(218 100% 86% / 0.2) !important;
+    background:
+      radial-gradient(circle at 50% 0%, hsl(258 74% 80% / 0.1), transparent 34%),
+      radial-gradient(circle at 92% 82%, hsl(204 100% 74% / 0.14), transparent 22%),
+      linear-gradient(180deg, hsl(229 48% 18% / 0.72), hsl(227 66% 10% / 0.8)),
+      linear-gradient(135deg, hsl(216 100% 68% / 0.08), transparent 48%, hsl(258 76% 78% / 0.05)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      inset 0 0 0 1px hsl(218 100% 80% / 0.04),
+      0 30px 90px -48px hsl(230 78% 4% / 0.94),
+      0 0 34px hsl(218 100% 68% / 0.12) !important;
+  }
+
+  .dark .calendar-light-page .schedule-light-mode-toggle,
+  .dark .calendar-light-page .schedule-light-top-controls,
+  .dark .calendar-light-page .app-light-toolbar,
+  .dark .calendar-light-page .glass-toolbar,
+  .dark .calendar-light-page .glass-chip-rail,
+  .dark .calendar-light-page [role="tablist"] {
+    border-color: hsl(218 100% 86% / 0.18);
+    background:
+      radial-gradient(circle at 50% -40%, hsl(219 100% 82% / 0.14), transparent 48%),
+      linear-gradient(180deg, hsl(230 42% 26% / 0.74), hsl(229 48% 18% / 0.52)),
+      linear-gradient(135deg, hsl(216 100% 70% / 0.08), transparent 52%, hsl(258 76% 80% / 0.05));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -1px 0 hsl(218 100% 80% / 0.05),
+      0 24px 56px -32px hsl(231 82% 3% / 0.84),
+      0 0 18px hsl(220 100% 64% / 0.12);
+  }
+
+  .dark .calendar-light-page .schedule-light-pill,
+  .dark .calendar-light-page .app-light-toolbar button,
+  .dark .calendar-light-page .glass-toolbar button,
+  .dark .calendar-light-page .glass-chip-rail button,
+  .dark .calendar-light-page [role="tablist"] button {
+    color: hsl(225 24% 82%) !important;
+  }
+
+  .dark .calendar-light-page .schedule-light-pill:hover,
+  .dark .calendar-light-page .app-light-toolbar button:hover,
+  .dark .calendar-light-page .glass-toolbar button:hover,
+  .dark .calendar-light-page .glass-chip-rail button:hover,
+  .dark .calendar-light-page [role="tablist"] button:hover {
+    background: hsl(0 0% 100% / 0.07) !important;
+    color: hsl(220 100% 98%) !important;
+  }
+
+  .dark .calendar-light-page .schedule-light-mode-toggle button[data-state="active"],
+  .dark .calendar-light-page .schedule-light-mode-toggle .bg-secondary,
+  .dark .calendar-light-page .app-light-toolbar button[data-state="active"],
+  .dark .calendar-light-page .app-light-toolbar .bg-secondary,
+  .dark .calendar-light-page .glass-toolbar button[data-state="active"],
+  .dark .calendar-light-page .glass-toolbar .bg-secondary,
+  .dark .calendar-light-page .glass-chip-rail button[data-state="active"],
+  .dark .calendar-light-page .glass-chip-rail .bg-secondary,
+  .dark .calendar-light-page [role="tablist"] button[data-state="active"],
+  .dark .calendar-light-page [role="tablist"] .bg-secondary {
+    border-color: hsl(218 100% 88% / 0.22);
+    background:
+      linear-gradient(180deg, hsl(224 52% 30% / 0.94), hsl(226 58% 20% / 0.78)),
+      linear-gradient(135deg, hsl(214 100% 70% / 0.16), transparent 58%, hsl(258 80% 80% / 0.06)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.16),
+      0 16px 30px -18px hsl(220 100% 56% / 0.28),
+      0 0 18px hsl(218 100% 70% / 0.16);
+  }
+
+  .dark .calendar-light-page .schedule-light-add {
+    border-color: hsl(216 100% 90% / 0.3);
+    background:
+      linear-gradient(135deg, hsl(198 100% 76% / 0.98), hsl(219 100% 66% / 0.96) 58%, hsl(231 100% 70% / 0.94));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.28),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.06),
+      0 24px 54px -22px hsl(219 100% 58% / 0.62),
+      0 0 32px hsl(214 100% 72% / 0.36);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell {
+    position: relative;
+    border-color: hsl(216 100% 88% / 0.24);
+    background:
+      radial-gradient(circle at 50% -12%, hsl(255 76% 82% / 0.14), transparent 30%),
+      radial-gradient(circle at 96% 88%, hsl(203 100% 74% / 0.22), transparent 28%),
+      radial-gradient(circle at 10% 18%, hsl(217 100% 80% / 0.08), transparent 20%),
+      linear-gradient(180deg, hsl(229 56% 18% / 0.92) 0%, hsl(227 60% 12% / 0.95) 32%, hsl(225 68% 10% / 0.97) 100%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 0 0 1px hsl(217 100% 82% / 0.05),
+      0 36px 110px -52px hsl(232 82% 3% / 0.94),
+      0 0 44px hsl(214 100% 70% / 0.18);
+    backdrop-filter: blur(28px) saturate(1.08);
+    -webkit-backdrop-filter: blur(28px) saturate(1.08);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.08), transparent 10%),
+      radial-gradient(circle at 18% 16%, hsl(0 0% 100% / 0.1) 0 1px, transparent 2px),
+      radial-gradient(circle at 50% 24%, hsl(213 100% 86% / 0.12) 0 1px, transparent 2px),
+      radial-gradient(circle at 82% 22%, hsl(0 0% 100% / 0.08) 0 1px, transparent 2px),
+      radial-gradient(circle at 72% 76%, hsl(203 100% 80% / 0.1) 0 1px, transparent 2px);
+    background-size: 100% 100%, 280px 220px, 360px 260px, 300px 240px, 380px 260px;
+    opacity: 0.9;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+      inset 0 0 0 1px hsl(216 100% 90% / 0.08),
+      inset 0 0 38px hsl(214 100% 78% / 0.06);
   }
 
   .dark .schedule-light-row,
@@ -2061,13 +2479,25 @@ All colors MUST be HSL.
   }
 
   .dark .liquid-cyan-hover:hover {
-    border-color: hsl(202 75% 66% / 0.62);
-    box-shadow: 0 0 22px hsl(199 100% 72% / 0.26);
+    border-color: hsl(202 75% 66% / 0.56);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      0 22px 48px -26px hsl(220 100% 56% / 0.18),
+      0 0 18px hsl(199 100% 72% / 0.16);
   }
 
   .dark .liquid-cyan-hover {
-    border-color: hsl(202 75% 66% / 0.32);
-    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.12);
+    border-color: hsl(226 92% 82% / 0.14);
+    background:
+      radial-gradient(circle at 86% 62%, hsl(207 100% 74% / 0.08), transparent 24%),
+      radial-gradient(circle at 56% 18%, hsl(267 72% 74% / 0.06), transparent 30%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.66)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.05), transparent 48%, hsl(266 72% 72% / 0.04));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.03),
+      0 24px 64px -36px hsl(231 82% 3% / 0.82),
+      0 0 22px hsl(223 100% 58% / 0.08);
   }
 
   .my-work-glow button,
@@ -2110,13 +2540,15 @@ All colors MUST be HSL.
   }
 
   .dark .entity-card-hover:hover {
-    border-color: hsl(202 75% 66% / 0.66);
+    border-color: hsl(202 75% 66% / 0.56);
     box-shadow:
-      0 0 24px hsl(199 100% 72% / 0.26);
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      0 22px 48px -26px hsl(220 100% 56% / 0.18),
+      0 0 18px hsl(199 100% 72% / 0.16);
   }
 
   .dark .entity-card-hover {
-    border-color: hsl(202 75% 66% / 0.36);
+    border-color: hsl(226 92% 82% / 0.14);
   }
 
   .no-card-surface-hover::after,
@@ -2141,14 +2573,15 @@ All colors MUST be HSL.
   .dark .content-glass-surface {
     border-color: hsl(226 92% 82% / 0.16);
     background:
-      radial-gradient(circle at 84% 18%, hsl(266 72% 72% / 0.08), transparent 24%),
-      linear-gradient(180deg, hsl(0 0% 100% / 0.06), hsl(0 0% 100% / 0.015)),
-      linear-gradient(160deg, hsl(216 100% 62% / 0.12), hsl(232 58% 16% / 0.18));
+      radial-gradient(circle at 86% 62%, hsl(207 100% 74% / 0.08), transparent 24%),
+      radial-gradient(circle at 56% 18%, hsl(267 72% 74% / 0.06), transparent 30%),
+      linear-gradient(180deg, hsl(231 42% 14% / 0.58), hsl(229 72% 7% / 0.66)),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.05), transparent 48%, hsl(266 72% 72% / 0.04));
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.12),
-      inset 0 -1px 0 hsl(220 100% 72% / 0.04),
-      0 28px 72px -42px hsl(230 78% 4% / 0.84),
-      0 0 26px hsl(223 100% 58% / 0.08);
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      inset 0 -1px 0 hsl(221 100% 72% / 0.03),
+      0 24px 64px -36px hsl(231 82% 3% / 0.82),
+      0 0 22px hsl(223 100% 58% / 0.08);
   }
 
   .glass-scrollbar {
@@ -2526,6 +2959,23 @@ All colors MUST be HSL.
       0 0 14px hsl(199 100% 72% / 0.22);
   }
 
+  .dark .delphi-fc-shell {
+    border-color: hsl(221 100% 85% / 0.22);
+    background:
+      radial-gradient(circle at 18% 12%, hsl(220 100% 76% / 0.14), transparent 20%),
+      radial-gradient(circle at 84% 82%, hsl(206 100% 72% / 0.16), transparent 24%),
+      radial-gradient(circle at 56% 0%, hsl(257 68% 76% / 0.1), transparent 28%),
+      linear-gradient(180deg, hsl(228 46% 18% / 0.9) 0%, hsl(228 58% 11% / 0.94) 28%, hsl(228 64% 9% / 0.96) 100%),
+      linear-gradient(145deg, hsl(220 100% 62% / 0.05), transparent 42%, hsl(266 72% 72% / 0.04));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.16),
+      inset 0 0 0 1px hsl(220 100% 76% / 0.05),
+      0 34px 100px -48px hsl(231 82% 4% / 0.92),
+      0 0 42px hsl(219 100% 68% / 0.12);
+    backdrop-filter: blur(24px) saturate(1.16);
+    -webkit-backdrop-filter: blur(24px) saturate(1.16);
+  }
+
   .delphi-fc-shell .fc-scrollgrid-section-header > * {
     position: sticky;
     top: 0;
@@ -2558,8 +3008,58 @@ All colors MUST be HSL.
     backdrop-filter: none;
   }
 
+  .dark .delphi-fc-shell .fc {
+    --fc-border-color: hsl(222 100% 86% / 0.14);
+    --fc-neutral-bg-color: hsl(229 30% 18% / 0.26);
+    --fc-neutral-text-color: hsl(225 28% 78%);
+    color: hsl(220 100% 96%);
+  }
+
+  .dark .delphi-fc-shell .fc-theme-standard td,
+  .dark .delphi-fc-shell .fc-theme-standard th,
+  .dark .delphi-fc-shell .fc-scrollgrid,
+  .dark .delphi-fc-shell .fc-scrollgrid-section > * {
+    border-color: hsl(222 100% 86% / 0.12);
+  }
+
+  .dark .delphi-fc-shell .fc-scrollgrid,
+  .dark .delphi-fc-shell .fc-scrollgrid table,
+  .dark .delphi-fc-shell .fc-col-header,
+  .dark .delphi-fc-shell .fc-timegrid-body,
+  .dark .delphi-fc-shell .fc-daygrid-body,
+  .dark .delphi-fc-shell .fc-timegrid-cols,
+  .dark .delphi-fc-shell .fc-timegrid-slots {
+    background: transparent;
+  }
+
+  .dark .delphi-fc-shell .fc-col-header-cell {
+    background:
+      radial-gradient(circle at 50% -20%, hsl(220 100% 84% / 0.18), transparent 46%),
+      linear-gradient(180deg, hsl(229 28% 31% / 0.78), hsl(228 30% 21% / 0.72)),
+      linear-gradient(145deg, hsl(219 100% 72% / 0.08), transparent 54%, hsl(267 72% 72% / 0.06));
+    box-shadow:
+      inset 0 -1px 0 hsl(222 100% 86% / 0.14),
+      inset 0 1px 0 hsl(0 0% 100% / 0.16);
+    backdrop-filter: blur(18px) saturate(1.08);
+    -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-col-header-cell {
+    background:
+      radial-gradient(circle at 50% -34%, hsl(216 100% 88% / 0.16), transparent 52%),
+      linear-gradient(180deg, hsl(228 34% 28% / 0.7), hsl(228 34% 22% / 0.58)),
+      linear-gradient(135deg, hsl(216 100% 70% / 0.05), transparent 56%, hsl(257 70% 80% / 0.04));
+    box-shadow:
+      inset 0 -1px 0 hsl(217 100% 86% / 0.12),
+      inset 0 1px 0 hsl(0 0% 100% / 0.12);
+  }
+
   .delphi-fc-shell .fc-col-header-cell:not(:first-child) {
     border-left: 1px solid hsl(var(--border) / 0.52) !important;
+  }
+
+  .dark .delphi-fc-shell .fc-col-header-cell:not(:first-child) {
+    border-left-color: hsl(221 100% 86% / 0.12) !important;
   }
 
   .delphi-fc-shell .fc-timegrid-cols {
@@ -2572,6 +3072,20 @@ All colors MUST be HSL.
 
   .delphi-fc-shell .fc-timegrid-col {
     border-right: 1px solid hsl(var(--border) / 0.52) !important;
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-col {
+    border-right-color: hsl(221 100% 86% / 0.09) !important;
+    background:
+      linear-gradient(180deg, hsl(229 40% 18% / 0.46), hsl(228 58% 11% / 0.26)),
+      linear-gradient(145deg, hsl(219 100% 72% / 0.03), transparent 58%, hsl(267 72% 72% / 0.02));
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-col {
+    border-right-color: hsl(216 100% 86% / 0.08) !important;
+    background:
+      linear-gradient(180deg, hsl(228 56% 15% / 0.18), hsl(226 66% 11% / 0.1)),
+      linear-gradient(135deg, hsl(216 100% 70% / 0.015), transparent 60%);
   }
 
   .delphi-fc-shell .fc-timegrid-col:last-child {
@@ -2590,6 +3104,11 @@ All colors MUST be HSL.
     letter-spacing: 0.02em;
     color: hsl(var(--foreground));
     text-decoration: none;
+  }
+
+  .dark .delphi-fc-shell .fc-col-header-cell-cushion,
+  .dark .delphi-fc-shell .fc-daygrid-day-number {
+    color: hsl(220 100% 96%);
   }
 
   .delphi-fc-day-header {
@@ -2613,6 +3132,14 @@ All colors MUST be HSL.
     color: hsl(217 76% 48%);
   }
 
+  .dark .delphi-fc-day-header-weekday {
+    color: hsl(225 24% 74%);
+  }
+
+  .dark .delphi-fc-day-header-weekday--today {
+    color: hsl(214 100% 84%);
+  }
+
   .delphi-fc-day-header-date {
     display: inline-flex;
     min-width: 2.65rem;
@@ -2631,6 +3158,19 @@ All colors MUST be HSL.
     color: white;
   }
 
+  .dark .delphi-fc-day-header-date {
+    color: hsl(220 100% 96%);
+  }
+
+  .dark .delphi-fc-day-header-date--today {
+    background:
+      linear-gradient(180deg, hsl(213 100% 76% / 0.98), hsl(223 100% 60% / 0.92));
+    color: hsl(0 0% 100%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.24),
+      0 0 22px hsl(217 100% 72% / 0.3);
+  }
+
   .delphi-fc-shell .fc-timegrid-axis-cushion,
   .delphi-fc-shell .fc-timegrid-slot-label-cushion {
     font-size: 0.76rem;
@@ -2639,9 +3179,34 @@ All colors MUST be HSL.
     text-decoration: none;
   }
 
+  .dark .delphi-fc-shell .fc-timegrid-axis-cushion,
+  .dark .delphi-fc-shell .fc-timegrid-slot-label-cushion {
+    color: hsl(224 24% 84%);
+  }
+
   .delphi-fc-shell .fc-timegrid-slot,
   .delphi-fc-shell .fc-daygrid-day-frame {
     background: hsl(0 0% 100% / 0.98);
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-slot,
+  .dark .delphi-fc-shell .fc-daygrid-day-frame {
+    background:
+      linear-gradient(180deg, hsl(229 40% 18% / 0.44), hsl(228 58% 11% / 0.28)),
+      linear-gradient(145deg, hsl(219 100% 72% / 0.03), transparent 58%, hsl(267 72% 72% / 0.02)) !important;
+    background-image:
+      linear-gradient(180deg, hsl(229 40% 18% / 0.44), hsl(228 58% 11% / 0.28)),
+      linear-gradient(145deg, hsl(219 100% 72% / 0.03), transparent 58%, hsl(267 72% 72% / 0.02)) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-slot,
+  .dark .calendar-light-page .delphi-fc-shell .fc-daygrid-day-frame {
+    background:
+      linear-gradient(180deg, hsl(228 56% 16% / 0.06), hsl(226 66% 11% / 0.02)),
+      linear-gradient(135deg, hsl(216 100% 70% / 0.01), transparent 60%) !important;
+    background-image:
+      linear-gradient(180deg, hsl(228 56% 16% / 0.06), hsl(226 66% 11% / 0.02)),
+      linear-gradient(135deg, hsl(216 100% 70% / 0.01), transparent 60%) !important;
   }
 
   .delphi-fc-shell .fc-timegrid-slot {
@@ -2657,6 +3222,14 @@ All colors MUST be HSL.
     border-top-color: hsl(var(--border) / 0.44);
   }
 
+  .dark .delphi-fc-shell .fc-timegrid-slot {
+    border-top-color: hsl(221 100% 86% / 0.11) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-slot {
+    border-top-color: hsl(216 100% 88% / 0.1) !important;
+  }
+
   .delphi-fc-shell .fc-timegrid-slot-minor,
   .delphi-fc-shell .fc-timegrid-slot-minor td,
   .delphi-fc-shell td.fc-timegrid-slot.fc-timegrid-slot-minor,
@@ -2665,8 +3238,30 @@ All colors MUST be HSL.
     box-shadow: none !important;
   }
 
+  .dark .delphi-fc-shell .fc-timegrid-slot-minor,
+  .dark .delphi-fc-shell .fc-timegrid-slot-minor td,
+  .dark .delphi-fc-shell td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  .dark .delphi-fc-shell tr.fc-timegrid-slot-minor > td {
+    border-top-color: transparent !important;
+    background: inherit !important;
+    background-image: inherit !important;
+    box-shadow: none !important;
+  }
+
   .delphi-fc-shell .fc-day-today {
     background: hsl(217 76% 48% / 0.03) !important;
+  }
+
+  .dark .delphi-fc-shell .fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(222 44% 30% / 0.28), hsl(224 46% 22% / 0.12)),
+      linear-gradient(145deg, hsl(217 100% 78% / 0.08), transparent 60%) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(220 24% 72% / 0.26), hsl(220 18% 58% / 0.12)),
+      linear-gradient(180deg, hsl(224 42% 28% / 0.08), hsl(224 48% 18% / 0.03)) !important;
   }
 
   .delphi-fc-shell .fc-highlight {
@@ -2854,12 +3449,39 @@ All colors MUST be HSL.
     box-shadow: inset 0 0 0 1px hsl(217 76% 48% / 0.14);
   }
 
+  .dark .delphi-fc-shell .fc-timegrid-col.fc-day-today,
+  .dark .delphi-fc-shell .fc-daygrid-day.fc-day-today {
+    box-shadow:
+      inset 0 0 0 1px hsl(216 100% 78% / 0.18),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-col.fc-day-today,
+  .dark .calendar-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today {
+    box-shadow:
+      inset 1px 0 0 hsl(216 100% 88% / 0.12),
+      inset -1px 0 0 hsl(216 100% 88% / 0.12),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  }
+
   .delphi-fc-shell .fc-daygrid-day.fc-day-today {
     background: hsl(217 76% 48% / 0.03) !important;
   }
 
+  .dark .delphi-fc-shell .fc-daygrid-day.fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(222 44% 30% / 0.28), hsl(224 46% 22% / 0.12)),
+      linear-gradient(145deg, hsl(217 100% 78% / 0.08), transparent 60%) !important;
+  }
+
   .delphi-fc-shell .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
     background: hsl(217 76% 48% / 0.03) !important;
+  }
+
+  .dark .delphi-fc-shell .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+    background:
+      linear-gradient(180deg, hsl(222 44% 30% / 0.28), hsl(224 46% 22% / 0.12)),
+      linear-gradient(145deg, hsl(217 100% 78% / 0.08), transparent 60%) !important;
   }
 
   .delphi-fc-shell .fc-timegrid-divider {
@@ -2869,6 +3491,644 @@ All colors MUST be HSL.
   .delphi-fc-shell .fc-timegrid-divider-frame {
     min-height: 1.5rem;
     background: hsl(0 0% 100% / 0.98);
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-divider,
+  .dark .delphi-fc-shell .fc-timegrid-divider-frame {
+    background:
+      radial-gradient(circle at 50% -20%, hsl(220 100% 84% / 0.14), transparent 44%),
+      linear-gradient(180deg, hsl(229 28% 30% / 0.8), hsl(228 30% 21% / 0.7)) !important;
+    border-color: hsl(221 100% 86% / 0.12) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-divider,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
+    background:
+      radial-gradient(circle at 50% -30%, hsl(216 100% 86% / 0.1), transparent 46%),
+      linear-gradient(180deg, hsl(228 34% 28% / 0.72), hsl(228 34% 22% / 0.62)) !important;
+    border-color: hsl(216 100% 86% / 0.08) !important;
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-axis,
+  .dark .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  .dark .delphi-fc-shell .fc-timegrid-axis-frame {
+    background: linear-gradient(180deg, hsl(228 20% 26% / 0.74), hsl(228 18% 18% / 0.66));
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-axis,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-axis-frame {
+    background:
+      linear-gradient(180deg, hsl(228 20% 20% / 0.52), hsl(228 18% 15% / 0.36)),
+      linear-gradient(135deg, hsl(216 100% 80% / 0.02), transparent 70%);
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  .dark .delphi-fc-shell .fc-timegrid-axis-frame {
+    border-right: 1px solid hsl(221 100% 86% / 0.08);
+  }
+
+  .dark .delphi-fc-shell .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame {
+    background:
+      linear-gradient(180deg, hsl(220 26% 64% / 0.3), hsl(222 24% 54% / 0.18)),
+      linear-gradient(180deg, hsl(222 44% 30% / 0.22), hsl(224 46% 22% / 0.08));
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame {
+    background:
+      linear-gradient(180deg, hsl(220 20% 74% / 0.26), hsl(220 16% 58% / 0.14)),
+      linear-gradient(180deg, hsl(223 42% 30% / 0.06), hsl(224 46% 20% / 0.02));
+  }
+
+  .dark .delphi-fc-shell .fc-col-header-cell.fc-day-today {
+    background:
+      radial-gradient(circle at 50% -20%, hsl(217 100% 84% / 0.24), transparent 48%),
+      linear-gradient(180deg, hsl(227 46% 24% / 0.94), hsl(228 58% 16% / 0.9)),
+      linear-gradient(145deg, hsl(219 100% 72% / 0.08), transparent 54%, hsl(267 72% 72% / 0.05));
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-col-header-cell.fc-day-today {
+    background:
+      radial-gradient(circle at 50% -24%, hsl(216 100% 88% / 0.24), transparent 52%),
+      linear-gradient(180deg, hsl(226 46% 22% / 0.88), hsl(227 54% 18% / 0.8)),
+      linear-gradient(135deg, hsl(216 100% 72% / 0.06), transparent 56%, hsl(257 70% 80% / 0.04));
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-theme-standard td,
+  .dark .calendar-light-page .delphi-fc-shell .fc-theme-standard th,
+  .dark .calendar-light-page .delphi-fc-shell .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell .fc-scrollgrid-section > * {
+    border-color: hsl(216 100% 88% / 0.06);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell .fc-scrollgrid table {
+    border: 0 !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-scrollgrid {
+    background: transparent !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-col-header-cell,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-col-header-cell {
+    border-bottom: 1px solid hsl(216 100% 88% / 0.08) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-col-header-cell:not(:first-child),
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-col-header-cell:not(:first-child) {
+    border-left-color: hsl(216 100% 88% / 0.08) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-col,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-col {
+    box-shadow: inset 1px 0 0 hsl(216 100% 88% / 0.04);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-col:first-child,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-col:first-child {
+    box-shadow: none;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-slot,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-slot {
+    box-shadow: none !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-slot:not(.fc-timegrid-slot-minor),
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-slot:not(.fc-timegrid-slot-minor) {
+    border-top: 1px solid hsl(216 100% 88% / 0.09) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-timegrid-slot-minor td,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view tr.fc-timegrid-slot-minor > td,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-timegrid-slot-minor td,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view tr.fc-timegrid-slot-minor > td {
+    border-top-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridWeek-view .fc-day-today::after,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timeGridDay-view .fc-day-today::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 16%),
+      linear-gradient(180deg, hsl(215 100% 86% / 0.1), transparent 34%, transparent 72%, hsl(214 100% 84% / 0.06) 100%);
+    opacity: 0.9;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-col,
+  .dark .calendar-light-page .delphi-fc-shell .fc-col-header-cell,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-axis,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-axis-frame {
+    position: relative;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-now-indicator-line {
+    border-color: hsl(5 95% 68%);
+    box-shadow:
+      0 0 10px hsl(5 95% 68% / 0.32),
+      0 0 20px hsl(5 95% 68% / 0.14);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-timegrid-now-indicator-line::before {
+    background: hsl(5 95% 68%);
+    box-shadow:
+      0 0 10px hsl(5 95% 68% / 0.38),
+      0 0 18px hsl(5 95% 68% / 0.16);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week,
+  .dark .calendar-light-page .delphi-fc-shell--day {
+    border-color: hsl(214 100% 90% / 0.18);
+    background:
+      radial-gradient(circle at 50% -10%, hsl(219 100% 82% / 0.24), transparent 34%),
+      radial-gradient(circle at 100% 100%, hsl(207 100% 74% / 0.2), transparent 30%),
+      radial-gradient(circle at 0% 0%, hsl(225 100% 72% / 0.12), transparent 24%),
+      linear-gradient(180deg, hsl(228 48% 17% / 0.9) 0%, hsl(227 56% 11% / 0.94) 42%, hsl(228 60% 8% / 0.96) 100%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 0 0 1px hsl(214 100% 82% / 0.08),
+      0 40px 110px -52px hsl(233 86% 3% / 0.96),
+      0 0 42px hsl(214 100% 72% / 0.18);
+    backdrop-filter: blur(28px) saturate(1.18);
+    -webkit-backdrop-filter: blur(28px) saturate(1.18);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week::before,
+  .dark .calendar-light-page .delphi-fc-shell--day::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 0%, hsl(214 100% 88% / 0.14), transparent 28%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 14%, transparent 82%, hsl(205 100% 82% / 0.08) 100%);
+    mix-blend-mode: screen;
+    opacity: 0.96;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc {
+    --fc-border-color: hsl(214 100% 90% / 0.07);
+    --fc-neutral-bg-color: transparent;
+    --fc-neutral-text-color: hsl(223 30% 82%);
+    color: hsl(220 100% 97%);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid table,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-col-header,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-body,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-cols,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slots,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid table,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-col-header,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-body,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-cols,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slots {
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-theme-standard td,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-theme-standard th,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid-section > *,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-theme-standard td,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-theme-standard th,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid-section > * {
+    border-color: hsl(214 100% 90% / 0.055) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-divider,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-divider-frame,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-divider,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-divider-frame {
+    min-height: 0;
+    background:
+      radial-gradient(circle at 50% -10%, hsl(214 100% 86% / 0.12), transparent 42%),
+      linear-gradient(180deg, hsl(228 38% 22% / 0.56), hsl(228 40% 16% / 0.4)) !important;
+    border-color: hsl(214 100% 90% / 0.065) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell {
+    background:
+      radial-gradient(circle at 50% -24%, hsl(214 100% 88% / 0.18), transparent 50%),
+      linear-gradient(180deg, hsl(228 44% 28% / 0.7), hsl(228 42% 22% / 0.56)),
+      linear-gradient(135deg, hsl(217 100% 78% / 0.05), transparent 58%, hsl(252 72% 80% / 0.03));
+    box-shadow:
+      inset 0 -1px 0 hsl(214 100% 90% / 0.08),
+      inset 0 1px 0 hsl(0 0% 100% / 0.12);
+    border-bottom: 1px solid hsl(214 100% 90% / 0.08) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell:not(:first-child),
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell:not(:first-child) {
+    border-left: 1px solid hsl(214 100% 90% / 0.05) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell:first-child,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell:first-child {
+    background:
+      linear-gradient(180deg, hsl(229 30% 20% / 0.42), hsl(228 28% 15% / 0.28)),
+      linear-gradient(135deg, hsl(214 100% 84% / 0.035), transparent 70%);
+    box-shadow:
+      inset 0 -1px 0 hsl(214 100% 90% / 0.06),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .delphi-fc-day-header,
+  .dark .calendar-light-page .delphi-fc-shell--day .delphi-fc-day-header {
+    min-height: 5.25rem;
+    gap: 0.45rem;
+    padding: 0.3rem 0 0.1rem;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .delphi-fc-day-header-weekday,
+  .dark .calendar-light-page .delphi-fc-shell--day .delphi-fc-day-header-weekday {
+    color: hsl(222 28% 74%);
+    letter-spacing: 0.12em;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .delphi-fc-day-header-date,
+  .dark .calendar-light-page .delphi-fc-shell--day .delphi-fc-day-header-date {
+    min-width: 2.85rem;
+    min-height: 2.85rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-label-frame,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis-frame,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-label-frame,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis-frame {
+    background:
+      linear-gradient(180deg, hsl(229 26% 18% / 0.3), hsl(228 24% 13% / 0.18)),
+      linear-gradient(135deg, hsl(214 100% 84% / 0.025), transparent 72%) !important;
+    border-right: 1px solid hsl(214 100% 90% / 0.05) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis-cushion,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-label-cushion,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis-cushion,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-label-cushion {
+    color: hsl(223 26% 82%);
+    opacity: 0.9;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col {
+    background:
+      linear-gradient(180deg, hsl(228 52% 14% / 0.16), hsl(227 60% 10% / 0.08)),
+      linear-gradient(145deg, hsl(217 100% 72% / 0.015), transparent 65%) !important;
+    border-right: 1px solid hsl(214 100% 90% / 0.045) !important;
+    box-shadow: inset 1px 0 0 hsl(0 0% 100% / 0.015);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot {
+    background: transparent !important;
+    border-top: 1px solid hsl(214 100% 90% / 0.065) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor td,
+  .dark .calendar-light-page .delphi-fc-shell--week td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell--week tr.fc-timegrid-slot-minor > td,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor td,
+  .dark .calendar-light-page .delphi-fc-shell--day td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  .dark .calendar-light-page .delphi-fc-shell--day tr.fc-timegrid-slot-minor > td {
+    border-top-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col.fc-day-today,
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-daygrid-day.fc-day-today,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col.fc-day-today,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-daygrid-day.fc-day-today {
+    position: relative;
+    background:
+      linear-gradient(180deg, hsl(219 100% 86% / 0.16), transparent 16%, transparent 88%, hsl(216 100% 82% / 0.1) 100%),
+      linear-gradient(180deg, hsl(219 24% 78% / 0.22), hsl(220 22% 62% / 0.12)) !important;
+    box-shadow:
+      inset 1px 0 0 hsl(214 100% 92% / 0.11),
+      inset -1px 0 0 hsl(214 100% 92% / 0.11),
+      inset 0 1px 0 hsl(0 0% 100% / 0.08);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame {
+    background:
+      radial-gradient(circle at 50% 0%, hsl(214 100% 88% / 0.16), transparent 22%),
+      linear-gradient(180deg, hsl(220 22% 76% / 0.22), hsl(220 18% 60% / 0.12)) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-day-today::after,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-day-today::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 0%, hsl(214 100% 90% / 0.18), transparent 24%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.06), transparent 12%, transparent 78%, hsl(212 100% 84% / 0.08) 100%);
+    mix-blend-mode: screen;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell.fc-day-today,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell.fc-day-today {
+    background:
+      radial-gradient(circle at 50% -12%, hsl(214 100% 90% / 0.22), transparent 44%),
+      linear-gradient(180deg, hsl(227 56% 22% / 0.92), hsl(227 62% 15% / 0.88)),
+      linear-gradient(145deg, hsl(217 100% 78% / 0.08), transparent 56%) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-now-indicator-line,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-now-indicator-line {
+    border-color: hsl(5 95% 68%);
+    box-shadow:
+      0 0 10px hsl(5 95% 68% / 0.34),
+      0 0 22px hsl(5 95% 68% / 0.18);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell--week .fc-timegrid-now-indicator-line::before,
+  .dark .calendar-light-page .delphi-fc-shell--day .fc-timegrid-now-indicator-line::before {
+    background: hsl(5 95% 68%);
+    box-shadow:
+      0 0 10px hsl(5 95% 68% / 0.4),
+      0 0 18px hsl(5 95% 68% / 0.2);
+  }
+
+  .dark .sales-cosmos-page {
+    background:
+      linear-gradient(180deg, hsl(229 88% 5% / 0.14), hsl(229 88% 5% / 0.36)),
+      url("../Dark Background.png") center / cover no-repeat !important;
+  }
+
+  .dark .sales-cosmos-frame {
+    padding-block: 1.5rem 2rem;
+  }
+
+  .dark .sales-cosmos-page .sales-toolbar,
+  .dark .sales-cosmos-page .sales-focus-button,
+  .dark .sales-cosmos-page .sales-filter-toggle,
+  .dark .sales-cosmos-page .sales-add-action {
+    border-color: hsl(220 100% 84% / 0.18) !important;
+    background:
+      radial-gradient(circle at 50% -36%, hsl(218 100% 84% / 0.14), transparent 48%),
+      linear-gradient(180deg, hsl(231 34% 27% / 0.74), hsl(230 36% 18% / 0.5)),
+      linear-gradient(135deg, hsl(214 100% 70% / 0.06), transparent 56%, hsl(257 78% 80% / 0.04)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -1px 0 hsl(220 100% 74% / 0.04),
+      0 24px 56px -34px hsl(230 92% 3% / 0.86),
+      0 0 20px hsl(219 100% 66% / 0.12);
+    backdrop-filter: blur(24px) saturate(1.12);
+    -webkit-backdrop-filter: blur(24px) saturate(1.12);
+  }
+
+  .dark .sales-cosmos-page .sales-add-action {
+    background:
+      linear-gradient(135deg, hsl(198 100% 76% / 0.98), hsl(219 100% 66% / 0.96) 58%, hsl(231 100% 70% / 0.94)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.28),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.06),
+      0 24px 54px -22px hsl(219 100% 58% / 0.62),
+      0 0 32px hsl(214 100% 72% / 0.36);
+  }
+
+  .dark .sales-cosmos-page .sales-leads-shell,
+  .dark .sales-cosmos-page .sales-folder-shell,
+  .dark .sales-cosmos-page .sales-showcase-panel,
+  .dark .sales-cosmos-page .sales-tracker-panel,
+  .dark .sales-cosmos-page .sales-limbo-panel,
+  .dark .sales-cosmos-page .sales-folder-panel {
+    border-color: hsl(218 100% 84% / 0.18) !important;
+    background:
+      radial-gradient(circle at 78% 12%, hsl(257 74% 80% / 0.1), transparent 28%),
+      radial-gradient(circle at 94% 84%, hsl(205 100% 74% / 0.14), transparent 24%),
+      radial-gradient(circle at 18% 28%, hsl(216 100% 76% / 0.06), transparent 20%),
+      linear-gradient(180deg, hsl(230 48% 16% / 0.78), hsl(228 66% 10% / 0.82)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 0 0 1px hsl(218 100% 84% / 0.04),
+      0 30px 90px -44px hsl(232 82% 3% / 0.92),
+      0 0 30px hsl(217 100% 68% / 0.14) !important;
+    backdrop-filter: blur(26px) saturate(1.08);
+    -webkit-backdrop-filter: blur(26px) saturate(1.08);
+  }
+
+  .dark .sales-cosmos-page .sales-showcase-panel,
+  .dark .sales-cosmos-page .sales-tracker-panel,
+  .dark .sales-cosmos-page .sales-limbo-panel,
+  .dark .sales-cosmos-page .sales-folder-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .sales-cosmos-page .sales-showcase-panel::before,
+  .dark .sales-cosmos-page .sales-tracker-panel::before,
+  .dark .sales-cosmos-page .sales-limbo-panel::before,
+  .dark .sales-cosmos-page .sales-folder-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.08), transparent 12%),
+      linear-gradient(90deg, transparent 4%, hsl(218 100% 86% / 0.18) 48%, transparent 96%);
+    opacity: 0.9;
+  }
+
+  .dark .sales-cosmos-page .sales-panel-header {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .dark .sales-cosmos-page .sales-panel-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(217 100% 84% / 0.34), transparent);
+    box-shadow: 0 0 16px hsl(217 100% 70% / 0.16);
+  }
+
+  .dark .sales-cosmos-page .sales-stats-grid .glass-hero-panel {
+    min-height: 158px;
+    border-color: hsl(218 100% 84% / 0.18) !important;
+    background:
+      radial-gradient(circle at 88% 24%, hsl(257 76% 80% / 0.1), transparent 22%),
+      radial-gradient(circle at 14% 82%, hsl(206 100% 74% / 0.08), transparent 18%),
+      linear-gradient(180deg, hsl(230 44% 16% / 0.82), hsl(228 62% 10% / 0.86)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 0 0 1px hsl(218 100% 84% / 0.05),
+      0 24px 64px -34px hsl(232 82% 3% / 0.9),
+      0 0 28px hsl(217 100% 68% / 0.14) !important;
+    border-radius: 1.9rem;
+  }
+
+  .dark .sales-cosmos-page .sales-stats-grid .glass-hero-panel > div > div:first-child p:first-child {
+    color: hsl(0 0% 100% / 0.92) !important;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .dark .sales-cosmos-page .sales-stats-grid .glass-hero-panel > div > div:first-child p:nth-child(2) {
+    font-size: 3.2rem;
+    letter-spacing: -0.04em;
+  }
+
+  .dark .sales-cosmos-page .sales-stats-grid .glass-hero-panel > div > div:first-child p:last-child {
+    color: hsl(201 100% 68%) !important;
+    font-size: 0.95rem;
+  }
+
+  .dark .sales-cosmos-page .sales-stats-grid .glass-hero-panel > div > div:last-child {
+    border-color: hsl(217 100% 82% / 0.18) !important;
+    background: linear-gradient(180deg, hsl(228 34% 24% / 0.56), hsl(228 36% 18% / 0.42)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 0 18px hsl(217 100% 70% / 0.14);
+  }
+
+  .dark .sales-cosmos-page .sales-top-prospect-card,
+  .dark .sales-cosmos-page .sales-prospect-row,
+  .dark .sales-cosmos-page .sales-folder-shell .glass-list-surface,
+  .dark .sales-cosmos-page .sales-limbo-panel .glass-list-surface {
+    border-color: hsl(218 100% 84% / 0.16) !important;
+    background:
+      radial-gradient(circle at 92% 88%, hsl(205 100% 74% / 0.08), transparent 24%),
+      radial-gradient(circle at 14% 18%, hsl(216 100% 76% / 0.04), transparent 18%),
+      linear-gradient(180deg, hsl(230 42% 15% / 0.76), hsl(228 64% 10% / 0.82)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      inset 0 0 0 1px hsl(218 100% 84% / 0.04),
+      0 24px 60px -38px hsl(232 82% 3% / 0.88),
+      0 0 24px hsl(217 100% 68% / 0.08) !important;
+  }
+
+  .dark .sales-cosmos-page .sales-top-prospect-card {
+    border-radius: 2rem;
+  }
+
+  .dark .sales-cosmos-page .sales-prospect-row {
+    align-items: center;
+    border-radius: 2rem;
+    padding-block: 1.35rem;
+  }
+
+  .dark .sales-cosmos-page .sales-top-prospect-card:hover,
+  .dark .sales-cosmos-page .sales-prospect-row:hover,
+  .dark .sales-cosmos-page .sales-folder-shell .glass-list-surface:hover,
+  .dark .sales-cosmos-page .sales-limbo-panel .glass-list-surface:hover {
+    border-color: hsl(217 100% 80% / 0.24) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      0 28px 68px -34px hsl(220 100% 56% / 0.18),
+      0 0 20px hsl(217 100% 70% / 0.12) !important;
+  }
+
+  .dark .sales-cosmos-page .sales-next-task {
+    border-color: hsl(218 100% 84% / 0.14) !important;
+    background:
+      linear-gradient(180deg, hsl(230 32% 22% / 0.7), hsl(228 34% 18% / 0.5)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.1),
+      0 0 18px hsl(217 100% 68% / 0.08);
+  }
+
+  .dark .sales-cosmos-page .sales-next-task p:first-child {
+    color: hsl(225 22% 76%) !important;
+  }
+
+  .dark .sales-cosmos-page .sales-next-task p:last-child {
+    color: hsl(220 100% 96%) !important;
+    font-size: 0.96rem;
+  }
+
+  .dark .sales-cosmos-page .sales-special-note {
+    border-color: hsl(218 100% 84% / 0.18) !important;
+    background:
+      linear-gradient(180deg, hsl(220 66% 18% / 0.5), hsl(221 70% 16% / 0.34)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 0 18px hsl(217 100% 70% / 0.08);
+  }
+
+  .dark .sales-cosmos-page .sales-search input {
+    width: 31rem;
+    border-radius: 999px;
+    border-color: hsl(218 100% 84% / 0.16) !important;
+    background:
+      linear-gradient(180deg, hsl(230 34% 22% / 0.58), hsl(229 34% 18% / 0.42)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      0 0 16px hsl(217 100% 70% / 0.08);
+  }
+
+  .dark .sales-cosmos-page .sales-filters-row button,
+  .dark .sales-cosmos-page .sales-focus-button,
+  .dark .sales-cosmos-page .sales-limbo-panel > div:first-child button {
+    border-radius: 999px;
+  }
+
+  .dark .sales-cosmos-page .sales-filters-row button {
+    border-color: hsl(218 100% 84% / 0.12) !important;
+    background: linear-gradient(180deg, hsl(230 30% 22% / 0.54), hsl(229 30% 18% / 0.34)) !important;
+    color: hsl(225 20% 82%) !important;
+  }
+
+  .dark .sales-cosmos-page .sales-filters-row button.text-primary,
+  .dark .sales-cosmos-page .sales-filters-row button.font-semibold {
+    border-color: hsl(217 100% 82% / 0.22) !important;
+    background:
+      linear-gradient(180deg, hsl(224 52% 30% / 0.9), hsl(226 58% 20% / 0.72)) !important;
+    color: hsl(220 100% 98%) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 0 18px hsl(217 100% 70% / 0.14);
+  }
+
+  .dark .sales-cosmos-page .sales-prospect-row .pointer-events-none {
+    box-shadow: 0 0 16px hsl(195 100% 70% / 0.56) !important;
+  }
+
+  .dark .sales-cosmos-page .sales-prospect-row .ml-4 .h-10,
+  .dark .sales-cosmos-page .sales-top-prospect-card button.rounded-full {
+    border-color: hsl(218 100% 84% / 0.14) !important;
+    background: linear-gradient(180deg, hsl(230 34% 22% / 0.56), hsl(229 34% 18% / 0.38)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.08),
+      0 0 16px hsl(217 100% 70% / 0.08);
+  }
+
+  .dark .sales-cosmos-page .sales-showcase-panel .glass-scrollbar,
+  .dark .sales-cosmos-page .sales-tracker-panel .glass-scrollbar,
+  .dark .sales-cosmos-page .sales-limbo-panel .glass-scrollbar {
+    scrollbar-gutter: stable;
   }
 
   .delphi-fc-shell .fc-timegrid-axis {
@@ -3937,58 +5197,84 @@ All colors MUST be HSL.
     --lobby-cursor-y: 50%;
     --lobby-cursor-alpha: 0.45;
     background:
-      linear-gradient(180deg, hsl(214 46% 86% / 0.16) 0%, hsl(222 40% 46% / 0.16) 36%, hsl(224 42% 15% / 0.44) 100%);
-    border: 1px solid hsl(0 0% 100% / 0.34);
+      radial-gradient(circle at 50% 4%, hsl(213 100% 90% / 0.28) 0%, transparent 28%),
+      radial-gradient(circle at 14% 24%, hsl(205 100% 80% / 0.18) 0%, transparent 24%),
+      radial-gradient(circle at 88% 18%, hsl(263 100% 84% / 0.12) 0%, transparent 24%),
+      radial-gradient(circle at 96% 84%, hsl(208 100% 74% / 0.16) 0%, transparent 26%),
+      linear-gradient(180deg, hsl(219 82% 84% / 0.18) 0%, hsl(221 58% 42% / 0.18) 34%, hsl(225 48% 14% / 0.46) 100%);
+    border: 1px solid hsl(212 100% 92% / 0.34);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.45),
-      inset 0 -1px 0 hsl(0 0% 100% / 0.13),
-      inset 0 20px 40px -30px hsl(196 100% 84% / 0.45),
-      0 34px 70px -30px hsl(231 55% 7% / 0.96);
-    backdrop-filter: blur(40px) saturate(150%);
+      inset 0 1px 0 hsl(0 0% 100% / 0.42),
+      inset 0 -1px 0 hsl(209 100% 80% / 0.18),
+      inset 0 28px 64px -40px hsl(200 100% 86% / 0.4),
+      0 42px 84px -36px hsl(231 66% 5% / 0.96),
+      0 0 38px hsl(210 100% 78% / 0.16);
+    backdrop-filter: blur(42px) saturate(155%);
+    -webkit-backdrop-filter: blur(42px) saturate(155%);
   }
 
   .lobby-panel-cursor-glow {
     position: absolute;
-    inset: -1px;
+    inset: 0;
     border-radius: inherit;
-    padding: 1.4px;
     pointer-events: none;
-    opacity: calc(0.62 * var(--lobby-cursor-alpha));
+    opacity: calc(0.54 * var(--lobby-cursor-alpha));
     background:
       radial-gradient(
-        220px 170px at var(--lobby-cursor-x) var(--lobby-cursor-y),
-        hsl(193 100% 78% / 0.95) 0%,
-        hsl(212 95% 66% / 0.72) 34%,
-        hsl(258 86% 72% / 0.45) 52%,
-        transparent 74%
+        320px 240px at var(--lobby-cursor-x) var(--lobby-cursor-y),
+        hsl(194 100% 82% / 0.42) 0%,
+        hsl(215 100% 74% / 0.28) 36%,
+        hsl(255 86% 76% / 0.18) 52%,
+        transparent 76%
       );
-    filter: blur(0.4px) saturate(120%);
+    filter: blur(12px) saturate(125%);
     transition:
-      opacity 220ms ease,
-      background-position 90ms linear;
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+      opacity 220ms ease;
   }
 
   .lobby-panel-glow {
     position: absolute;
-    inset: -18% -24% auto -24%;
-    height: 62%;
+    inset: -8% -16% auto -16%;
+    height: 56%;
     background:
-      radial-gradient(circle at 50% 45%, hsl(193 100% 80% / 0.3) 0%, hsl(214 98% 70% / 0.2) 46%, transparent 78%);
-    filter: blur(22px);
+      radial-gradient(circle at 50% 18%, hsl(211 100% 86% / 0.36) 0%, hsl(220 100% 76% / 0.18) 40%, transparent 72%);
+    filter: blur(26px);
     pointer-events: none;
   }
 
   .lobby-panel-edge {
     position: absolute;
-    inset: 0;
+    inset: 0.55rem;
     border-radius: inherit;
-    border: 1px solid hsl(0 0% 100% / 0.14);
-    box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.05);
+    border: 1px solid hsl(0 0% 100% / 0.16);
+    box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.03);
+    pointer-events: none;
+  }
+
+  .lobby-panel-rim {
+    position: absolute;
+    inset: -0.2rem;
+    border-radius: inherit;
+    border: 1px solid hsl(209 100% 88% / 0.34);
+    box-shadow:
+      0 0 0 1px hsl(213 100% 88% / 0.12),
+      0 0 24px hsl(209 100% 78% / 0.26),
+      0 0 56px hsl(221 100% 74% / 0.14);
+    pointer-events: none;
+  }
+
+  .lobby-panel-floor {
+    position: absolute;
+    left: 9%;
+    right: 9%;
+    bottom: -1.1rem;
+    height: 0.38rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, hsl(205 100% 84% / 0.84) 10%, hsl(210 100% 92% / 0.98) 50%, hsl(205 100% 84% / 0.84) 90%, transparent);
+    box-shadow:
+      0 0 14px hsl(205 100% 80% / 0.54),
+      0 0 30px hsl(215 100% 78% / 0.28);
+    opacity: 0.92;
     pointer-events: none;
   }
 
@@ -4005,36 +5291,118 @@ All colors MUST be HSL.
     pointer-events: none;
   }
 
+  .lobby-panel-swirl {
+    position: absolute;
+    inset: auto -6% -8% -6%;
+    height: 42%;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 78% 86%, hsl(203 100% 82% / 0.3) 0%, transparent 18%),
+      radial-gradient(circle at 54% 94%, hsl(212 100% 88% / 0.24) 0%, transparent 22%),
+      linear-gradient(180deg, transparent 0%, hsl(221 68% 12% / 0.08) 100%);
+    filter: blur(10px);
+    opacity: 0.95;
+    pointer-events: none;
+  }
+
+  .lobby-panel-swirl::before,
+  .lobby-panel-swirl::after {
+    content: "";
+    position: absolute;
+    inset: auto 4% 6% 4%;
+    height: 56%;
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 10% 50%, hsl(0 0% 100% / 0.18), transparent 18%),
+      linear-gradient(90deg, transparent 0%, hsl(203 100% 88% / 0.08) 14%, hsl(219 100% 84% / 0.16) 34%, hsl(204 100% 84% / 0.1) 56%, transparent 80%);
+    filter: blur(12px);
+    transform: rotate(-6deg);
+    opacity: 0.9;
+  }
+
+  .lobby-panel-swirl::after {
+    inset: auto 10% 18% 14%;
+    height: 42%;
+    transform: rotate(8deg);
+    opacity: 0.66;
+  }
+
+  .lobby-orb-wrap {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto 1.15rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .lobby-orb-image {
+    position: relative;
+    z-index: 2;
+    width: 5.7rem;
+    height: 5.7rem;
+    padding: 0.15rem;
+    filter:
+      drop-shadow(0 8px 18px hsl(204 100% 80% / 0.38))
+      drop-shadow(0 16px 28px hsl(221 72% 12% / 0.36));
+  }
+
+  .lobby-orb-pedestal {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    z-index: 1;
+    width: 3.6rem;
+    height: 0.8rem;
+    border-radius: 999px / 65%;
+    transform: translateX(-50%);
+    background:
+      linear-gradient(180deg, hsl(211 100% 92% / 0.44), hsl(219 90% 60% / 0.22)),
+      linear-gradient(90deg, transparent, hsl(205 100% 82% / 0.54), transparent);
+    border: 1px solid hsl(211 100% 90% / 0.34);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.26),
+      0 0 14px hsl(210 100% 80% / 0.26);
+  }
+
   .lobby-kicker {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 10px;
+    font-size: 0.88rem;
     font-weight: 700;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.42em;
     text-transform: uppercase;
     color: hsl(197 100% 90% / 0.86);
   }
 
   .lobby-title {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(2.2rem, 4.2vw, 3rem);
+    font-size: clamp(3.8rem, 7vw, 7rem);
     font-weight: 700;
-    line-height: 1.06;
-    letter-spacing: -0.024em;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
     color: hsl(0 0% 100% / 0.98);
-    text-shadow: 0 2px 14px hsl(218 100% 86% / 0.12);
+    text-shadow: 0 4px 24px hsl(218 100% 86% / 0.12);
   }
 
   .lobby-copy {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(1rem, 1.5vw, 1.08rem);
-    line-height: 1.55;
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    line-height: 1.48;
     font-weight: 500;
-    color: hsl(0 0% 100% / 0.88);
+    color: hsl(0 0% 100% / 0.9);
   }
 
   .lobby-cta {
     position: relative;
     overflow: hidden;
+    border: 1px solid hsl(207 100% 90% / 0.38);
+    background:
+      radial-gradient(circle at 50% 0%, hsl(209 100% 90% / 0.18), transparent 42%),
+      linear-gradient(180deg, hsl(211 100% 72% / 0.82), hsl(224 88% 60% / 0.84));
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.58),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.12),
+      0 18px 38px -20px hsl(212 100% 70% / 0.72),
+      0 0 24px hsl(211 100% 80% / 0.26);
+    backdrop-filter: blur(18px);
     transition:
       transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1),
       box-shadow 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -4054,10 +5422,10 @@ All colors MUST be HSL.
   .lobby-cta:hover {
     transform: translateY(-2px) scale(1.015);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.7),
-      inset 0 -1px 0 hsl(0 0% 100% / 0.18),
-      0 18px 34px -18px hsl(198 100% 65% / 0.95),
-      0 0 18px hsl(196 100% 78% / 0.42);
+      inset 0 1px 0 hsl(0 0% 100% / 0.72),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.16),
+      0 20px 40px -18px hsl(206 100% 72% / 0.88),
+      0 0 24px hsl(208 100% 82% / 0.36);
   }
 
   .lobby-cta:hover::after {
@@ -4069,20 +5437,59 @@ All colors MUST be HSL.
   }
 
   .dark .lobby-cta {
-    border-color: hsl(197 76% 72% / 0.32);
-    background: linear-gradient(160deg, hsl(198 88% 68% / 0.34), hsl(222 70% 54% / 0.3));
-    box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.26),
-      inset 0 -1px 0 hsl(0 0% 100% / 0.08),
-      0 16px 30px -20px hsl(198 100% 60% / 0.52);
+    border-color: hsl(208 100% 88% / 0.34);
   }
 
   .dark .lobby-cta:hover {
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.3),
       inset 0 -1px 0 hsl(0 0% 100% / 0.1),
-      0 18px 34px -20px hsl(198 100% 60% / 0.58),
-      0 0 16px hsl(196 100% 74% / 0.22);
+      0 22px 42px -22px hsl(205 100% 66% / 0.74),
+      0 0 22px hsl(208 100% 78% / 0.3);
+  }
+
+  .lobby-corner-label {
+    font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+    font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: hsl(0 0% 100% / 0.86);
+    text-shadow: 0 2px 10px hsl(220 76% 10% / 0.28);
+  }
+
+  .lobby-corner-label:hover {
+    color: hsl(0 0% 100%);
+  }
+
+  .lobby-corner-label--left {
+    left: 0.5rem;
+  }
+
+  .lobby-corner-label--right {
+    right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .lobby-panel {
+      border-radius: 2rem;
+    }
+
+    .lobby-title {
+      font-size: clamp(2.7rem, 12vw, 4.3rem);
+    }
+
+    .lobby-copy {
+      font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+    }
+
+    .lobby-corner-label {
+      font-size: 1rem;
+    }
+
+    .lobby-panel-floor {
+      left: 6%;
+      right: 6%;
+    }
   }
 
   .lobby-pill {

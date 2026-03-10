@@ -27,6 +27,7 @@ import {
   mapRowToProject,
   replaceDevelopmentProjects,
 } from "@/lib/supabase-development-projects";
+import { fetchSalesPageState, replaceSalesPageState } from "@/lib/supabase-sales-page-state";
 import { syncDatesIntoSchedule } from "@/lib/date-funnel-sync";
 import { formatMoney, parseMoney } from "@/lib/money";
 import { MeetingNotesDialog } from "@/components/MeetingNotesDialog";
@@ -193,6 +194,8 @@ export default function Development() {
   });
   const hasLoadedFromSupabase = useRef(false);
   const suppressNextSync = useRef(false);
+  const hasLoadedWorkflowStateFromSupabase = useRef(false);
+  const suppressNextWorkflowStateSync = useRef(false);
   const previousProgressRef = useRef<Map<number, number>>(new Map());
   const previousStatusRef = useRef<Map<number, Project["status"]>>(new Map());
   const celebrationTimeoutRef = useRef<number | null>(null);
@@ -294,6 +297,39 @@ export default function Development() {
   }, []);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    let cancelled = false;
+    const loadWorkflowStateFromSupabase = async () => {
+      try {
+        const rows = await fetchSalesPageState();
+        if (cancelled) return;
+        const workflowRow = rows.find((row) => row.key === "development_workflow_map");
+        if (workflowRow?.payload && typeof workflowRow.payload === "object" && !Array.isArray(workflowRow.payload)) {
+          const rawMap = workflowRow.payload as Record<string, unknown>;
+          const normalized = Object.fromEntries(
+            Object.entries(rawMap).map(([projectId, tasks]) => [projectId, normalizeWorkflowTasks(tasks)])
+          );
+          suppressNextWorkflowStateSync.current = true;
+          setProjectMilestonesMap(normalized);
+        } else if (Object.keys(projectMilestonesMap).length > 0) {
+          await replaceSalesPageState({ development_workflow_map: projectMilestonesMap });
+        }
+        hasLoadedWorkflowStateFromSupabase.current = true;
+      } catch (error) {
+        if (cancelled) return;
+        hasLoadedWorkflowStateFromSupabase.current = true;
+        setSyncState("error");
+        setSyncMessage(getErrorMessage(error));
+      }
+    };
+    void loadWorkflowStateFromSupabase();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     void syncDatesIntoSchedule().catch(() => {
       // non-blocking: linked schedule sync should never crash the page
     });
@@ -326,6 +362,33 @@ export default function Development() {
       cancelled = true;
     };
   }, [projects]);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !hasLoadedWorkflowStateFromSupabase.current) return;
+    if (suppressNextWorkflowStateSync.current) {
+      suppressNextWorkflowStateSync.current = false;
+      return;
+    }
+    let cancelled = false;
+    const persistWorkflowState = async () => {
+      try {
+        await replaceSalesPageState({ development_workflow_map: projectMilestonesMap });
+        if (!cancelled && syncState !== "error") {
+          setSyncState("idle");
+          setSyncMessage("Synced");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setSyncState("error");
+          setSyncMessage(getErrorMessage(error));
+        }
+      }
+    };
+    void persistWorkflowState();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectMilestonesMap, syncState]);
 
   useEffect(() => {
     const previousProgressMap = previousProgressRef.current;
@@ -985,13 +1048,13 @@ export default function Development() {
           <div>
             <AnimatedTitle text="Development" className="app-light-title" />
             <p className="app-light-subtitle">Manage and track ongoing client projects</p>
-            {isSupabaseConfigured && (syncState === "syncing" || syncState === "error") ? (
+            {!isSupabaseConfigured ? (
+              <p className="mt-1 text-xs text-amber-500">Supabase not configured. Using local storage.</p>
+            ) : syncState === "syncing" || syncState === "error" ? (
               <p className={`mt-1 text-xs ${syncState === "error" ? "text-destructive" : "text-muted-foreground"}`}>
                 {syncState === "syncing" ? "Supabase syncing..." : syncMessage}
               </p>
-            ) : (
-              <p className="mt-1 text-xs text-amber-500">Supabase not configured. Using local storage.</p>
-            )}
+            ) : null}
             <LinkedSyncStatusLine className="mt-1" />
           </div>
           <div className="flex items-center gap-3">

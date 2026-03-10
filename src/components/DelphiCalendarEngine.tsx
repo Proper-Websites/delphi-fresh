@@ -272,7 +272,7 @@ export default function DelphiCalendarEngine({
   };
 
   return (
-    <div className="delphi-fc-shell">
+    <div className={cn("delphi-fc-shell", `delphi-fc-shell--${viewMode}`)}>
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

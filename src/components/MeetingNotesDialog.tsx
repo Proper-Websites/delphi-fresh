@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useLocalStorageState } from "@/hooks/use-local-storage";
 import { GlassScrollArea } from "@/components/ui/glass-scroll-area";
+import { isSupabaseConfigured } from "@/lib/supabase";
+import { fetchSalesPageState, replaceSalesPageState } from "@/lib/supabase-sales-page-state";
 
 type Note = {
   id: number;
@@ -29,8 +31,51 @@ export function MeetingNotesDialog({ open, onOpenChange, scopeKey, title }: Meet
   const [draft, setDraft] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
+  const storeRef = useRef(store);
+  const hasLoadedFromSupabase = useRef(false);
+  const suppressNextSync = useRef(false);
 
   const notes = useMemo(() => store[scopeKey] ?? [], [store, scopeKey]);
+
+  useEffect(() => {
+    storeRef.current = store;
+  }, [store]);
+
+  useEffect(() => {
+    if (!open || !isSupabaseConfigured) return;
+    let cancelled = false;
+    const loadFromSupabase = async () => {
+      try {
+        const rows = await fetchSalesPageState();
+        if (cancelled) return;
+        const notesRow = rows.find((row) => row.key === "meeting_notes_store");
+        if (notesRow?.payload && typeof notesRow.payload === "object" && !Array.isArray(notesRow.payload)) {
+          suppressNextSync.current = true;
+          setStore(notesRow.payload as NotesStore);
+        } else if (Object.keys(storeRef.current).length > 0) {
+          await replaceSalesPageState({ meeting_notes_store: storeRef.current });
+        }
+        hasLoadedFromSupabase.current = true;
+      } catch {
+        hasLoadedFromSupabase.current = true;
+      }
+    };
+    void loadFromSupabase();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, setStore]);
+
+  useEffect(() => {
+    if (!open || !isSupabaseConfigured || !hasLoadedFromSupabase.current) return;
+    if (suppressNextSync.current) {
+      suppressNextSync.current = false;
+      return;
+    }
+    void replaceSalesPageState({ meeting_notes_store: store }).catch(() => {
+      // Keep local notes even if Supabase sync fails.
+    });
+  }, [open, store]);
 
   const saveScopeNotes = (next: Note[]) => {
     setStore((prev) => ({ ...prev, [scopeKey]: next }));

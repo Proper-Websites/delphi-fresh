@@ -951,7 +951,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
   const renderMonthView = () => {
     const month = visibleDate.getMonth();
     return (
-      <Card className={cn("glass-hero-panel h-full overflow-hidden p-0", !embedded && "calendar-light-shell")}>
+      <Card className={cn("glass-hero-panel h-full overflow-hidden p-0", !embedded && "schedule-light-shell schedule-light-surface calendar-light-shell")}>
         <div className="grid grid-cols-7 border-b border-border/60 bg-white/60 px-3 py-3 text-[11px] font-semibold tracking-[0.1em] text-muted-foreground">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((label) => (
             <div key={label} className="px-3 py-1">{label}</div>
@@ -1031,7 +1031,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     });
 
     return (
-      <Card className={cn("glass-hero-panel h-full overflow-hidden p-0", !embedded && "calendar-light-shell")}>
+      <Card className={cn("glass-hero-panel h-full overflow-hidden p-0", !embedded && "schedule-light-shell schedule-light-surface calendar-light-shell")}>
         <div className="grid border-b border-border/60 bg-white/64" style={{ gridTemplateColumns }}>
           <div className="border-r border-border/50 p-3 text-xs font-semibold tracking-[0.08em] text-muted-foreground">Time</div>
           {days.map((day) => {
@@ -1180,7 +1180,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     const sortedDays = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
 
     return (
-      <Card className={cn("glass-hero-panel h-full overflow-auto p-6", !embedded && "calendar-light-shell")}>
+      <Card className={cn("glass-hero-panel h-full overflow-auto p-6", !embedded && "schedule-light-shell schedule-light-surface calendar-light-shell")}>
         <div className="space-y-6">
           {sortedDays.map((dayKey) => (
             <div key={dayKey}>
@@ -1226,7 +1226,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     const monthStarts = Array.from({ length: 12 }, (_, index) => new Date(year, index, 1, 12, 0, 0));
 
     return (
-      <Card className={cn("glass-hero-panel h-full overflow-hidden p-3", !embedded && "calendar-light-shell")}>
+      <Card className={cn("glass-hero-panel h-full overflow-hidden p-3", !embedded && "schedule-light-shell schedule-light-surface calendar-light-shell")}>
         <div className="grid h-full min-h-0 grid-cols-4 grid-rows-3 gap-2">
           {monthStarts.map((monthStart) => {
             const monthLabel = monthStart.toLocaleDateString("en-US", { month: "long", year: "numeric" });
@@ -1304,10 +1304,10 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
   const selectedDateObj = parseDateKey(selectedDate);
 
   return (
-    <div className={embedded ? "schedule-light-page h-full min-h-0 relative overflow-hidden" : "app-atmosphere-page app-light-page calendar-light-page min-h-screen relative overflow-hidden"}>
-      <div className={embedded ? "schedule-light-frame relative flex h-full flex-col gap-4 p-2 xl:flex-row" : "app-light-frame relative flex min-h-screen flex-col gap-5 xl:h-[100vh] xl:flex-row"}>
+    <div className={embedded ? "schedule-light-page h-full min-h-0 relative overflow-hidden" : "app-atmosphere-page app-light-page schedule-light-page calendar-light-page min-h-screen relative overflow-hidden"}>
+      <div className={embedded ? "schedule-light-frame relative flex h-full flex-col gap-4 p-2 xl:flex-row" : "schedule-light-frame app-light-frame relative flex min-h-screen flex-col gap-5 xl:h-[100vh] xl:flex-row"}>
         <div className="order-1 flex min-w-0 flex-1 flex-col gap-4">
-          <Card className={cn("overflow-hidden p-4", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel calendar-light-shell")}>
+          <Card className={cn("overflow-hidden p-4", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell")}>
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
               <div className="flex min-w-0 flex-1 flex-col gap-3 xl:flex-row xl:items-center">
                 <div className="min-w-0">
@@ -1315,12 +1315,12 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 </div>
 
                 <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as CalendarViewMode)} className="w-full max-w-[640px]">
-                  <TabsList className={cn("grid grid-cols-5", embedded && "schedule-light-mode-toggle schedule-calendar-tabs")}>
-                    <TabsTrigger value="day" className={cn("gap-1.5", embedded && "schedule-light-mode-pill")}><Clock3 className="h-4 w-4" />Day</TabsTrigger>
-                    <TabsTrigger value="week" className={cn("gap-1.5", embedded && "schedule-light-mode-pill")}><Rows3 className="h-4 w-4" />Week</TabsTrigger>
-                    <TabsTrigger value="month" className={cn("gap-1.5", embedded && "schedule-light-mode-pill")}><CalendarDays className="h-4 w-4" />Month</TabsTrigger>
-                    <TabsTrigger value="year" className={cn("gap-1.5", embedded && "schedule-light-mode-pill")}><CalendarRange className="h-4 w-4" />Year</TabsTrigger>
-                    <TabsTrigger value="agenda" className={cn("gap-1.5", embedded && "schedule-light-mode-pill")}><ListFilter className="h-4 w-4" />Agenda</TabsTrigger>
+                  <TabsList className="schedule-light-mode-toggle schedule-calendar-tabs grid grid-cols-5">
+                    <TabsTrigger value="day" className="schedule-light-mode-pill gap-1.5"><Clock3 className="h-4 w-4" />Day</TabsTrigger>
+                    <TabsTrigger value="week" className="schedule-light-mode-pill gap-1.5"><Rows3 className="h-4 w-4" />Week</TabsTrigger>
+                    <TabsTrigger value="month" className="schedule-light-mode-pill gap-1.5"><CalendarDays className="h-4 w-4" />Month</TabsTrigger>
+                    <TabsTrigger value="year" className="schedule-light-mode-pill gap-1.5"><CalendarRange className="h-4 w-4" />Year</TabsTrigger>
+                    <TabsTrigger value="agenda" className="schedule-light-mode-pill gap-1.5"><ListFilter className="h-4 w-4" />Agenda</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -1333,7 +1333,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 )}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className={cn("h-9 rounded-full px-3 text-sm", embedded && "schedule-light-pill")}>
+                    <Button variant="outline" className="schedule-light-pill h-9 rounded-full px-3 text-sm">
                       {getDateHeaderLabel(viewMode, visibleDate)}
                     </Button>
                   </PopoverTrigger>
@@ -1353,14 +1353,14 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                     />
                   </PopoverContent>
                 </Popover>
-                <Button variant="outline" onClick={jumpToToday} className={cn("rounded-full", embedded && "schedule-light-pill")}>Today</Button>
-                <Button size="icon" variant="outline" onClick={() => navigateRange(-1)} className={cn(embedded && "schedule-light-pill")}>
+                <Button variant="outline" onClick={jumpToToday} className="schedule-light-pill rounded-full">Today</Button>
+                <Button size="icon" variant="outline" onClick={() => navigateRange(-1)} className="schedule-light-pill">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button size="icon" variant="outline" onClick={() => navigateRange(1)} className={cn(embedded && "schedule-light-pill")}>
+                <Button size="icon" variant="outline" onClick={() => navigateRange(1)} className="schedule-light-pill">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <Button onClick={() => openCreate(selectedDate)} className={cn("h-10 rounded-full px-5 text-sm font-semibold", embedded ? "schedule-light-add" : "add-action")}>+ Add Event</Button>
+                <Button onClick={() => openCreate(selectedDate)} className={cn("h-10 rounded-full px-5 text-sm font-semibold", embedded ? "schedule-light-add" : "schedule-light-add add-action")}>+ Add Event</Button>
               </div>
             </div>
           </Card>
@@ -1386,7 +1386,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
           </div>
         </div>
 
-        {!rightPanelHidden && <Card className={cn("order-2 w-full shrink-0 overflow-hidden p-4 xl:sticky xl:top-6 xl:w-[320px] 2xl:w-[360px]", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel calendar-light-shell")}>
+        {!rightPanelHidden && <Card className={cn("order-2 w-full shrink-0 overflow-hidden p-4 xl:sticky xl:top-6 xl:w-[320px] 2xl:w-[360px]", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell")}>
           <Button onClick={() => openCreate()} className="mb-4 h-10 w-full rounded-full text-sm font-semibold">
             <Plus className="mr-1.5 h-4 w-4" /> Create
           </Button>

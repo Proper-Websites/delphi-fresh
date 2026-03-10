@@ -14,7 +14,7 @@ import Subscriptions from "./pages/Subscriptions";
 import Sales from "./pages/Sales";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import { isSupabaseConfigured, supabase } from "./lib/supabase";
+import { isSupabaseConfigured } from "./lib/supabase";
 import { applyStoredThemePreference, getStoredThemePreference, resolveThemePreference, type ThemePreference } from "./lib/theme";
 import { replaceMyWorkTasks } from "./lib/supabase-my-work";
 import { replaceCalendarEvents } from "./lib/supabase-calendar-events";
@@ -83,10 +83,6 @@ const readLocalRecord = <T,>(key: string): Record<string, T> => {
   } catch {
     return {};
   }
-};
-
-const writeLocalJson = (key: string, value: unknown) => {
-  localStorage.setItem(key, JSON.stringify(value));
 };
 
 const isElementVisible = (element: HTMLElement | null) => {
@@ -209,105 +205,14 @@ const App = () => {
 
   useEffect(() => {
     if (localStorage.getItem(DATA_RESET_VERSION_KEY) === DATA_RESET_VERSION) return;
-
-    const localKeysToClear = [
-      "delphi_my_work_tasks_v3",
-      "delphi_calendar_events_v2",
-      "delphi_calendar_events_v1",
-      "delphi_sales_outreach_v2",
-      "delphi_development_projects_v2",
-      "delphi_subscriptions_clients_v2",
-      "delphi_task_draft_v1",
-    ];
-    localKeysToClear.forEach((key) => localStorage.removeItem(key));
-
-    const run = async () => {
-      if (isSupabaseConfigured && supabase) {
-        await Promise.allSettled([
-          supabase.from("my_work_tasks").delete().neq("id", -1),
-          supabase.from("calendar_events").delete().neq("id", -1),
-          supabase.from("sales_outreach").delete().neq("id", -1),
-          supabase.from("development_projects").delete().neq("id", -1),
-          supabase.from("subscription_clients").delete().neq("id", -1),
-        ]);
-      }
-      localStorage.setItem(DATA_RESET_VERSION_KEY, DATA_RESET_VERSION);
-    };
-
-    void run();
+    // Historical seed-data reset is retired. Never auto-delete local or Supabase records on boot.
+    localStorage.setItem(DATA_RESET_VERSION_KEY, DATA_RESET_VERSION);
   }, []);
 
   useEffect(() => {
     if (localStorage.getItem(SCHEDULE_RESET_VERSION_KEY) === SCHEDULE_RESET_VERSION) return;
-
-    const nextMyWork = readLocalArray<Record<string, unknown>>("delphi_my_work_tasks_v3").map((task) => ({
-      ...task,
-      date: "",
-      startTime: "",
-      endTime: "",
-    }));
-
-    const nextCalendar = readLocalArray<Record<string, unknown>>("delphi_calendar_events_v2").map((event) => ({
-      ...event,
-      date: "",
-      startTime: "",
-      endTime: "",
-      allDay: true,
-    }));
-
-    const nextLegacyCalendar = readLocalArray<Record<string, unknown>>("delphi_calendar_events_v1").map((event) => ({
-      ...event,
-      date: "",
-      startTime: "",
-      endTime: "",
-      allDay: true,
-    }));
-
-    const nextSales = readLocalArray<Record<string, unknown>>("delphi_sales_outreach_v2").map((prospect) => ({
-      ...prospect,
-      nextFollowUpDate: "",
-      nextFollowUpTime: "",
-    }));
-
-    const nextDevelopment = readLocalArray<Record<string, unknown>>("delphi_development_projects_v2").map((project) => ({
-      ...project,
-      startDate: "",
-      deadline: "",
-    }));
-
-    const nextDevelopmentWorkflowMap = Object.fromEntries(
-      Object.entries(readLocalRecord<Array<Record<string, unknown>>>("delphi_development_project_workflows_v2")).map(([projectId, tasks]) => [
-        projectId,
-        Array.isArray(tasks)
-          ? tasks.map((task) => ({
-              ...task,
-              date: "",
-            }))
-          : [],
-      ])
-    );
-
-    const nextSubscriptions = readLocalArray<Record<string, unknown>>("delphi_subscriptions_clients_v2").map((client) => ({
-      ...client,
-      nextBilling: "",
-      lastRevisionDate: "",
-    }));
-
-    writeLocalJson("delphi_my_work_tasks_v3", nextMyWork);
-    writeLocalJson("delphi_calendar_events_v2", nextCalendar);
-    writeLocalJson("delphi_calendar_events_v1", nextLegacyCalendar);
-    writeLocalJson("delphi_sales_outreach_v2", nextSales);
-    writeLocalJson("delphi_development_projects_v2", nextDevelopment);
-    writeLocalJson("delphi_development_project_workflows_v2", nextDevelopmentWorkflowMap);
-    writeLocalJson("delphi_subscriptions_clients_v2", nextSubscriptions);
-    localStorage.removeItem("delphi_calendar_event_draft_v1");
-    localStorage.removeItem("delphi_sales_prospect_draft_v1");
-    localStorage.removeItem("delphi_subscriptions_client_draft_v1");
-    localStorage.removeItem("delphi_task_draft_v1");
+    // Historical schedule reset is retired. Never auto-clear scheduling fields on boot.
     localStorage.setItem(SCHEDULE_RESET_VERSION_KEY, SCHEDULE_RESET_VERSION);
-
-    window.dispatchEvent(new Event("delphi-linked-sync-refresh"));
-    window.dispatchEvent(new Event("delphi-force-sync-now"));
   }, []);
 
   useEffect(() => {
@@ -649,6 +554,9 @@ const App = () => {
           group_options: readLocalArray<string>("delphi_sales_group_options_v1"),
           role_options: readLocalArray<string>("delphi_sales_role_options_v1"),
           industry_options: readLocalArray<string>("delphi_sales_industry_options_v1"),
+          development_workflow_map: readLocalRecord("delphi_development_project_workflows_v2"),
+          meeting_notes_store: readLocalRecord("delphi_meeting_notes_v1"),
+          admin_review_pins: readLocalArray("delphi_admin_review_pins_v1"),
         };
         const development = readLocalArray("delphi_development_projects_v2");
         const subscriptions = readLocalArray("delphi_subscriptions_clients_v2");

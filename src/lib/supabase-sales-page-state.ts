@@ -9,7 +9,10 @@ export type SalesPageStateKey =
   | "campaign_options"
   | "group_options"
   | "role_options"
-  | "industry_options";
+  | "industry_options"
+  | "development_workflow_map"
+  | "meeting_notes_store"
+  | "admin_review_pins";
 
 export interface SalesPageStateRow {
   key: SalesPageStateKey;
@@ -27,6 +30,9 @@ const VALID_KEYS: SalesPageStateKey[] = [
   "group_options",
   "role_options",
   "industry_options",
+  "development_workflow_map",
+  "meeting_notes_store",
+  "admin_review_pins",
 ];
 
 const isMissingTableError = (error: unknown) => {
@@ -75,15 +81,6 @@ export async function replaceSalesPageState(entries: Partial<Record<SalesPageSta
       if (isMissingTableError(upsertError)) throw toMissingTableMigrationError(upsertError);
       throw upsertError;
     }
-    const quotedKeys = payload.map((item) => `'${item.key}'`).join(",");
-    const { error: pruneError } = await supabase.from("sales_page_state").delete().not("key", "in", `(${quotedKeys})`);
-    if (pruneError) throw pruneError;
     return;
-  }
-
-  const { error } = await supabase.from("sales_page_state").delete().neq("key", "");
-  if (error) {
-    if (isMissingTableError(error)) throw toMissingTableMigrationError(error);
-    throw error;
   }
 }

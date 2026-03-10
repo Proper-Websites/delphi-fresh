@@ -3,6 +3,7 @@
 
 -- 1) my_work_tasks: linked metadata
 alter table if exists public.my_work_tasks
+  add column if not exists required boolean not null default false,
   add column if not exists linked boolean not null default false,
   add column if not exists linked_source text,
   add column if not exists linked_key text,
@@ -213,6 +214,40 @@ alter table if exists public.subscription_clients
   add column if not exists contact_phone text,
   add column if not exists contact_email text,
   add column if not exists client_since date;
+
+-- 8a) ensure anon access exists for subscription_clients
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'subscription_clients'
+      and policyname = 'Allow anon users full access to subscription_clients (temporary)'
+  ) then
+    create policy "Allow anon users full access to subscription_clients (temporary)"
+      on public.subscription_clients
+      for all
+      to anon
+      using (true)
+      with check (true);
+  end if;
+end$$;
+
+-- 8b) ensure anon access exists for development_projects
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'development_projects'
+      and policyname = 'Allow anon users full access to development_projects (temporary)'
+  ) then
+    create policy "Allow anon users full access to development_projects (temporary)"
+      on public.development_projects
+      for all
+      to anon
+      using (true)
+      with check (true);
+  end if;
+end$$;
 
 -- 9) refresh schema cache (again after all alterations)
 notify pgrst, 'reload schema';

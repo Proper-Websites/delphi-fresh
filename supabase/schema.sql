@@ -78,6 +78,7 @@ create table if not exists public.my_work_tasks (
   title text not null,
   project text not null default '',
   priority text not null check (priority in ('crucial', 'high', 'medium', 'low')),
+  required boolean not null default false,
   task_date date null,
   start_time time null,
   end_time time null,

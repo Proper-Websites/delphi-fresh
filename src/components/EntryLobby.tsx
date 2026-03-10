@@ -267,7 +267,7 @@ export function EntryLobby({ onEnter }: EntryLobbyProps) {
       <div className="relative z-10 flex min-h-screen items-center justify-center p-6">
         <div
           className={cn(
-            "lobby-panel relative w-full max-w-[46rem] overflow-hidden rounded-[1.9rem] px-8 py-5 text-center md:px-10 md:py-6",
+            "lobby-panel relative w-full max-w-[85rem] overflow-hidden rounded-[2.75rem] px-8 py-8 text-center md:px-14 md:py-10 xl:px-20 xl:py-12",
             launchMode && "lobby-panel-warp"
           )}
           onMouseMove={(event) => {
@@ -291,19 +291,25 @@ export function EntryLobby({ onEnter }: EntryLobbyProps) {
         >
           <div className="lobby-panel-glow" />
           <div className="lobby-panel-edge" />
+          <div className="lobby-panel-rim" />
+          <div className="lobby-panel-floor" />
           <div className="lobby-panel-cursor-glow" />
           <div className="lobby-panel-noise" />
+          <div className="lobby-panel-swirl" />
 
-          <div className="relative z-10 pb-12 md:pb-14">
-            <img
-              src="/crystal-sphere.svg"
-              alt="Oracle sphere"
-              className="mx-auto mb-3 h-16 w-16 p-1 drop-shadow-[0_12px_22px_hsl(220_72%_10%/.45)]"
-            />
+          <div className="relative z-10 flex min-h-[32rem] flex-col justify-center pb-12 pt-2 md:min-h-[36rem] md:pb-14 xl:min-h-[39rem]">
+            <div className="lobby-orb-wrap">
+              <div className="lobby-orb-pedestal" />
+              <img
+                src="/crystal-sphere.svg"
+                alt="Oracle sphere"
+                className="lobby-orb-image"
+              />
+            </div>
 
-            <p className="lobby-kicker mb-1.5">Delphi</p>
-            <AnimatedTitle text="Welcome Back" className="lobby-title mb-1.5" />
-            <p className="lobby-copy mx-auto mb-5 max-w-[31rem]">
+            <p className="lobby-kicker mb-3">Delphi</p>
+            <AnimatedTitle text="Welcome Back" className="lobby-title mb-5" />
+            <p className="lobby-copy mx-auto mb-10 max-w-[56rem]">
               Enter your space to plan clearly, move gently, and run every part of Delphi from one calm place.
             </p>
 
@@ -311,7 +317,7 @@ export function EntryLobby({ onEnter }: EntryLobbyProps) {
               onClick={() => enterNow("combined")}
               size="lg"
               disabled={Boolean(launchMode)}
-              className="lobby-cta h-12 rounded-full px-8 text-base font-semibold tracking-tight border border-cyan-100/45 bg-[linear-gradient(160deg,hsl(191_92%_70%/.78),hsl(213_89%_63%/.76))] text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/.66),inset_0_-1px_0_hsl(0_0%_100%/.14),0_14px_28px_-16px_hsl(198_100%_65%/.92)] backdrop-blur-xl hover:brightness-110 hover:text-white"
+              className="lobby-cta h-16 rounded-full px-14 text-[1.05rem] font-semibold tracking-[0.02em] text-white hover:text-white md:h-[4.65rem] md:min-w-[20rem]"
             >
               {launchMode ? "Launching..." : "LAUNCH"}
             </Button>
@@ -320,7 +326,7 @@ export function EntryLobby({ onEnter }: EntryLobbyProps) {
               size="sm"
               onClick={() => enterNow("personal")}
               disabled={Boolean(launchMode)}
-              className="absolute bottom-0 left-0 h-auto px-0 py-0 text-[11px] font-medium tracking-[0.06em] text-white/72 hover:bg-transparent hover:text-cyan-100"
+              className="lobby-corner-label lobby-corner-label--left absolute bottom-0 left-0 h-auto px-0 py-0 hover:bg-transparent"
             >
               Personal
             </Button>
@@ -329,7 +335,7 @@ export function EntryLobby({ onEnter }: EntryLobbyProps) {
               size="sm"
               onClick={() => enterNow("business")}
               disabled={Boolean(launchMode)}
-              className="absolute bottom-0 right-0 h-auto px-0 py-0 text-[11px] font-medium tracking-[0.06em] text-white/72 hover:bg-transparent hover:text-cyan-100"
+              className="lobby-corner-label lobby-corner-label--right absolute bottom-0 right-0 h-auto px-0 py-0 hover:bg-transparent"
             >
               Business
             </Button>

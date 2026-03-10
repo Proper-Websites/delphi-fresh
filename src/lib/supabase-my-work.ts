@@ -5,6 +5,7 @@ export interface MyWorkTaskRow {
   title: string;
   project: string;
   priority: "crucial" | "high" | "medium" | "low";
+  required: boolean;
   task_date: string | null;
   start_time: string | null;
   end_time: string | null;
@@ -25,6 +26,7 @@ export interface MyWorkTaskRecord {
   title: string;
   project: string;
   priority: "crucial" | "high" | "medium" | "low";
+  required: boolean;
   date: string;
   startTime: string;
   endTime: string;
@@ -44,6 +46,7 @@ export function mapMyWorkRowToRecord(row: MyWorkTaskRow): MyWorkTaskRecord {
     title: row.title,
     project: row.project,
     priority: row.priority,
+    required: Boolean(row.required),
     date: row.task_date ?? "",
     startTime: row.start_time?.slice(0, 5) ?? "",
     endTime: row.end_time?.slice(0, 5) ?? "",
@@ -76,6 +79,7 @@ export async function replaceMyWorkTasks(tasks: MyWorkTaskRecord[]) {
     title: task.title,
     project: task.project,
     priority: task.priority,
+    required: Boolean(task.required),
     task_date: task.date?.trim() ? task.date : null,
     start_time: task.startTime?.trim() ? `${task.startTime}:00` : null,
     end_time: task.endTime?.trim() ? `${task.endTime}:00` : null,
@@ -104,6 +108,7 @@ export async function replaceMyWorkTasks(tasks: MyWorkTaskRecord[]) {
 }
 
 type OptionalMyWorkColumn =
+  | "required"
   | "linked"
   | "linked_source"
   | "linked_key"
@@ -114,6 +119,7 @@ const isMissingOptionalColumnError = (error: unknown) => {
   if (!error || typeof error !== "object" || !("message" in error)) return false;
   const message = String((error as { message?: unknown }).message || "").toLowerCase();
   const mentionsOptionalColumn =
+    message.includes("required") ||
     message.includes("linked_source") ||
     message.includes("linked_key") ||
     message.includes("linked_ref_id") ||
@@ -127,6 +133,7 @@ const isMissingOptionalColumnError = (error: unknown) => {
 const getMissingOptionalColumn = (error: unknown): OptionalMyWorkColumn | null => {
   if (!error || typeof error !== "object" || !("message" in error)) return null;
   const message = String((error as { message?: unknown }).message || "").toLowerCase();
+  if (message.includes("required")) return "required";
   if (message.includes("linked_source")) return "linked_source";
   if (message.includes("linked_key")) return "linked_key";
   if (message.includes("linked_ref_id")) return "linked_ref_id";
