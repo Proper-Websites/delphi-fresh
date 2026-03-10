@@ -378,6 +378,7 @@ export default function Sales() {
   });
   const [syncState, setSyncState] = useState<"idle" | "syncing" | "error">("idle");
   const [syncMessage, setSyncMessage] = useState("");
+  const [supabaseLoadCount, setSupabaseLoadCount] = useState<number | null>(null);
   const [limboForm, setLimboForm] = useState({
     prospect: "",
     contact: "",
@@ -523,6 +524,7 @@ export default function Sales() {
         const rows = await fetchSalesOutreach();
         if (cancelled) return;
         if (rows.length > 0) {
+          setSupabaseLoadCount(rows.length);
           suppressNextSync.current = true;
           setOutreachData(
             rows.map((row) => {
@@ -534,7 +536,10 @@ export default function Sales() {
             })
           );
         } else {
-          await replaceSalesOutreach(outreachData);
+          setSupabaseLoadCount(0);
+          if (outreachData.length > 0) {
+            await replaceSalesOutreach(outreachData);
+          }
         }
         hasLoadedFromSupabase.current = true;
         setSyncState("idle");
@@ -542,6 +547,7 @@ export default function Sales() {
       } catch (error) {
         if (cancelled) return;
         hasLoadedFromSupabase.current = true;
+        setSupabaseLoadCount(null);
         setSyncState("error");
         setSyncMessage(getSupabaseErrorMessage(error));
       }
@@ -1982,6 +1988,9 @@ export default function Sales() {
           <div>
             <AnimatedTitle text="Sales" className="app-light-title" />
             <p className="app-light-subtitle">Track outbound emails and prospect engagement</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Supabase: {isSupabaseConfigured ? "on" : "off"} | Loaded rows: {supabaseLoadCount ?? "unknown"} | Local rows: {outreachData.length}
+            </p>
             {isSupabaseConfigured && (syncState === "syncing" || syncState === "error") ? (
               <p className={`mt-1 text-xs ${syncState === "error" ? "text-destructive" : "text-muted-foreground"}`}>
                 {syncState === "syncing" ? "Supabase syncing..." : syncMessage}
