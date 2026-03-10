@@ -161,7 +161,7 @@ export async function fetchSalesOutreach() {
 
 export async function replaceSalesOutreach(
   items: SalesOutreachRecord[],
-  options?: { allowEmptyDelete?: boolean }
+  options?: { allowEmptyDelete?: boolean; pruneMissing?: boolean }
 ) {
   if (!supabase) return;
   const payload = items.map((item, index) => ({
@@ -206,9 +206,11 @@ export async function replaceSalesOutreach(
   if (payload.length > 0) {
     const { error: upsertError } = await upsertSalesPayload(payload);
     if (upsertError) throw upsertError;
-    const ids = payload.map((item) => item.id);
-    const { error: pruneError } = await supabase.from("sales_outreach").delete().not("id", "in", `(${ids.join(",")})`);
-    if (pruneError) throw pruneError;
+    if (options?.pruneMissing) {
+      const ids = payload.map((item) => item.id);
+      const { error: pruneError } = await supabase.from("sales_outreach").delete().not("id", "in", `(${ids.join(",")})`);
+      if (pruneError) throw pruneError;
+    }
     return;
   }
 
