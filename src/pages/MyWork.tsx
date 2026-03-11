@@ -761,8 +761,8 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
   };
 
   return (
-    <div className="schedule-light-page relative h-[100vh] overflow-hidden">
-      <div className="schedule-light-frame relative flex h-full flex-col gap-6 p-8">
+    <div className="schedule-light-page relative min-h-screen overflow-x-hidden overflow-y-auto">
+      <div className="schedule-light-frame relative flex min-h-screen flex-col gap-6 p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <AnimatedTitle text="Schedule" className="schedule-light-title" />
@@ -919,7 +919,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                 </div>
 
                 <div className="relative grid min-h-0 flex-1 gap-4 xl:grid-cols-[minmax(0,1.85fr)_minmax(320px,35%)]">
-                  <div className="min-h-0 space-y-3 overflow-y-auto pr-1">
+                  <div className="space-y-3 pr-1">
                     {overdueTasks.length > 0 && (
                       <div className="schedule-light-row rounded-[28px] p-4">
                         <button
@@ -1252,7 +1252,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                     <div className="mb-3 flex items-center justify-between">
                       <p className="schedule-light-section-label text-xs font-semibold tracking-[0.08em] text-muted-foreground">CORE MATTER</p>
                     </div>
-                    <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
+                    <div className="flex-1 space-y-2 pr-1">
                       {requiredTasks.map((task) => (
                         <button
                           key={task.id}

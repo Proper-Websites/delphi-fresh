@@ -25,6 +25,7 @@ import { formatDateWritten } from "@/lib/date-format";
 import { normalizeMoneyInput } from "@/lib/money";
 import { toSmartTitleCase, toSmartTitleCaseLive } from "@/lib/text-format";
 import { formatPhoneNumber } from "@/lib/phone-format";
+import { sanitizeWebsiteInput } from "@/lib/url-format";
 
 export interface Project {
   id: number;
@@ -195,8 +196,8 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
       contactName: toSmartTitleCase(formData.contactName),
       contactEmail: formData.contactEmail.trim().toLowerCase(),
       contactPhone: formatPhoneNumber(formData.contactPhone),
-      websiteUrl: formData.websiteUrl.trim(),
-      commentingToolUrl: formData.commentingToolUrl.trim(),
+      websiteUrl: sanitizeWebsiteInput(formData.websiteUrl),
+      commentingToolUrl: sanitizeWebsiteInput(formData.commentingToolUrl),
       status: formData.status,
       stage: formData.stage,
       progress: STAGE_TO_PROGRESS[formData.stage],
@@ -233,8 +234,8 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
         contactName: toSmartTitleCase(formData.contactName),
         contactEmail: formData.contactEmail.trim().toLowerCase(),
         contactPhone: formatPhoneNumber(formData.contactPhone),
-        websiteUrl: formData.websiteUrl.trim(),
-        commentingToolUrl: formData.commentingToolUrl.trim(),
+        websiteUrl: sanitizeWebsiteInput(formData.websiteUrl),
+        commentingToolUrl: sanitizeWebsiteInput(formData.commentingToolUrl),
         status: formData.status,
         stage: formData.stage,
         progress: STAGE_TO_PROGRESS[formData.stage],
@@ -532,6 +533,7 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
                       type="url"
                       value={formData.websiteUrl}
                       onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+                      onBlur={(e) => setFormData({ ...formData, websiteUrl: sanitizeWebsiteInput(e.target.value) })}
                       className="bg-background border-border focus:border-primary transition-colors"
                     />
                   </div>
@@ -542,6 +544,7 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
                       type="url"
                       value={formData.commentingToolUrl}
                       onChange={(e) => setFormData({ ...formData, commentingToolUrl: e.target.value })}
+                      onBlur={(e) => setFormData({ ...formData, commentingToolUrl: sanitizeWebsiteInput(e.target.value) })}
                       className="bg-background border-border focus:border-primary transition-colors"
                     />
                   </div>
@@ -773,6 +776,7 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
                       type="url"
                       value={formData.websiteUrl}
                       onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+                      onBlur={(e) => setFormData({ ...formData, websiteUrl: sanitizeWebsiteInput(e.target.value) })}
                       placeholder="Website"
                       className="h-11"
                     />
@@ -781,6 +785,7 @@ export function ProjectModal({ project, isOpen, onClose, onSave, onAutoSave }: P
                       type="url"
                       value={formData.commentingToolUrl}
                       onChange={(e) => setFormData({ ...formData, commentingToolUrl: e.target.value })}
+                      onBlur={(e) => setFormData({ ...formData, commentingToolUrl: sanitizeWebsiteInput(e.target.value) })}
                       placeholder="Commenting Tool"
                       className="h-11"
                     />

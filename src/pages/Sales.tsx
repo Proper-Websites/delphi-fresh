@@ -24,6 +24,7 @@ import { fetchSalesPageState, replaceSalesPageState } from "@/lib/supabase-sales
 import { syncDatesIntoSchedule } from "@/lib/date-funnel-sync";
 import { toSmartTitleCase, toSmartTitleCaseLive } from "@/lib/text-format";
 import { formatPhoneNumber } from "@/lib/phone-format";
+import { sanitizeWebsiteInput } from "@/lib/url-format";
 import { MeetingNotesDialog } from "@/components/MeetingNotesDialog";
 import { LinkedSyncStatusLine } from "@/components/LinkedSyncStatusLine";
 import { GlassScrollArea } from "@/components/ui/glass-scroll-area";
@@ -122,6 +123,7 @@ interface ProspectFormData {
   status: ProspectStatusForm;
   lastContact: string;
   nextFollowUpDate: string;
+  hasSpecificTime: boolean;
   nextFollowUpTime: string;
   email: string;
   secondaryEmail: string;
@@ -238,11 +240,9 @@ const normalizePhoneKey = (value: string | undefined | null) => {
   return digits.length > 10 ? digits.slice(-10) : digits;
 };
 const normalizeWebsiteKey = (value: string | undefined | null) => {
-  const raw = String(value || "").trim().toLowerCase();
+  const raw = sanitizeWebsiteInput(value).toLowerCase();
   if (!raw) return "";
   return raw
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
     .split(/[?#]/)[0]
     .replace(/\/+$/, "");
 };
@@ -405,6 +405,7 @@ export default function Sales() {
     status: "",
     lastContact: "",
     nextFollowUpDate: "",
+    hasSpecificTime: false,
     nextFollowUpTime: "",
     notionUrl: "",
     specialNotes: "",
@@ -1112,6 +1113,7 @@ export default function Sales() {
       status: "",
       lastContact: "",
       nextFollowUpDate: "",
+      hasSpecificTime: false,
       nextFollowUpTime: "",
       notionUrl: "",
       specialNotes: "",
@@ -1172,6 +1174,7 @@ export default function Sales() {
       status: item.status || "",
       lastContact: item.lastContact || "",
       nextFollowUpDate: item.nextFollowUpDate || "",
+      hasSpecificTime: Boolean(item.nextFollowUpTime),
       nextFollowUpTime: item.nextFollowUpTime || "",
       notionUrl: item.notionUrl || "",
       specialNotes: item.specialNotes || "",
@@ -1218,6 +1221,10 @@ export default function Sales() {
       setProspectForm((prev) => ({
         ...prev,
         ...parsed,
+        hasSpecificTime:
+          typeof parsed.hasSpecificTime === "boolean"
+            ? parsed.hasSpecificTime
+            : Boolean((parsed.nextFollowUpTime || prev.nextFollowUpTime || "").trim()),
         cellPhone: formatPhoneNumber(parsed.cellPhone || prev.cellPhone),
         businessPhone: formatPhoneNumber(parsed.businessPhone || prev.businessPhone),
       }));
@@ -1291,10 +1298,10 @@ export default function Sales() {
       status: (prospectForm.status || "no_response") as ProspectStatus,
       lastContact: prospectForm.lastContact,
       nextFollowUpDate: prospectForm.nextFollowUpDate,
-      nextFollowUpTime: prospectForm.nextFollowUpTime,
+      nextFollowUpTime: prospectForm.hasSpecificTime ? prospectForm.nextFollowUpTime : "",
       emailsSent: Math.max(0, Number(prospectForm.emailsSent) || 0),
       replies: Math.max(0, Number(prospectForm.replies) || 0),
-      notionUrl: prospectForm.notionUrl.trim(),
+      notionUrl: sanitizeWebsiteInput(prospectForm.notionUrl),
       specialNotes: prospectForm.specialNotes.trim(),
       companyName,
       prospectName,
@@ -1436,10 +1443,10 @@ export default function Sales() {
       status: (prospectForm.status || "no_response") as ProspectStatus,
       lastContact: prospectForm.lastContact,
       nextFollowUpDate: prospectForm.nextFollowUpDate,
-      nextFollowUpTime: prospectForm.nextFollowUpTime,
+      nextFollowUpTime: prospectForm.hasSpecificTime ? prospectForm.nextFollowUpTime : "",
       emailsSent: Math.max(0, Number(prospectForm.emailsSent) || 0),
       replies: Math.max(0, Number(prospectForm.replies) || 0),
-      notionUrl: prospectForm.notionUrl.trim(),
+      notionUrl: sanitizeWebsiteInput(prospectForm.notionUrl),
       specialNotes: prospectForm.specialNotes.trim(),
       companyName,
       prospectName,
@@ -1600,6 +1607,7 @@ export default function Sales() {
     setProspectForm((prev) => ({
       ...prev,
       nextFollowUpDate: dateValue,
+      hasSpecificTime: Boolean(timeValue ?? prev.nextFollowUpTime),
       nextFollowUpTime: timeValue ?? prev.nextFollowUpTime,
     }));
   };
@@ -2229,13 +2237,6 @@ export default function Sales() {
                       >
                         <Star className={`h-4 w-4 ${starredProspectIds.includes(item.id) ? "fill-current" : ""}`} />
                       </button>
-                    </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <span className={sourceBadgeClass}>{getSourceLabel(item.source)}</span>
-                      {item.campaign ? <span className={`${sourceBadgeClass} max-w-[135px] truncate`}>{item.campaign}</span> : null}
-                      {item.group ? <span className={`${sourceBadgeClass} max-w-[120px] truncate`}>{item.group}</span> : null}
-                      <span className={websiteTypeBadgeClass}>{getWebsiteTypeLabel(item.planMode)}</span>
-                      {item.budgetTier ? <span className={budgetTierBadgeClass}>{getBudgetTierLabel(item.budgetTier)}</span> : null}
                     </div>
                     <div className="sales-next-task mt-3 rounded-[20px] border border-[var(--glass-stroke-soft)] bg-[linear-gradient(180deg,hsl(220_28%_100%/.12),hsl(220_28%_100%/.04))] px-3 py-2.5">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Next Task</p>
@@ -3227,6 +3228,26 @@ export default function Sales() {
                         <Button
                           type="button"
                           size="sm"
+                          variant={prospectForm.hasSpecificTime ? "outline" : "secondary"}
+                          className="h-8 px-3 text-xs"
+                          onClick={() => setProspectForm((prev) => ({ ...prev, hasSpecificTime: false, nextFollowUpTime: "" }))}
+                        >
+                          Date Only
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={prospectForm.hasSpecificTime ? "secondary" : "outline"}
+                          className="h-8 px-3 text-xs"
+                          onClick={() => setProspectForm((prev) => ({ ...prev, hasSpecificTime: true }))}
+                        >
+                          Specific Time
+                        </Button>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        <Button
+                          type="button"
+                          size="sm"
                           variant={prospectForm.timeZoneMode === "mine" ? "secondary" : "outline"}
                           className="h-8 px-3 text-xs"
                           onClick={() => setProspectForm((prev) => ({ ...prev, timeZoneMode: "mine" }))}
@@ -3249,37 +3270,41 @@ export default function Sales() {
                           Client Timezone
                         </Button>
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {TIME_PRESETS.map((preset) => (
-                          <Button
-                            key={preset.value}
-                            type="button"
-                            size="sm"
-                            variant={prospectForm.nextFollowUpTime === preset.value ? "secondary" : "outline"}
-                            className="h-8 px-3 text-xs"
-                            onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: preset.value })}
-                          >
-                            {preset.label}
-                          </Button>
-                        ))}
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          className="h-8 px-2 text-xs"
-                          onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: "" })}
-                        >
-                          Clear Time
-                        </Button>
-                      </div>
-                      <Input
-                        type="time"
-                        value={prospectForm.nextFollowUpTime}
-                        onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
-                        className="h-11"
-                      />
+                      {prospectForm.hasSpecificTime ? (
+                        <>
+                          <div className="flex flex-wrap gap-1.5">
+                            {TIME_PRESETS.map((preset) => (
+                              <Button
+                                key={preset.value}
+                                type="button"
+                                size="sm"
+                                variant={prospectForm.nextFollowUpTime === preset.value ? "secondary" : "outline"}
+                                className="h-8 px-3 text-xs"
+                                onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: preset.value })}
+                              >
+                                {preset.label}
+                              </Button>
+                            ))}
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 px-2 text-xs"
+                              onClick={() => setProspectForm({ ...prospectForm, hasSpecificTime: false, nextFollowUpTime: "" })}
+                            >
+                              Clear Time
+                            </Button>
+                          </div>
+                          <Input
+                            type="time"
+                            value={prospectForm.nextFollowUpTime}
+                            onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
+                            className="h-11"
+                          />
+                        </>
+                      ) : null}
                       <p className="text-[11px] text-muted-foreground">
-                        Leave time blank to keep this as a date-only Sales task.
+                        Date-only tasks will sync by date only. Turn on Specific Time only when you want an exact hour.
                       </p>
                       <p className="text-[11px] text-muted-foreground">
                         {prospectForm.timeZoneMode === "client"
@@ -3365,6 +3390,7 @@ export default function Sales() {
                     <Input
                       value={prospectForm.notionUrl}
                       onChange={(event) => setProspectForm({ ...prospectForm, notionUrl: event.target.value })}
+                      onBlur={(event) => setProspectForm({ ...prospectForm, notionUrl: sanitizeWebsiteInput(event.target.value) })}
                       className={`h-11 md:col-span-2 ${duplicateWebsiteError ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       placeholder="Website Link"
                     />
@@ -3555,6 +3581,7 @@ export default function Sales() {
                       <Input
                         value={prospectForm.notionUrl}
                         onChange={(event) => setProspectForm({ ...prospectForm, notionUrl: event.target.value })}
+                        onBlur={(event) => setProspectForm({ ...prospectForm, notionUrl: sanitizeWebsiteInput(event.target.value) })}
                         placeholder="Website Link"
                         className={`h-11 md:col-span-2 ${duplicateWebsiteError ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       />
@@ -3810,6 +3837,26 @@ export default function Sales() {
                             <Button
                               type="button"
                               size="sm"
+                              variant={prospectForm.hasSpecificTime ? "outline" : "secondary"}
+                              className="h-8 px-3 text-xs"
+                              onClick={() => setProspectForm((prev) => ({ ...prev, hasSpecificTime: false, nextFollowUpTime: "" }))}
+                            >
+                              Date Only
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={prospectForm.hasSpecificTime ? "secondary" : "outline"}
+                              className="h-8 px-3 text-xs"
+                              onClick={() => setProspectForm((prev) => ({ ...prev, hasSpecificTime: true }))}
+                            >
+                              Specific Time
+                            </Button>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            <Button
+                              type="button"
+                              size="sm"
                               variant={prospectForm.timeZoneMode === "mine" ? "secondary" : "outline"}
                               className="h-8 px-3 text-xs"
                               onClick={() => setProspectForm((prev) => ({ ...prev, timeZoneMode: "mine" }))}
@@ -3828,41 +3875,45 @@ export default function Sales() {
                                   clientTimeZone: inferredClientTimeZone || prev.clientTimeZone,
                                 }))
                               }
-                            >
-                              Client Timezone
-                            </Button>
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {TIME_PRESETS.map((preset) => (
-                              <Button
-                                key={preset.value}
-                                type="button"
-                                size="sm"
-                                variant={prospectForm.nextFollowUpTime === preset.value ? "secondary" : "outline"}
-                                className="h-8 px-3 text-xs"
-                                onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: preset.value })}
                               >
-                                {preset.label}
+                                Client Timezone
                               </Button>
-                            ))}
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="ghost"
-                              className="h-8 px-2 text-xs"
-                              onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: "" })}
-                            >
-                              Clear Time
-                            </Button>
-                          </div>
-                          <Input
-                            type="time"
-                            value={prospectForm.nextFollowUpTime}
-                            onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
-                            className="h-11"
-                          />
+                            </div>
+                          {prospectForm.hasSpecificTime ? (
+                            <>
+                              <div className="flex flex-wrap gap-1.5">
+                                {TIME_PRESETS.map((preset) => (
+                                  <Button
+                                    key={preset.value}
+                                    type="button"
+                                    size="sm"
+                                    variant={prospectForm.nextFollowUpTime === preset.value ? "secondary" : "outline"}
+                                    className="h-8 px-3 text-xs"
+                                    onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: preset.value })}
+                                  >
+                                    {preset.label}
+                                  </Button>
+                                ))}
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-8 px-2 text-xs"
+                                  onClick={() => setProspectForm({ ...prospectForm, hasSpecificTime: false, nextFollowUpTime: "" })}
+                                >
+                                  Clear Time
+                                </Button>
+                              </div>
+                              <Input
+                                type="time"
+                                value={prospectForm.nextFollowUpTime}
+                                onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
+                                className="h-11"
+                              />
+                            </>
+                          ) : null}
                           <p className="text-[11px] text-muted-foreground">
-                            Leave time blank to keep this as a date-only Sales task.
+                            Date-only tasks will sync by date only. Turn on Specific Time only when you want an exact hour.
                           </p>
                           <p className="text-[11px] text-muted-foreground">
                             {prospectForm.timeZoneMode === "client"

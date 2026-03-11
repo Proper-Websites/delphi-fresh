@@ -1,6 +1,7 @@
 import type { Project } from "@/components/ProjectModal";
 import { supabase } from "@/lib/supabase";
 import { formatPhoneNumber } from "@/lib/phone-format";
+import { sanitizeWebsiteInput } from "@/lib/url-format";
 
 export interface DevelopmentProjectRow {
   id: number | string;
@@ -95,8 +96,8 @@ export async function upsertDevelopmentProjects(projects: Project[]) {
     contact_name: project.contactName?.trim() ? project.contactName : null,
     contact_email: project.contactEmail?.trim() ? project.contactEmail : null,
     contact_phone: project.contactPhone?.trim() ? formatPhoneNumber(project.contactPhone) : null,
-    website_url: project.websiteUrl?.trim() ? project.websiteUrl : null,
-    commenting_tool_url: project.commentingToolUrl?.trim() ? project.commentingToolUrl : null,
+    website_url: project.websiteUrl?.trim() ? sanitizeWebsiteInput(project.websiteUrl) : null,
+    commenting_tool_url: project.commentingToolUrl?.trim() ? sanitizeWebsiteInput(project.commentingToolUrl) : null,
     status: project.status,
     stage: project.stage,
     progress: project.progress,
@@ -124,8 +125,8 @@ export async function replaceDevelopmentProjects(projects: Project[]) {
     contact_name: project.contactName?.trim() ? project.contactName : null,
     contact_email: project.contactEmail?.trim() ? project.contactEmail : null,
     contact_phone: project.contactPhone?.trim() ? formatPhoneNumber(project.contactPhone) : null,
-    website_url: project.websiteUrl?.trim() ? project.websiteUrl : null,
-    commenting_tool_url: project.commentingToolUrl?.trim() ? project.commentingToolUrl : null,
+    website_url: project.websiteUrl?.trim() ? sanitizeWebsiteInput(project.websiteUrl) : null,
+    commenting_tool_url: project.commentingToolUrl?.trim() ? sanitizeWebsiteInput(project.commentingToolUrl) : null,
     status: project.status,
     stage: project.stage,
     progress: project.progress,
