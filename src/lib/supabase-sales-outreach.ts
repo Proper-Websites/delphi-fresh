@@ -22,9 +22,27 @@ export interface SalesOutreachRow {
   interest_level?: "low" | "medium" | "high" | null;
   plan_mode?: "custom" | "template" | null;
   budget_tier?: "premium" | "standard" | "basic" | null;
-  response_tags?: Array<"price" | "sample" | "meeting" | "interest"> | null;
-  asked_for?: "price" | "sample" | "meeting" | "interest" | "later" | "not_set" | null;
-  asked_for_secondary?: "price" | "sample" | "meeting" | "interest" | "later" | "not_set" | null;
+  response_tags?: Array<"price" | "sample" | "meeting" | "interest" | "maintenance" | "edits"> | null;
+  asked_for?:
+    | "price"
+    | "sample"
+    | "meeting"
+    | "interest"
+    | "maintenance"
+    | "edits"
+    | "later"
+    | "not_set"
+    | null;
+  asked_for_secondary?:
+    | "price"
+    | "sample"
+    | "meeting"
+    | "interest"
+    | "maintenance"
+    | "edits"
+    | "later"
+    | "not_set"
+    | null;
   auto_top_prospect?: boolean | null;
   next_follow_up_date?: string | null;
   next_follow_up_time?: string | null;
@@ -39,6 +57,8 @@ export interface SalesOutreachRow {
   business_phone?: string | null;
   city?: string | null;
   state?: string | null;
+  time_zone_mode?: "client" | "mine" | null;
+  client_time_zone?: string | null;
   fee?: string | null;
   mrr?: string | null;
   special_notes?: string | null;
@@ -60,9 +80,25 @@ export interface SalesOutreachRecord {
   interestLevel?: "low" | "medium" | "high";
   planMode?: "custom" | "template";
   budgetTier?: "premium" | "standard" | "basic";
-  responses?: Array<"price" | "sample" | "meeting" | "interest" | "later">;
-  askedFor?: "price" | "sample" | "meeting" | "interest" | "later" | "not_set";
-  askedForSecondary?: "price" | "sample" | "meeting" | "interest" | "later" | "not_set";
+  responses?: Array<"price" | "sample" | "meeting" | "interest" | "maintenance" | "edits" | "later">;
+  askedFor?:
+    | "price"
+    | "sample"
+    | "meeting"
+    | "interest"
+    | "maintenance"
+    | "edits"
+    | "later"
+    | "not_set";
+  askedForSecondary?:
+    | "price"
+    | "sample"
+    | "meeting"
+    | "interest"
+    | "maintenance"
+    | "edits"
+    | "later"
+    | "not_set";
   autoTopProspect?: boolean;
   nextFollowUpDate?: string;
   nextFollowUpTime?: string;
@@ -77,6 +113,8 @@ export interface SalesOutreachRecord {
   businessPhone?: string;
   city?: string;
   state?: string;
+  timeZoneMode?: "client" | "mine";
+  clientTimeZone?: string;
   fee?: string;
   mrr?: string;
   specialNotes?: string;
@@ -101,8 +139,13 @@ export function mapSalesOutreachRowToRecord(row: SalesOutreachRow): SalesOutreac
   const normalizeResponses = (value: SalesOutreachRow["response_tags"]) =>
     Array.isArray(value)
       ? value.filter(
-          (entry): entry is "price" | "sample" | "meeting" | "interest" =>
-            entry === "price" || entry === "sample" || entry === "meeting" || entry === "interest"
+          (entry): entry is "price" | "sample" | "meeting" | "interest" | "maintenance" | "edits" =>
+            entry === "price" ||
+            entry === "sample" ||
+            entry === "meeting" ||
+            entry === "interest" ||
+            entry === "maintenance" ||
+            entry === "edits"
         )
       : [];
 
@@ -142,6 +185,8 @@ export function mapSalesOutreachRowToRecord(row: SalesOutreachRow): SalesOutreac
     businessPhone: row.business_phone ?? "",
     city: row.city ?? "",
     state: row.state ?? "",
+    timeZoneMode: row.time_zone_mode === "client" ? "client" : "mine",
+    clientTimeZone: row.client_time_zone ?? "",
     fee: row.fee ?? "",
     mrr: row.mrr ?? "",
     specialNotes: row.special_notes ?? "",
@@ -198,6 +243,8 @@ export async function replaceSalesOutreach(
     business_phone: item.businessPhone?.trim() ? item.businessPhone : null,
     city: item.city?.trim() ? item.city : null,
     state: item.state?.trim() ? item.state : null,
+    time_zone_mode: item.timeZoneMode === "client" ? "client" : "mine",
+    client_time_zone: item.clientTimeZone?.trim() ? item.clientTimeZone : null,
     fee: item.fee?.trim() ? item.fee : null,
     mrr: item.mrr?.trim() ? item.mrr : null,
     special_notes: item.specialNotes?.trim() ? item.specialNotes : null,
@@ -247,6 +294,8 @@ type OptionalSalesColumn =
   | "business_phone"
   | "city"
   | "state"
+  | "time_zone_mode"
+  | "client_time_zone"
   | "fee"
   | "mrr"
   | "special_notes";
@@ -279,6 +328,8 @@ const isMissingOptionalColumnError = (error: unknown) => {
     "business_phone",
     "city",
     "state",
+    "time_zone_mode",
+    "client_time_zone",
     "fee",
     "mrr",
     "special_notes",
@@ -320,6 +371,8 @@ const getMissingOptionalColumn = (error: unknown): OptionalSalesColumn | null =>
     "secondary_email",
     "state",
     "city",
+    "time_zone_mode",
+    "client_time_zone",
     "role",
     "fee",
     "mrr",

@@ -2,6 +2,7 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { replaceCalendarEvents, type CalendarEventRecord } from "@/lib/supabase-calendar-events";
 import { replaceMyWorkTasks, type MyWorkTaskRecord } from "@/lib/supabase-my-work";
 import { getSupabaseErrorMessage } from "@/lib/supabase-errors";
+import { convertProspectFollowUpToUserTime, getUserTimeZone, type ProspectTimeZoneMode } from "@/lib/prospect-timezone";
 
 const MY_WORK_KEY = "delphi_my_work_tasks_v3";
 const CALENDAR_KEY = "delphi_calendar_events_v2";
@@ -55,6 +56,8 @@ type SalesProspect = {
   status?: "interested" | "follow_up" | "booked" | "verdict" | "no_response";
   nextFollowUpDate?: string;
   nextFollowUpTime?: string;
+  timeZoneMode?: ProspectTimeZoneMode;
+  clientTimeZone?: string;
   lastContact?: string;
 };
 
@@ -214,6 +217,7 @@ const makeMirrorEvent = (task: StoredTask): StoredCalendarEvent => ({
 
 const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: LinkedSyncIssue[] } => {
   const issues: LinkedSyncIssue[] = [];
+  const userTimeZone = getUserTimeZone();
   const development = readArray<DevelopmentProject>(DEVELOPMENT_KEY);
   const developmentWorkflowMap = readRecord<DevelopmentWorkflowTask[]>(DEVELOPMENT_WORKFLOW_KEY);
   const sales = readArray<SalesProspect>(SALES_KEY);
@@ -308,10 +312,19 @@ const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: Li
 
     const prospectName = String(prospect.prospect || "Prospect").trim() || "Prospect";
     const status = prospect.status || "follow_up";
-    const startTime = isValidTimeKey(prospect.nextFollowUpTime) ? prospect.nextFollowUpTime : "";
+    const rawStartTime = isValidTimeKey(prospect.nextFollowUpTime) ? prospect.nextFollowUpTime : "";
+    const normalizedFollowUp = convertProspectFollowUpToUserTime(
+      followUpDate,
+      rawStartTime,
+      prospect.timeZoneMode,
+      prospect.clientTimeZone,
+      userTimeZone
+    );
+    const scheduledDate = isValidDateKey(normalizedFollowUp.date) ? normalizedFollowUp.date : followUpDate;
+    const startTime = isValidTimeKey(normalizedFollowUp.time) ? normalizedFollowUp.time : "";
     const [hour, minute] = startTime ? startTime.split(":").map(Number) : [0, 0];
     linkedTasks.push(
-      makeLinkedTask("sales", `sales:${prospect.id}:next-task`, prospectName, followUpDate, {
+      makeLinkedTask("sales", `sales:${prospect.id}:next-task`, prospectName, scheduledDate, {
         project: prospectName,
         department: "Sales",
         priority: status === "interested" || status === "booked" || status === "verdict" ? "high" : "medium",

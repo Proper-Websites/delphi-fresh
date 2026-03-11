@@ -28,11 +28,25 @@ import { MeetingNotesDialog } from "@/components/MeetingNotesDialog";
 import { LinkedSyncStatusLine } from "@/components/LinkedSyncStatusLine";
 import { GlassScrollArea } from "@/components/ui/glass-scroll-area";
 import { promptForNextStep } from "@/lib/next-step";
+import {
+  getTimeZoneLabel,
+  getUserTimeZone,
+  resolveClientTimeZone,
+  type ProspectTimeZoneMode,
+} from "@/lib/prospect-timezone";
 
 type ProspectStatus = OutreachStatus;
 type ProspectSource = "cold_email" | "referral" | "network" | "repeat" | "targeted";
 type ProspectInterest = "low" | "medium" | "high";
-type ProspectAskedFor = "price" | "sample" | "meeting" | "interest" | "later" | "not_set";
+type ProspectAskedFor =
+  | "price"
+  | "sample"
+  | "meeting"
+  | "interest"
+  | "maintenance"
+  | "edits"
+  | "later"
+  | "not_set";
 type FollowUpType = "call" | "email";
 type ProspectPlanMode = "custom" | "template";
 type ProspectBudgetTier = "premium" | "standard" | "basic";
@@ -79,6 +93,8 @@ interface OutreachItem {
   businessPhone?: string;
   city?: string;
   state?: string;
+  timeZoneMode?: ProspectTimeZoneMode;
+  clientTimeZone?: string;
   fee?: string;
   mrr?: string;
   followUpType?: FollowUpType;
@@ -113,6 +129,8 @@ interface ProspectFormData {
   businessPhone: string;
   city: string;
   state: string;
+  timeZoneMode: ProspectTimeZoneMode;
+  clientTimeZone: string;
   fee: string;
   mrr: string;
   followUpType: FollowUpTypeForm;
@@ -146,7 +164,15 @@ interface LimboItem {
 }
 
 const initialOutreachData: OutreachItem[] = [];
-const RESPONSE_OPTIONS: ProspectAskedFor[] = ["price", "sample", "meeting", "interest", "later"];
+const RESPONSE_OPTIONS: ProspectAskedFor[] = [
+  "price",
+  "sample",
+  "meeting",
+  "interest",
+  "maintenance",
+  "edits",
+  "later",
+];
 const CREATE_GROUP_VALUE = "__create_group__";
 const TIME_PRESETS: Array<{ label: string; value: string }> = [
   { label: "Morning", value: "09:00" },
@@ -159,6 +185,8 @@ const getAskedForLabel = (value?: ProspectAskedFor) => {
   if (value === "sample") return "Sample";
   if (value === "meeting") return "Meeting";
   if (value === "interest") return "Interest";
+  if (value === "maintenance") return "Maintenance";
+  if (value === "edits") return "Edits";
   if (value === "later") return "Later";
   return "Not Set";
 };
@@ -168,7 +196,12 @@ const normalizeResponseSelections = (values: unknown): ProspectAskedFor[] => {
   const next: ProspectAskedFor[] = [];
   values.forEach((value) => {
     if (
-      (value === "price" || value === "sample" || value === "meeting" || value === "interest") &&
+      (value === "price" ||
+        value === "sample" ||
+        value === "meeting" ||
+        value === "interest" ||
+        value === "maintenance" ||
+        value === "edits") &&
       !next.includes(value)
     ) {
       next.push(value);
@@ -362,6 +395,8 @@ export default function Sales() {
     businessPhone: "",
     city: "",
     state: "",
+    timeZoneMode: "mine",
+    clientTimeZone: "",
     fee: "",
     mrr: "",
     followUpType: "",
@@ -390,6 +425,12 @@ export default function Sales() {
   const suppressNextSync = useRef(false);
   const hasLoadedPageStateFromSupabase = useRef(false);
   const suppressNextPageStateSync = useRef(false);
+  const userTimeZone = getUserTimeZone();
+  const inferredClientTimeZone = useMemo(
+    () => resolveClientTimeZone(prospectForm.city, prospectForm.state),
+    [prospectForm.city, prospectForm.state]
+  );
+  const activeSchedulingTimeZone = prospectForm.timeZoneMode === "client" ? inferredClientTimeZone || prospectForm.clientTimeZone : userTimeZone;
 
   const buildSalesPageState = useCallback(
     (overrides?: Partial<Record<
@@ -846,6 +887,20 @@ export default function Sales() {
     return timeText ? `${dateText} • ${timeText}` : dateText;
   };
 
+  const formatScheduledPreview = (
+    date?: string,
+    time?: string,
+    mode: ProspectTimeZoneMode = "mine",
+    clientTimeZone?: string
+  ) => {
+    const base = formatNextFollowUp(date, time);
+    if (!date) return base;
+    if (mode === "client") {
+      return `${base} • ${getTimeZoneLabel(clientTimeZone || inferredClientTimeZone)}`;
+    }
+    return `${base} • ${getTimeZoneLabel(userTimeZone)}`;
+  };
+
   const topProspects = useMemo(() => {
     const starredSet = new Set(starredProspectIds);
     return outreachData
@@ -1047,6 +1102,8 @@ export default function Sales() {
       businessPhone: "",
       city: "",
       state: "",
+      timeZoneMode: "mine",
+      clientTimeZone: "",
       fee: "",
       mrr: "",
       followUpType: "",
@@ -1105,6 +1162,8 @@ export default function Sales() {
       businessPhone: formatPhoneNumber(item.businessPhone || ""),
       city: item.city || "",
       state: item.state || "",
+      timeZoneMode: item.timeZoneMode || "mine",
+      clientTimeZone: item.clientTimeZone || resolveClientTimeZone(item.city, item.state) || "",
       fee: item.fee || "",
       mrr: item.mrr || "",
       followUpType: item.followUpType || "",
@@ -1183,6 +1242,7 @@ export default function Sales() {
         prospectForm.businessPhone.trim() ||
         prospectForm.city.trim() ||
         prospectForm.state.trim() ||
+        (prospectForm.timeZoneMode === "client" && (prospectForm.clientTimeZone.trim() || inferredClientTimeZone)) ||
         prospectForm.fee.trim() ||
         prospectForm.mrr.trim() ||
         prospectForm.prospect.trim() ||
@@ -1257,6 +1317,8 @@ export default function Sales() {
       businessPhone: formatPhoneNumber(prospectForm.businessPhone),
       city: toSmartTitleCase(prospectForm.city),
       state: toSmartTitleCase(prospectForm.state),
+      timeZoneMode: prospectForm.timeZoneMode || "mine",
+      clientTimeZone: resolveClientTimeZone(prospectForm.city, prospectForm.state) || prospectForm.clientTimeZone || "",
       fee: prospectForm.fee.trim(),
       mrr: prospectForm.mrr.trim(),
       followUpType: prospectForm.followUpType || undefined,
@@ -1295,6 +1357,8 @@ export default function Sales() {
         businessPhone: target.businessPhone || "",
         city: target.city || "",
         state: target.state || "",
+        timeZoneMode: target.timeZoneMode || "mine",
+        clientTimeZone: target.clientTimeZone || "",
         fee: target.fee || "",
         mrr: target.mrr || "",
         followUpType: target.followUpType || "",
@@ -1331,6 +1395,8 @@ export default function Sales() {
         businessPhone: nextItem.businessPhone || "",
         city: nextItem.city || "",
         state: nextItem.state || "",
+        timeZoneMode: nextItem.timeZoneMode || "mine",
+        clientTimeZone: nextItem.clientTimeZone || "",
         fee: nextItem.fee || "",
         mrr: nextItem.mrr || "",
         followUpType: nextItem.followUpType || "",
@@ -1396,6 +1462,8 @@ export default function Sales() {
       businessPhone: formatPhoneNumber(prospectForm.businessPhone),
       city: toSmartTitleCase(prospectForm.city),
       state: toSmartTitleCase(prospectForm.state),
+      timeZoneMode: prospectForm.timeZoneMode || "mine",
+      clientTimeZone: resolveClientTimeZone(prospectForm.city, prospectForm.state) || prospectForm.clientTimeZone || "",
       fee: prospectForm.fee.trim(),
       mrr: prospectForm.mrr.trim(),
       followUpType: prospectForm.followUpType || undefined,
@@ -3141,7 +3209,7 @@ export default function Sales() {
                       </div>
                       <div className="mt-2 inline-flex items-center rounded-full border border-primary/35 bg-card/70 px-3 py-1 text-xs font-semibold text-foreground">
                         {prospectForm.nextFollowUpDate
-                          ? `Scheduled: ${formatNextFollowUp(prospectForm.nextFollowUpDate, prospectForm.nextFollowUpTime)}`
+                          ? `Scheduled: ${formatScheduledPreview(prospectForm.nextFollowUpDate, prospectForm.nextFollowUpTime, prospectForm.timeZoneMode, activeSchedulingTimeZone || undefined)}`
                           : "No next task scheduled yet"}
                       </div>
                     </div>
@@ -3155,6 +3223,32 @@ export default function Sales() {
                     </div>
                     <div className="space-y-2">
                       <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Time (Optional)</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={prospectForm.timeZoneMode === "mine" ? "secondary" : "outline"}
+                          className="h-8 px-3 text-xs"
+                          onClick={() => setProspectForm((prev) => ({ ...prev, timeZoneMode: "mine" }))}
+                        >
+                          My Timezone
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={prospectForm.timeZoneMode === "client" ? "secondary" : "outline"}
+                          className="h-8 px-3 text-xs"
+                          onClick={() =>
+                            setProspectForm((prev) => ({
+                              ...prev,
+                              timeZoneMode: "client",
+                              clientTimeZone: inferredClientTimeZone || prev.clientTimeZone,
+                            }))
+                          }
+                        >
+                          Client Timezone
+                        </Button>
+                      </div>
                       <div className="flex flex-wrap gap-1.5">
                         {TIME_PRESETS.map((preset) => (
                           <Button
@@ -3186,6 +3280,13 @@ export default function Sales() {
                       />
                       <p className="text-[11px] text-muted-foreground">
                         Leave time blank to keep this as a date-only Sales task.
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {prospectForm.timeZoneMode === "client"
+                          ? activeSchedulingTimeZone
+                            ? `Client timezone active: ${getTimeZoneLabel(activeSchedulingTimeZone)}. Delphi will convert this into your schedule timezone automatically.`
+                            : "Client timezone selected. Add city and state so Delphi can infer the prospect timezone."
+                          : `Using your timezone: ${getTimeZoneLabel(userTimeZone)}.`}
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -3653,7 +3754,7 @@ export default function Sales() {
                     </div>
                     <div className="mb-3 inline-flex items-center rounded-full border border-primary/35 bg-primary/10 px-3 py-1 text-xs font-semibold text-foreground">
                       {prospectForm.nextFollowUpDate
-                        ? `Scheduled: ${formatNextFollowUp(prospectForm.nextFollowUpDate, prospectForm.nextFollowUpTime)}`
+                        ? `Scheduled: ${formatScheduledPreview(prospectForm.nextFollowUpDate, prospectForm.nextFollowUpTime, prospectForm.timeZoneMode, activeSchedulingTimeZone || undefined)}`
                         : "No next task scheduled yet"}
                     </div>
                     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -3706,6 +3807,32 @@ export default function Sales() {
                         <div className="space-y-2">
                           <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Time (Optional)</p>
                           <div className="flex flex-wrap gap-1.5">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={prospectForm.timeZoneMode === "mine" ? "secondary" : "outline"}
+                              className="h-8 px-3 text-xs"
+                              onClick={() => setProspectForm((prev) => ({ ...prev, timeZoneMode: "mine" }))}
+                            >
+                              My Timezone
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={prospectForm.timeZoneMode === "client" ? "secondary" : "outline"}
+                              className="h-8 px-3 text-xs"
+                              onClick={() =>
+                                setProspectForm((prev) => ({
+                                  ...prev,
+                                  timeZoneMode: "client",
+                                  clientTimeZone: inferredClientTimeZone || prev.clientTimeZone,
+                                }))
+                              }
+                            >
+                              Client Timezone
+                            </Button>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
                             {TIME_PRESETS.map((preset) => (
                               <Button
                                 key={preset.value}
@@ -3736,6 +3863,13 @@ export default function Sales() {
                           />
                           <p className="text-[11px] text-muted-foreground">
                             Leave time blank to keep this as a date-only Sales task.
+                          </p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {prospectForm.timeZoneMode === "client"
+                              ? activeSchedulingTimeZone
+                                ? `Client timezone active: ${getTimeZoneLabel(activeSchedulingTimeZone)}. Delphi will convert this into your schedule timezone automatically.`
+                                : "Client timezone selected. Add city and state so Delphi can infer the prospect timezone."
+                              : `Using your timezone: ${getTimeZoneLabel(userTimeZone)}.`}
                           </p>
                           <div className="flex flex-wrap gap-1.5">
                             <Button type="button" size="sm" variant="outline" className="h-8 px-3 text-xs" onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: "09:00" })}>Morning</Button>

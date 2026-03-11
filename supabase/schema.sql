@@ -217,6 +217,8 @@ create table if not exists public.sales_outreach (
   business_phone text null,
   city text null,
   state text null,
+  time_zone_mode text null,
+  client_time_zone text null,
   fee text null,
   mrr text null,
   special_notes text null,

@@ -59,6 +59,8 @@ alter table if exists public.sales_outreach
   add column if not exists business_phone text,
   add column if not exists city text,
   add column if not exists state text,
+  add column if not exists time_zone_mode text,
+  add column if not exists client_time_zone text,
   add column if not exists fee text,
   add column if not exists mrr text,
   add column if not exists special_notes text;
