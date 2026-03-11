@@ -1440,7 +1440,6 @@ export default function Sales() {
     if (responses.length === 0) missing.push("Response");
     if (!hasValue(item.lastContact)) missing.push("Last Contact");
     if (!hasValue(item.nextFollowUpDate)) missing.push("Next Task Date");
-    if (!hasValue(item.nextFollowUpTime)) missing.push("Next Task Time");
     if (!hasValue(item.email)) missing.push("Primary Email");
     if (!hasValue(item.cellPhone)) missing.push("Cell Phone");
     if (!hasValue(item.city)) missing.push("City");
@@ -3174,6 +3173,9 @@ export default function Sales() {
                         onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
                         className="h-11"
                       />
+                      <p className="text-[11px] text-muted-foreground">
+                        Leave time blank to keep this as a date-only Sales task.
+                      </p>
                     </div>
                     <div className="space-y-2">
                       <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">Last Contact (Internal)</p>
@@ -3721,6 +3723,9 @@ export default function Sales() {
                             onChange={(event) => setProspectForm({ ...prospectForm, nextFollowUpTime: event.target.value })}
                             className="h-11"
                           />
+                          <p className="text-[11px] text-muted-foreground">
+                            Leave time blank to keep this as a date-only Sales task.
+                          </p>
                           <div className="flex flex-wrap gap-1.5">
                             <Button type="button" size="sm" variant="outline" className="h-8 px-3 text-xs" onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: "09:00" })}>Morning</Button>
                             <Button type="button" size="sm" variant="outline" className="h-8 px-3 text-xs" onClick={() => setProspectForm({ ...prospectForm, nextFollowUpTime: "13:00" })}>Afternoon</Button>
