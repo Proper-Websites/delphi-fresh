@@ -102,6 +102,16 @@ const minutesToTime = (minutesRaw: number) => {
   return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
 };
 
+const formatTimeRange = (item: Pick<DelphiCalendarEngineItem, "startTime" | "endTime">, format: DelphiCalendarTimeFormat) => {
+  if (format === "24h") return `${item.startTime}-${item.endTime}`;
+  const asText = (time: string) =>
+    new Date(buildIso("2026-01-01", time)).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  return `${asText(item.startTime)}-${asText(item.endTime)}`;
+};
+
 export default function DelphiCalendarEngine({
   viewMode,
   visibleDate,
@@ -229,24 +239,35 @@ export default function DelphiCalendarEngine({
 
   const renderEventContent = (arg: EventContentArg) => {
     const item = arg.event.extendedProps.item as DelphiCalendarEngineItem;
-    const compactTimeGrid = arg.view.type === "timeGridWeek" || arg.view.type === "timeGridDay";
-    const showMeta = arg.view.type !== "dayGridMonth" && !compactTimeGrid;
+    const isMonthView = arg.view.type === "dayGridMonth";
+    const start = arg.event.start;
+    const end = arg.event.end ?? start;
+    const durationMinutes =
+      start && end ? Math.max(0, Math.round((end.getTime() - start.getTime()) / 60000)) : 0;
+    const isCompact = !isMonthView && durationMinutes > 0 && durationMinutes <= 30;
+    const canShowNotes = !isMonthView && durationMinutes >= 60 && Boolean(item.notes);
     return (
-      <div className="delphi-fc-event-content">
+      <div
+        className={cn(
+          "delphi-fc-event-content",
+          isMonthView && "delphi-fc-event-content--month",
+          !isMonthView && "delphi-fc-event-content--timegrid",
+          isCompact && "delphi-fc-event-content--compact"
+        )}
+      >
         <div className="delphi-fc-event-topline">
           <span className="delphi-fc-event-title">{arg.event.title}</span>
-          {showMeta && (
+          {!isMonthView && durationMinutes >= 45 && (
             <span className="delphi-fc-event-kind">{item.source === "manual" ? "Event" : "Task"}</span>
           )}
         </div>
-        {showMeta && !item.allDay && (
+        {!item.allDay && !isMonthView && (
           <div className="delphi-fc-event-time">
-            {timeFormat === "24h"
-              ? `${item.startTime} - ${item.endTime}`
-              : `${arg.timeText}${item.endTime ? ` - ${new Date(buildIso(item.date, item.endTime)).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}` : ""}`}
+            {formatTimeRange(item, timeFormat)}
           </div>
         )}
-        {showMeta && item.notes ? <div className="delphi-fc-event-notes">{item.notes}</div> : null}
+        {isMonthView && !item.allDay ? <div className="delphi-fc-event-time">{arg.timeText}</div> : null}
+        {canShowNotes ? <div className="delphi-fc-event-notes">{item.notes}</div> : null}
       </div>
     );
   };
@@ -270,6 +291,9 @@ export default function DelphiCalendarEngine({
       </div>
     );
   };
+
+  const calendarHeight = viewMode === "month" ? "100%" : "72vh";
+  const isTimeGridView = viewMode === "week" || viewMode === "day";
 
   return (
     <div className={cn("delphi-fc-shell", `delphi-fc-shell--${viewMode}`)}>
@@ -296,8 +320,10 @@ export default function DelphiCalendarEngine({
         slotLabelInterval="01:00:00"
         slotMinTime="00:00:00"
         slotMaxTime="24:00:00"
+        scrollTime={isTimeGridView ? "06:00:00" : "00:00:00"}
+        scrollTimeReset={false}
         slotLabelFormat={timeFormat === "24h" ? { hour: "numeric", hour12: false } : { hour: "numeric", meridiem: "short" }}
-        height="100%"
+        height={calendarHeight}
         timeZone="local"
         dateClick={handleDateClick}
         select={handleSelect}

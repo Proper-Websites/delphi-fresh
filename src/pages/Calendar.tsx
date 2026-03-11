@@ -13,7 +13,6 @@ import {
   Rows3,
   Trash2,
 } from "lucide-react";
-import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -35,7 +34,6 @@ import { fetchCalendarEvents, mapCalendarRowToRecord, replaceCalendarEvents } fr
 import { toSmartTitleCase, toSmartTitleCaseLive } from "@/lib/text-format";
 import { applyLinkedWriteback } from "@/lib/linked-writeback";
 import { runLinkedScheduleSync } from "@/lib/linked-schedule-engine";
-import { groupDateOnlyTasksByDepartment, type DateOnlyDepartmentDisplayItem } from "@/lib/task-grouping";
 
 type CalendarViewMode = "day" | "week" | "month" | "year" | "agenda";
 type FormMode = "onboard" | "all";
@@ -86,8 +84,8 @@ type CalendarItem = {
   linked?: boolean;
   linkedKey?: string;
   department?: string;
-  groupTaskIds?: number[];
   grouped?: boolean;
+  groupTaskIds?: number[];
 };
 
 type PlacedEvent = CalendarItem & {
@@ -245,6 +243,80 @@ const defaultEvent = (date: string): Omit<CalendarEvent, "id"> => ({
   color: "cyan",
 });
 
+const AUTO_SCHEDULE_START_MINUTES = 9 * 60;
+const AUTO_SCHEDULE_END_MINUTES = 18 * 60;
+const AUTO_SCHEDULE_DURATION_MINUTES = 30;
+
+type ScheduledRange = { start: number; end: number };
+
+const rangesOverlap = (a: ScheduledRange, b: ScheduledRange) => Math.max(a.start, b.start) < Math.min(a.end, b.end);
+
+const findNextOpenSlot = (busyRanges: ScheduledRange[]) => {
+  const sortedBusy = busyRanges.slice().sort((a, b) => a.start - b.start || a.end - b.end);
+  let start = AUTO_SCHEDULE_START_MINUTES;
+
+  while (start + AUTO_SCHEDULE_DURATION_MINUTES <= 24 * 60) {
+    const candidate = { start, end: start + AUTO_SCHEDULE_DURATION_MINUTES };
+    const hasConflict = sortedBusy.some((range) => rangesOverlap(range, candidate));
+    if (!hasConflict) return candidate;
+
+    const blockingRange = sortedBusy.find((range) => rangesOverlap(range, candidate));
+    start = blockingRange ? Math.max(start + AUTO_SCHEDULE_DURATION_MINUTES, blockingRange.end) : start + AUTO_SCHEDULE_DURATION_MINUTES;
+    if (start < AUTO_SCHEDULE_END_MINUTES) {
+      start = Math.max(start, AUTO_SCHEDULE_START_MINUTES);
+    }
+  }
+
+  return { start: 23 * 60 + 29, end: 23 * 60 + 59 };
+};
+
+const getMyWorkCalendarColor = (task: MyWorkTask): EventColor => {
+  const linkedSource = String(task.linkedSource || "").trim().toLowerCase();
+  const linkedKey = String(task.linkedKey || "").trim().toLowerCase();
+  const department = String(task.department || "").trim().toLowerCase();
+
+  if (linkedSource === "sales" || linkedKey.startsWith("sales:") || department.includes("sales")) {
+    return "emerald";
+  }
+
+  if (linkedSource === "development" || linkedKey.startsWith("development:") || department.includes("development")) {
+    return "cyan";
+  }
+
+  if (linkedSource === "subscriptions" || linkedKey.startsWith("subscriptions:") || department.includes("subscription")) {
+    return "violet";
+  }
+
+  return "violet";
+};
+
+const groupMyWorkCalendarItems = (items: CalendarItem[]) => {
+  const buckets = new Map<string, CalendarItem[]>();
+
+  items.forEach((item) => {
+    const key = `${item.date}__${item.department || "My Work"}__${item.startTime}__${item.endTime}__${item.allDay ? "all-day" : "timed"}__${item.color}`;
+    const bucket = buckets.get(key) ?? [];
+    bucket.push(item);
+    buckets.set(key, bucket);
+  });
+
+  return Array.from(buckets.values()).flatMap((bucket) => {
+    if (bucket.length < 4) return bucket;
+
+    const [sample] = bucket;
+    return [
+      {
+        ...sample,
+        id: `work-group-${sample.date}-${(sample.department || "my-work").toLowerCase()}-${sample.startTime}-${sample.endTime}`,
+        title: `${sample.department || "My Work"} (${bucket.length})`,
+        notes: bucket.slice(0, 3).map((item) => item.title).join(" • "),
+        grouped: true,
+        groupTaskIds: bucket.map((item) => item.refId),
+      },
+    ];
+  });
+};
+
 const isMissingCalendarTableError = (error: unknown) => {
   const message = getSupabaseErrorMessage(error).toLowerCase();
   return message.includes("calendar_events") && message.includes("schema cache");
@@ -297,7 +369,7 @@ const layoutOverlaps = (events: CalendarItem[]): PlacedEvent[] => {
 const getEventSurfaceClass = (item: CalendarItem) =>
   cn(
     "group/event relative overflow-hidden rounded-2xl border text-left shadow-[0_18px_40px_-24px_hsl(220_45%_10%/.32),inset_0_1px_0_hsl(0_0%_100%/.52)] transition-all hover:-translate-y-0.5 hover:brightness-[1.03]",
-    item.source === "manual" ? colorClass[item.color] : baseSourceClass[item.source]
+    item.source === "manual" ? colorClass[item.color] : cn(baseSourceClass[item.source], colorClass[item.color])
   );
 
 interface CalendarPageProps {
@@ -555,71 +627,95 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     const manualItems: CalendarItem[] = events
       .filter((event) => event.sourceLayer !== "my-work-mirror" && !event.linked && isValidDateKey(event.date))
       .map((event) => ({
-      id: `manual-${event.id}`,
-      source: "manual",
-      refId: event.id,
-      title: event.title,
-      date: event.date,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      notes: event.notes,
-      allDay: Boolean(event.allDay) || !hasTimedRange(event),
-      color: event.color || "cyan",
-      linked: Boolean(event.linked),
-      linkedKey: event.linkedKey,
-    }));
+        id: `manual-${event.id}`,
+        source: "manual",
+        refId: event.id,
+        title: event.title,
+        date: event.date,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        notes: event.notes,
+        allDay: Boolean(event.allDay) || !hasTimedRange(event),
+        color: event.color || "cyan",
+        linked: Boolean(event.linked),
+        linkedKey: event.linkedKey,
+      }));
 
-    const validMyWorkTasks = myWorkTasks.filter((task) => isValidDateKey(task.date));
-    const groupedDisplays = new Map<string, MyWorkTask[]>();
-
-    validMyWorkTasks.forEach((task) => {
-      const bucket = groupedDisplays.get(task.date) ?? [];
-      bucket.push(task);
-      groupedDisplays.set(task.date, bucket);
+    const manualBusyByDate = new Map<string, ScheduledRange[]>();
+    manualItems.forEach((item) => {
+      if (item.allDay || !hasTimedRange(item)) return;
+      const bucket = manualBusyByDate.get(item.date) ?? [];
+      bucket.push({ start: toMinutes(item.startTime), end: toMinutes(item.endTime) });
+      manualBusyByDate.set(item.date, bucket);
     });
 
-    const myWorkItems: CalendarItem[] = Array.from(groupedDisplays.entries()).flatMap(([date, rawTasks]) =>
-      groupDateOnlyTasksByDepartment(rawTasks as MyWorkTask[]).map((item) => {
-        if (item.kind === "group") {
-          return {
-            id: `work-group-${date}-${item.department.toLowerCase()}`,
-            source: "my-work" as const,
-            refId: item.tasks[0].id,
-            title: `${item.department} (${item.count})`,
-            date,
-            startTime: "00:00",
-            endTime: "23:59",
-            notes: "Department work block",
-            completed: item.tasks.every((task) => task.completed),
-            allDay: true,
-            color: "violet" as const,
-            linked: item.tasks.some((task) => Boolean(task.linked)),
-            linkedKey: item.tasks.find((task) => task.linkedKey)?.linkedKey,
-            department: item.department,
-            grouped: true,
-            groupTaskIds: item.tasks.map((task) => task.id),
-          };
+    const tasksByDate = new Map<string, MyWorkTask[]>();
+    myWorkTasks
+      .filter((task) => isValidDateKey(task.date))
+      .forEach((task) => {
+        const bucket = tasksByDate.get(task.date) ?? [];
+        bucket.push(task);
+        tasksByDate.set(task.date, bucket);
+      });
+
+    const myWorkItemsRaw: CalendarItem[] = Array.from(tasksByDate.entries()).flatMap(([date, dayTasks]) => {
+      const busyRanges = (manualBusyByDate.get(date) ?? []).slice();
+      const orderedTasks = dayTasks
+        .slice()
+        .sort((a, b) => {
+          const aTimed = hasTimedRange(a);
+          const bTimed = hasTimedRange(b);
+          if (aTimed !== bTimed) return aTimed ? -1 : 1;
+          if (aTimed && bTimed) {
+            const startDiff = toMinutes(a.startTime) - toMinutes(b.startTime);
+            if (startDiff !== 0) return startDiff;
+          }
+          const departmentDiff = a.department.localeCompare(b.department);
+          if (departmentDiff !== 0) return departmentDiff;
+          const titleDiff = a.title.localeCompare(b.title);
+          if (titleDiff !== 0) return titleDiff;
+          return a.id - b.id;
+        });
+
+      return orderedTasks.map((task) => {
+        let startTime = task.startTime;
+        let endTime = task.endTime;
+        let allDay = false;
+        const color = getMyWorkCalendarColor(task);
+
+        if (hasTimedRange(task)) {
+          busyRanges.push({ start: toMinutes(task.startTime), end: toMinutes(task.endTime) });
+        } else {
+          const slot = findNextOpenSlot(busyRanges);
+          startTime = toTime(slot.start);
+          endTime = toTime(slot.end);
+          busyRanges.push(slot);
         }
 
-        const task = item.task;
+        if (task.startTime === "00:00" && task.endTime === "23:59") {
+          allDay = true;
+        }
+
         return {
           id: `work-${task.id}`,
           source: "my-work" as const,
           refId: task.id,
           title: task.title,
-          date: task.date,
-          startTime: task.startTime,
-          endTime: task.endTime,
+          date,
+          startTime,
+          endTime,
           notes: task.project,
           completed: task.completed,
-          allDay: !hasTimedRange(task),
-          color: "violet" as const,
+          allDay,
+          color,
           linked: Boolean(task.linked),
           linkedKey: task.linkedKey,
           department: task.department,
         };
-      })
-    );
+      });
+    });
+
+    const myWorkItems = groupMyWorkCalendarItems(myWorkItemsRaw);
 
     return [...manualItems, ...myWorkItems].sort((a, b) => {
       if (a.date !== b.date) return a.date.localeCompare(b.date);
@@ -679,15 +775,8 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     return counts;
   }, [filteredItems]);
 
-  const nowMarker = useMemo(() => {
-    const now = new Date();
-    const todayKey = formatDateKey(now);
-    const minutes = now.getHours() * 60 + now.getMinutes();
-    return { todayKey, top: (minutes / 60) * HOUR_ROW_PX };
-  }, []);
-
   const conflictCount = useMemo(() => {
-    const dayEvents = events.filter((event) => event.date === selectedDate && !event.allDay && hasTimedRange(event));
+    const dayEvents = filteredItems.filter((item) => item.date === selectedDate && !item.allDay && hasTimedRange(item));
     let conflicts = 0;
     for (let i = 0; i < dayEvents.length; i += 1) {
       for (let j = i + 1; j < dayEvents.length; j += 1) {
@@ -699,15 +788,34 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
       }
     }
     return conflicts;
-  }, [events, selectedDate]);
+  }, [filteredItems, selectedDate]);
 
-  const openGroupedTaskItem = (item: CalendarItem) => {
-    if (!item.grouped || !item.groupTaskIds?.length) {
-      openGroupedTaskItem(item);
+  const openCalendarItem = (item: CalendarItem) => {
+    if (item.grouped && item.groupTaskIds?.length) {
+      const tasks = myWorkTasks.filter((task) => item.groupTaskIds?.includes(task.id));
+      setGroupedTaskDialog({ title: item.title, tasks });
       return;
     }
-    const tasks = myWorkTasks.filter((task) => item.groupTaskIds?.includes(task.id));
-    setGroupedTaskDialog({ title: item.title, tasks });
+    openEdit(item);
+  };
+
+  const openMyWorkTask = (task: MyWorkTask) => {
+    openEdit({
+      id: `work-${task.id}`,
+      source: "my-work",
+      refId: task.id,
+      title: task.title,
+      date: task.date,
+      startTime: task.startTime,
+      endTime: task.endTime,
+      notes: task.project,
+      completed: task.completed,
+      allDay: task.startTime === "00:00" && task.endTime === "23:59",
+      color: getMyWorkCalendarColor(task),
+      linked: Boolean(task.linked),
+      linkedKey: task.linkedKey,
+      department: task.department,
+    });
   };
 
   const navigateRange = (direction: 1 | -1) => {
@@ -879,25 +987,6 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     setIsModalOpen(true);
   };
 
-  const openMyWorkTaskFromGroup = (task: MyWorkTask) => {
-    openEdit({
-      id: `work-${task.id}`,
-      source: "my-work",
-      refId: task.id,
-      title: task.title,
-      date: task.date,
-      startTime: task.startTime,
-      endTime: task.endTime,
-      notes: task.project,
-      completed: task.completed,
-      allDay: !hasTimedRange(task),
-      color: "violet",
-      linked: Boolean(task.linked),
-      linkedKey: task.linkedKey,
-      department: task.department,
-    });
-  };
-
   const deleteEvent = (eventId: number) => {
     if (editingSource === "my-work") return;
     setEvents(events.filter((event) => event.id !== eventId));
@@ -926,6 +1015,20 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
         if (result.ok) {
           await runLinkedScheduleSync();
         }
+      } else {
+        const nextTasks = myWorkTasks.map((task) =>
+          task.id === editingEventId
+            ? {
+                ...task,
+                title: cleanEvent.title,
+                project: cleanEvent.notes?.trim() ? cleanEvent.notes.trim() : task.project,
+                date: cleanEvent.date,
+                startTime: cleanEvent.allDay ? "" : cleanEvent.startTime,
+                endTime: cleanEvent.allDay ? "" : cleanEvent.endTime,
+              }
+            : task
+        );
+        persistMyWorkTasks(nextTasks);
       }
     } else if (editingEventId) {
       setEvents(events.map((event) => (event.id === editingEventId ? { ...event, ...cleanEvent } : event)));
@@ -993,7 +1096,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                     <button
                       key={item.id}
                       onClick={() => {
-                        openGroupedTaskItem(item);
+                        openCalendarItem(item);
                       }}
                       className={cn("block w-full rounded-xl px-2.5 py-2.5", getEventSurfaceClass(item))}
                     >
@@ -1063,7 +1166,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                   <button
                     key={item.id}
                     onClick={() => {
-                      openGroupedTaskItem(item);
+                      openCalendarItem(item);
                     }}
                       className={cn("block w-full rounded-xl px-3 py-2.5", getEventSurfaceClass(item))}
                   >
@@ -1136,7 +1239,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                     className={cn("absolute px-3 py-2.5", getEventSurfaceClass(item))}
                     style={{ top, height, left, width: laneWidth }}
                     onClick={() => {
-                      openGroupedTaskItem(item);
+                      openCalendarItem(item);
                     }}
                   >
                     <div className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl bg-current opacity-45" />
@@ -1172,12 +1275,12 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
   };
 
   const renderAgendaView = () => {
-    const grouped = agendaItems.reduce<Record<string, CalendarItem[]>>((acc, item) => {
+    const itemsByDay = agendaItems.reduce<Record<string, CalendarItem[]>>((acc, item) => {
       acc[item.date] = acc[item.date] ? [...acc[item.date], item] : [item];
       return acc;
     }, {});
 
-    const sortedDays = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+    const sortedDays = Object.keys(itemsByDay).sort((a, b) => a.localeCompare(b));
 
     return (
       <Card className={cn("glass-hero-panel h-full overflow-auto p-6", !embedded && "schedule-light-shell schedule-light-surface calendar-light-shell")}>
@@ -1189,7 +1292,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 <h3 className="text-sm font-semibold tracking-[0.08em] text-muted-foreground">{getDayLabel(parseDateKey(dayKey))}</h3>
               </div>
               <div className="space-y-2">
-                {grouped[dayKey]
+                {itemsByDay[dayKey]
                   .slice()
                   .sort((a, b) => (a.allDay ? -1 : b.allDay ? 1 : toMinutes(a.startTime) - toMinutes(b.startTime)))
                   .map((item) => (
@@ -1197,7 +1300,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                       key={item.id}
                       className={cn("flex w-full items-center justify-between p-4", getEventSurfaceClass(item))}
                       onClick={() => {
-                        openGroupedTaskItem(item);
+                        openCalendarItem(item);
                       }}
                     >
                       <div className="min-w-0">
@@ -1304,28 +1407,35 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
   const selectedDateObj = parseDateKey(selectedDate);
 
   return (
-    <div className={embedded ? "schedule-light-page h-full min-h-0 relative overflow-hidden" : "app-atmosphere-page app-light-page schedule-light-page calendar-light-page min-h-screen relative overflow-hidden"}>
-      <div className={embedded ? "schedule-light-frame relative flex h-full flex-col gap-4 p-2 xl:flex-row" : "schedule-light-frame app-light-frame relative flex min-h-screen flex-col gap-5 xl:h-[100vh] xl:flex-row"}>
+    <div className={embedded ? "schedule-light-page h-full min-h-0 relative overflow-hidden" : "app-atmosphere-page app-light-page schedule-light-page calendar-light-page calendar-light-canvas min-h-screen relative overflow-hidden"}>
+      {!embedded && (
+        <>
+          <div className="calendar-light-bg-bloom calendar-light-bg-bloom-a" aria-hidden />
+          <div className="calendar-light-bg-bloom calendar-light-bg-bloom-b" aria-hidden />
+          <div className="calendar-light-bg-bloom calendar-light-bg-bloom-c" aria-hidden />
+          <div className="calendar-light-bg-weave" aria-hidden />
+          <div className="calendar-light-bg-sheen" aria-hidden />
+        </>
+      )}
+      <div className={embedded ? "schedule-light-frame relative flex h-full flex-col gap-4 p-2 xl:flex-row" : "schedule-light-frame app-light-frame calendar-light-layout relative flex min-h-screen flex-col gap-5 xl:h-[100vh] xl:flex-row"}>
         <div className="order-1 flex min-w-0 flex-1 flex-col gap-4">
-          <Card className={cn("overflow-hidden p-4", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell")}>
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+          <Card className={cn("overflow-hidden p-4", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell calendar-light-toolbar-shell")}>
+            <div className="calendar-light-toolbar flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
               <div className="flex min-w-0 flex-1 flex-col gap-3 xl:flex-row xl:items-center">
-                <div className="min-w-0">
-                  {!embedded && <AnimatedTitle text="Calendar" className="app-light-title" />}
-                </div>
+                {!embedded && <p className="calendar-light-kicker">Delphi Calendar</p>}
 
-                <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as CalendarViewMode)} className="w-full max-w-[640px]">
-                  <TabsList className="schedule-light-mode-toggle schedule-calendar-tabs grid grid-cols-5">
-                    <TabsTrigger value="day" className="schedule-light-mode-pill gap-1.5"><Clock3 className="h-4 w-4" />Day</TabsTrigger>
-                    <TabsTrigger value="week" className="schedule-light-mode-pill gap-1.5"><Rows3 className="h-4 w-4" />Week</TabsTrigger>
-                    <TabsTrigger value="month" className="schedule-light-mode-pill gap-1.5"><CalendarDays className="h-4 w-4" />Month</TabsTrigger>
-                    <TabsTrigger value="year" className="schedule-light-mode-pill gap-1.5"><CalendarRange className="h-4 w-4" />Year</TabsTrigger>
-                    <TabsTrigger value="agenda" className="schedule-light-mode-pill gap-1.5"><ListFilter className="h-4 w-4" />Agenda</TabsTrigger>
+                <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as CalendarViewMode)} className="w-full max-w-[720px]">
+                  <TabsList className="schedule-light-mode-toggle schedule-calendar-tabs calendar-light-view-tabs grid grid-cols-5">
+                    <TabsTrigger value="day" className="schedule-light-mode-pill calendar-light-view-tab gap-1.5"><Clock3 className="h-4 w-4" />Day</TabsTrigger>
+                    <TabsTrigger value="week" className="schedule-light-mode-pill calendar-light-view-tab gap-1.5"><Rows3 className="h-4 w-4" />Week</TabsTrigger>
+                    <TabsTrigger value="month" className="schedule-light-mode-pill calendar-light-view-tab gap-1.5"><CalendarDays className="h-4 w-4" />Month</TabsTrigger>
+                    <TabsTrigger value="year" className="schedule-light-mode-pill calendar-light-view-tab gap-1.5"><CalendarRange className="h-4 w-4" />Year</TabsTrigger>
+                    <TabsTrigger value="agenda" className="schedule-light-mode-pill calendar-light-view-tab gap-1.5"><ListFilter className="h-4 w-4" />Agenda</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
-              <div className={cn("flex flex-wrap items-center gap-2 xl:justify-end", embedded && "-mt-1")}>
+              <div className={cn("calendar-light-toolbar-actions flex flex-wrap items-center gap-2 xl:justify-end", embedded && "-mt-1")}>
                 {conflictCount > 0 && (
                   <Badge variant="outline" className="h-8 rounded-full border-amber-500/40 bg-amber-500/10 px-3 text-xs text-amber-600 dark:text-amber-300">
                     {conflictCount} overlap{conflictCount > 1 ? "s" : ""}
@@ -1333,7 +1443,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 )}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="schedule-light-pill h-9 rounded-full px-3 text-sm">
+                    <Button variant="outline" className="schedule-light-pill calendar-light-toolbar-chip h-10 rounded-full px-4 text-sm">
                       {getDateHeaderLabel(viewMode, visibleDate)}
                     </Button>
                   </PopoverTrigger>
@@ -1353,14 +1463,14 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                     />
                   </PopoverContent>
                 </Popover>
-                <Button variant="outline" onClick={jumpToToday} className="schedule-light-pill rounded-full">Today</Button>
-                <Button size="icon" variant="outline" onClick={() => navigateRange(-1)} className="schedule-light-pill">
+                <Button variant="outline" onClick={jumpToToday} className="schedule-light-pill calendar-light-toolbar-chip rounded-full">Today</Button>
+                <Button size="icon" variant="outline" onClick={() => navigateRange(-1)} className="schedule-light-pill calendar-light-toolbar-icon">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button size="icon" variant="outline" onClick={() => navigateRange(1)} className="schedule-light-pill">
+                <Button size="icon" variant="outline" onClick={() => navigateRange(1)} className="schedule-light-pill calendar-light-toolbar-icon">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-                <Button onClick={() => openCreate(selectedDate)} className={cn("h-10 rounded-full px-5 text-sm font-semibold", embedded ? "schedule-light-add" : "schedule-light-add add-action")}>+ Add Event</Button>
+                <Button onClick={() => openCreate(selectedDate)} className={cn("h-10 rounded-full px-6 text-sm font-semibold", embedded ? "schedule-light-add" : "schedule-light-add add-action calendar-light-add-button")}>+ Add Event</Button>
               </div>
             </div>
           </Card>
@@ -1377,7 +1487,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 onVisibleDateChange={setVisibleDate}
                 onViewModeChange={setViewMode}
                 onCreate={openCreate}
-                onEdit={openGroupedTaskItem}
+                onEdit={openCalendarItem}
                 onMoveItem={moveCalendarItem}
               />
             )}
@@ -1386,8 +1496,8 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
           </div>
         </div>
 
-        {!rightPanelHidden && <Card className={cn("order-2 w-full shrink-0 overflow-hidden p-4 xl:sticky xl:top-6 xl:w-[320px] 2xl:w-[360px]", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell")}>
-          <Button onClick={() => openCreate()} className="mb-4 h-10 w-full rounded-full text-sm font-semibold">
+        {!rightPanelHidden && <Card className={cn("order-2 w-full shrink-0 overflow-hidden p-4 xl:sticky xl:top-6 xl:w-[320px] 2xl:w-[360px]", embedded ? "schedule-light-shell schedule-light-surface" : "glass-hero-panel schedule-light-shell schedule-light-surface calendar-light-shell calendar-light-side-panel")}>
+          <Button onClick={() => openCreate()} className="calendar-light-side-create mb-4 h-10 w-full rounded-full text-sm font-semibold">
             <Plus className="mr-1.5 h-4 w-4" /> Create
           </Button>
 
@@ -1395,10 +1505,10 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search events"
-            className="mb-4"
+            className="calendar-light-side-input mb-4"
           />
 
-          <div className="mb-3 flex items-center justify-between">
+          <div className="calendar-light-side-nav mb-3 flex items-center justify-between">
             <Button size="icon" variant="ghost" onClick={() => setVisibleDate((prev) => addDays(prev, -30))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -1494,7 +1604,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
             })}
           </div>
 
-          <div className="space-y-3 border-t border-[var(--glass-stroke-soft)] pt-4">
+          <div className="calendar-light-side-section space-y-3 border-t border-[var(--glass-stroke-soft)] pt-4">
             <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">LAYERS</p>
             <div className="glass-subpanel flex items-center gap-2 rounded-[18px] px-2 py-2">
               <Checkbox checked={showManual} onCheckedChange={(checked) => setShowManual(Boolean(checked))} />
@@ -1506,7 +1616,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
             </div>
           </div>
 
-          <div className="mt-5 space-y-2 border-t border-[var(--glass-stroke-soft)] pt-4">
+          <div className="calendar-light-side-section mt-5 space-y-2 border-t border-[var(--glass-stroke-soft)] pt-4">
             <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">SELECTED DAY</p>
             <p className="text-sm font-semibold">{getDayLabel(selectedDateObj)}</p>
             <p className="text-xs text-muted-foreground">{selectedDayItems.length} scheduled blocks</p>
@@ -1520,7 +1630,7 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 selectedDayTimeline.map((item) => (
                   <button
                     key={`summary-${item.id}`}
-                    onClick={() => openGroupedTaskItem(item)}
+                    onClick={() => openCalendarItem(item)}
                     className={cn("flex w-full items-start gap-3 p-3.5", getEventSurfaceClass(item))}
                   >
                     <div className={cn("mt-1 h-2.5 w-2.5 shrink-0 rounded-full", eventAccentClass[item.color])} />
@@ -1564,22 +1674,25 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
                 type="button"
                 onClick={() => {
                   setGroupedTaskDialog(null);
-                  openMyWorkTaskFromGroup(task);
+                  openMyWorkTask(task);
                 }}
-                className={cn("flex w-full items-start justify-between rounded-xl p-3 text-left", getEventSurfaceClass({
-                  id: `work-${task.id}`,
-                  source: "my-work",
-                  refId: task.id,
-                  title: task.title,
-                  date: task.date,
-                  startTime: task.startTime,
-                  endTime: task.endTime,
-                  notes: task.project,
-                  completed: task.completed,
-                  allDay: !hasTimedRange(task),
-                  color: "violet",
-                  department: task.department,
-                }))}
+                className={cn(
+                  "flex w-full items-start justify-between rounded-xl p-3 text-left",
+                  getEventSurfaceClass({
+                    id: `work-${task.id}`,
+                    source: "my-work",
+                    refId: task.id,
+                    title: task.title,
+                    date: task.date,
+                    startTime: task.startTime,
+                    endTime: task.endTime,
+                    notes: task.project,
+                    completed: task.completed,
+                    allDay: task.startTime === "00:00" && task.endTime === "23:59",
+                    color: getMyWorkCalendarColor(task),
+                    department: task.department,
+                  })
+                )}
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">{task.title}</p>

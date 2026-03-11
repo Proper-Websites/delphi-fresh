@@ -501,6 +501,8 @@ All colors MUST be HSL.
   }
 
   .schedule-light-page {
+    min-height: 100vh;
+    min-height: 100dvh;
     color: hsl(221 38% 34%) !important;
     background:
       linear-gradient(180deg, hsl(0 0% 100% / 0.1), hsl(0 0% 100% / 0.03)),
@@ -1612,6 +1614,429 @@ All colors MUST be HSL.
   :root:not(.dark) .schedule-light-page .delphi-fc-shell .fc-day-other .fc-daygrid-day-number {
     color: hsl(220 20% 72%);
     opacity: 0.72;
+  }
+
+  :root:not(.dark) .calendar-light-page {
+    --calendar-ice-shell: linear-gradient(180deg, hsl(0 0% 100% / 0.48), hsl(210 100% 98% / 0.22));
+    --calendar-ice-panel: linear-gradient(180deg, hsl(0 0% 100% / 0.7), hsl(210 100% 98% / 0.42));
+    --calendar-ice-border: hsl(0 0% 100% / 0.58);
+    --calendar-ice-grid: hsl(212 48% 82% / 0.5);
+    --calendar-ice-grid-soft: hsl(211 42% 86% / 0.34);
+    --calendar-ice-text: hsl(217 31% 56%);
+    --calendar-ice-text-strong: hsl(217 33% 46%);
+    --calendar-ice-text-soft: hsl(215 34% 74%);
+    --calendar-ice-today: hsl(212 78% 65%);
+    --calendar-ice-today-soft: hsl(212 96% 85% / 0.24);
+    --calendar-ice-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.92),
+      inset 0 -1px 0 hsl(208 78% 90% / 0.12),
+      0 28px 60px -38px hsl(210 78% 70% / 0.22),
+      0 0 40px hsl(203 100% 94% / 0.12);
+  }
+
+  :root:not(.dark) .calendar-light-canvas {
+    background:
+      radial-gradient(circle at 18% 14%, hsl(198 100% 95% / 0.96), transparent 28%),
+      radial-gradient(circle at 88% 18%, hsl(214 100% 92% / 0.76), transparent 24%),
+      radial-gradient(circle at 54% 82%, hsl(204 100% 98% / 0.82), transparent 28%),
+      linear-gradient(180deg, hsl(214 100% 97%) 0%, hsl(209 100% 96%) 48%, hsl(209 100% 95%) 100%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-canvas::before,
+  :root:not(.dark) .calendar-light-canvas::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  :root:not(.dark) .calendar-light-canvas::before {
+    background:
+      linear-gradient(115deg, hsl(0 0% 100% / 0.28), transparent 32%, hsl(0 0% 100% / 0.14) 48%, transparent 72%),
+      radial-gradient(circle at 22% 46%, hsl(0 0% 100% / 0.34), transparent 24%),
+      radial-gradient(circle at 76% 64%, hsl(0 0% 100% / 0.22), transparent 20%);
+    opacity: 0.9;
+  }
+
+  :root:not(.dark) .calendar-light-canvas::after {
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.18), transparent 16%, transparent 82%, hsl(0 0% 100% / 0.16));
+    opacity: 0.92;
+  }
+
+  .calendar-light-bg-bloom,
+  .calendar-light-bg-weave,
+  .calendar-light-bg-sheen {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+  }
+
+  .calendar-light-bg-bloom {
+    filter: blur(10px);
+    opacity: 0.9;
+  }
+
+  .calendar-light-bg-bloom-a {
+    inset: 5% auto auto 2%;
+    width: 36rem;
+    height: 36rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, hsl(194 100% 90% / 0.52) 0%, transparent 68%);
+  }
+
+  .calendar-light-bg-bloom-b {
+    inset: auto 0 8% auto;
+    width: 40rem;
+    height: 26rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, hsl(209 100% 92% / 0.6) 0%, transparent 72%);
+  }
+
+  .calendar-light-bg-bloom-c {
+    inset: 16% 16% auto auto;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, hsl(0 0% 100% / 0.34) 0%, transparent 72%);
+  }
+
+  .calendar-light-bg-weave {
+    opacity: 0.4;
+    background-image:
+      linear-gradient(120deg, transparent 0%, transparent 42%, hsl(0 0% 100% / 0.26) 50%, transparent 58%, transparent 100%),
+      linear-gradient(12deg, transparent 0%, hsl(206 84% 78% / 0.16) 48%, transparent 52%),
+      linear-gradient(168deg, transparent 0%, hsl(204 74% 82% / 0.14) 48%, transparent 52%);
+    background-size: 100% 100%, 210px 210px, 260px 260px;
+    mask-image: linear-gradient(180deg, transparent 0%, hsl(0 0% 0% / 1) 18%, hsl(0 0% 0% / 1) 86%, transparent 100%);
+  }
+
+  .calendar-light-bg-sheen {
+    inset: auto 4% 8% 4%;
+    height: 18rem;
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 0%, hsl(0 0% 100% / 0.42), transparent 68%);
+    filter: blur(12px);
+    opacity: 0.72;
+  }
+
+  :root:not(.dark) .calendar-light-layout {
+    z-index: 1;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-shell,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel,
+  :root:not(.dark) .calendar-light-page .calendar-light-shell {
+    border-color: var(--calendar-ice-border) !important;
+    background:
+      var(--calendar-ice-panel),
+      linear-gradient(140deg, hsl(205 100% 98% / 0.34), transparent 40%, hsl(212 100% 92% / 0.18) 100%) !important;
+    box-shadow: var(--calendar-ice-shadow) !important;
+    backdrop-filter: blur(24px) saturate(1.05);
+    -webkit-backdrop-filter: blur(24px) saturate(1.05);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-shell {
+    padding: 1.1rem 1.35rem !important;
+    border-radius: 2rem !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar {
+    gap: 1rem;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-kicker {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--calendar-ice-text-soft);
+  }
+
+  :root:not(.dark) .calendar-light-page .schedule-calendar-tabs.calendar-light-view-tabs {
+    max-width: 42rem;
+    border: 1px solid hsl(0 0% 100% / 0.64);
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.4), hsl(210 100% 98% / 0.16)),
+      linear-gradient(135deg, hsl(206 100% 96% / 0.22), transparent 60%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.9),
+      0 12px 24px -22px hsl(210 62% 74% / 0.22);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-view-tab {
+    min-height: 2.7rem;
+    border-radius: 999px;
+    color: var(--calendar-ice-text-soft) !important;
+    font-weight: 600;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-view-tab svg {
+    color: hsl(211 42% 78%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-view-tab[data-state="active"] {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(210 100% 99% / 0.72)) !important;
+    color: var(--calendar-ice-text-strong) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.96),
+      0 10px 18px -16px hsl(210 62% 72% / 0.22);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-view-tab[data-state="active"] svg {
+    color: hsl(211 52% 70%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-actions {
+    gap: 0.75rem;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-chip,
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-icon {
+    border-color: hsl(0 0% 100% / 0.62) !important;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.68), hsl(210 100% 99% / 0.3)) !important;
+    color: var(--calendar-ice-text) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.92),
+      0 10px 20px -18px hsl(210 60% 72% / 0.18);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-chip:hover,
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-icon:hover {
+    color: var(--calendar-ice-text-strong) !important;
+    border-color: hsl(203 90% 76% / 0.48) !important;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.78), hsl(206 100% 98% / 0.42)) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-toolbar-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 999px;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-add-button,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-create {
+    border: 1px solid hsl(193 92% 80% / 0.54) !important;
+    background:
+      linear-gradient(90deg, hsl(188 92% 76% / 0.9) 0%, hsl(202 96% 70% / 0.96) 58%, hsl(210 96% 67% / 0.94) 100%) !important;
+    color: hsl(0 0% 100%) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.52),
+      0 18px 34px -20px hsl(202 94% 68% / 0.42),
+      0 0 26px hsl(194 100% 88% / 0.26) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-add-button:hover,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-create:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.6),
+      0 22px 38px -18px hsl(202 94% 68% / 0.48),
+      0 0 32px hsl(194 100% 88% / 0.34) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.56), hsl(210 100% 98% / 0.28)),
+      linear-gradient(145deg, hsl(204 100% 98% / 0.26), transparent 42%, hsl(211 100% 94% / 0.12) 100%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-input {
+    border-color: hsl(0 0% 100% / 0.62) !important;
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.72), hsl(210 100% 99% / 0.38)) !important;
+    color: var(--calendar-ice-text-strong) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-input::placeholder {
+    color: var(--calendar-ice-text-soft);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-nav p,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .text-sm,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .font-semibold {
+    color: var(--calendar-ice-text-strong);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .text-muted-foreground,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .text-xs {
+    color: var(--calendar-ice-text);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-section {
+    border-top-color: hsl(210 46% 86% / 0.42) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .glass-subpanel,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel .glass-list-surface,
+  :root:not(.dark) .calendar-light-page .calendar-light-side-panel [class*="getEventSurfaceClass"] {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.56), hsl(210 100% 98% / 0.24)) !important;
+    border-color: hsl(0 0% 100% / 0.5) !important;
+    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.84);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell {
+    border-radius: 2.2rem;
+    border-color: var(--calendar-ice-border) !important;
+    background:
+      var(--calendar-ice-shell),
+      linear-gradient(140deg, hsl(205 100% 99% / 0.24), transparent 44%, hsl(212 100% 93% / 0.16) 100%) !important;
+    box-shadow: var(--calendar-ice-shadow) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell::before {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.26), transparent 10%),
+      radial-gradient(circle at 88% 16%, hsl(213 100% 90% / 0.14), transparent 22%);
+    opacity: 0.9;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc {
+    --fc-border-color: var(--calendar-ice-grid);
+    --fc-neutral-bg-color: hsl(0 0% 100% / 0.16);
+    --fc-neutral-text-color: var(--calendar-ice-text);
+    --fc-now-indicator-color: hsl(7 90% 66%);
+    color: var(--calendar-ice-text-strong);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-theme-standard td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-theme-standard th,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-scrollgrid,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-scrollgrid-section > * {
+    border-color: var(--calendar-ice-grid);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-col-header-cell,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-axis,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-label-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-axis-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-divider-frame {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.76), hsl(210 100% 99% / 0.42)) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-col-header-cell {
+    box-shadow: inset 0 -1px 0 hsl(211 46% 84% / 0.46);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-col,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-daygrid-day-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot {
+    background: hsl(0 0% 100% / 0.2) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-col {
+    border-right-color: var(--calendar-ice-grid-soft) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot {
+    border-top-color: var(--calendar-ice-grid-soft) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-minor td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell tr.fc-timegrid-slot-minor > td {
+    background: transparent !important;
+    border-top-color: hsl(212 38% 88% / 0.16) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-axis-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-col-header-cell-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-daygrid-day-number {
+    color: var(--calendar-ice-text) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-slot-label-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-axis-cushion {
+    font-weight: 500;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-day-header {
+    min-height: 5.8rem;
+    gap: 0.55rem;
+    padding: 0.75rem 0;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-day-header-weekday {
+    color: var(--calendar-ice-text-soft);
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-day-header-weekday--today {
+    color: hsl(212 70% 50%);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-day-header-date {
+    min-width: 3.45rem;
+    min-height: 3.45rem;
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--calendar-ice-text);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-day-header-date--today {
+    background: linear-gradient(180deg, hsl(212 80% 68%), hsl(213 78% 62%));
+    color: hsl(0 0% 100%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.34),
+      0 14px 24px -18px hsl(213 80% 62% / 0.34);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-col.fc-day-today,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-daygrid-day.fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(209 100% 99% / 0.42), hsl(211 100% 97% / 0.24)) !important;
+    box-shadow: inset 0 0 0 1px hsl(212 78% 70% / 0.12);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-now-indicator-line {
+    border-color: hsl(7 92% 66%) !important;
+    box-shadow: 0 0 0 1px hsl(7 92% 66% / 0.04);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-timegrid-now-indicator-line::before {
+    background: hsl(7 92% 66%) !important;
+    border-color: hsl(0 0% 100% / 0.84) !important;
+    box-shadow: 0 0 10px hsl(7 92% 66% / 0.22);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-highlight {
+    background: linear-gradient(180deg, hsl(210 100% 90% / 0.18), hsl(209 100% 92% / 0.08)) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-day-other .fc-daygrid-day-number {
+    color: hsl(216 22% 76%) !important;
+    opacity: 0.82;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .fc-event,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell .delphi-fc-event {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.32),
+      0 8px 16px -14px hsl(207 84% 56% / 0.18);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-shell h3,
+  :root:not(.dark) .calendar-light-page .calendar-light-shell .text-foreground,
+  :root:not(.dark) .calendar-light-page .calendar-light-shell .font-semibold {
+    color: var(--calendar-ice-text-strong);
+  }
+
+  :root:not(.dark) .calendar-light-page .calendar-light-shell .text-muted-foreground {
+    color: var(--calendar-ice-text);
+  }
+
+  @media (max-width: 1280px) {
+    :root:not(.dark) .calendar-light-page .calendar-light-kicker {
+      display: none;
+    }
   }
 
   .schedule-light-row-control {
@@ -2908,7 +3333,7 @@ All colors MUST be HSL.
 
   .delphi-fc-shell {
     height: 100%;
-    min-height: 0;
+    min-height: 42rem;
     overflow: hidden;
     border: 1px solid var(--glass-stroke);
     border-radius: 1.8rem;
@@ -2917,6 +3342,11 @@ All colors MUST be HSL.
       linear-gradient(145deg, hsl(205 100% 72% / 0.08), transparent 38%, hsl(264 88% 79% / 0.08));
     box-shadow: var(--glass-shadow);
     backdrop-filter: blur(28px);
+  }
+
+  .delphi-fc-shell--week,
+  .delphi-fc-shell--day {
+    min-height: clamp(42rem, 72vh, 64rem);
   }
 
   .delphi-fc-shell .fc {
@@ -3334,11 +3764,43 @@ All colors MUST be HSL.
   }
 
   .delphi-fc-event {
+    position: relative;
     min-height: 100%;
-    border-radius: 0.55rem;
-    border: 1px solid hsl(var(--border) / 0.56);
+    border-radius: 1rem;
+    border: 1px solid hsl(0 0% 100% / 0.42);
     overflow: hidden;
-    box-shadow: none;
+    backdrop-filter: blur(16px) saturate(1.18);
+    -webkit-backdrop-filter: blur(16px) saturate(1.18);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.72),
+      inset 0 -1px 0 hsl(210 70% 88% / 0.18),
+      0 14px 28px -20px hsl(220 42% 12% / 0.3),
+      0 0 18px hsl(200 100% 92% / 0.14);
+  }
+
+  .delphi-fc-event::before,
+  .delphi-fc-event::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .delphi-fc-event::before {
+    background:
+      linear-gradient(145deg, hsl(0 0% 100% / 0.34), transparent 28%, transparent 72%, hsl(0 0% 100% / 0.12)),
+      radial-gradient(circle at 18% 12%, hsl(0 0% 100% / 0.3), transparent 26%),
+      radial-gradient(circle at 82% 86%, hsl(203 100% 92% / 0.14), transparent 28%);
+    opacity: 0.95;
+  }
+
+  .delphi-fc-event::after {
+    inset: 1px;
+    border-radius: calc(1rem - 1px);
+    border: 1px solid hsl(0 0% 100% / 0.12);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 -10px 18px hsl(214 100% 96% / 0.08);
   }
 
   .delphi-fc-event--selected {
@@ -3349,8 +3811,22 @@ All colors MUST be HSL.
   .delphi-fc-event-content {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    padding: 0.28rem 0.45rem 0.3rem;
+    gap: 0.14rem;
+    height: 100%;
+    padding: 0.28rem 0.45rem 0.34rem;
+  }
+
+  .delphi-fc-event-content--timegrid {
+    justify-content: flex-start;
+  }
+
+  .delphi-fc-event-content--month {
+    gap: 0.04rem;
+    padding: 0.18rem 0.38rem 0.22rem;
+  }
+
+  .delphi-fc-event-content--compact {
+    gap: 0.06rem;
   }
 
   .delphi-fc-event-topline {
@@ -3364,8 +3840,8 @@ All colors MUST be HSL.
     display: block;
     min-width: 0;
     font-size: 0.72rem;
-    font-weight: 500;
-    line-height: 1.2;
+    font-weight: 600;
+    line-height: 1.18;
     color: inherit;
   }
 
@@ -3383,65 +3859,96 @@ All colors MUST be HSL.
 
   .delphi-fc-event-time,
   .delphi-fc-event-notes {
-    font-size: 0.6rem;
-    font-weight: 500;
-    line-height: 1.2;
+    font-size: 0.62rem;
+    font-weight: 600;
+    line-height: 1.18;
     color: inherit;
-    opacity: 0.82;
+    opacity: 0.84;
+  }
+
+  .delphi-fc-event-notes {
+    font-weight: 500;
+    opacity: 0.76;
   }
 
   .delphi-fc-event--cyan {
-    background: hsl(206 100% 97%);
-    border-color: hsl(217 78% 55%);
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.34), transparent 24%),
+      linear-gradient(180deg, hsl(206 100% 98% / 0.82), hsl(204 100% 94% / 0.58));
+    border-color: hsl(217 78% 55% / 0.42);
     color: hsl(217 68% 36%);
   }
 
   .delphi-fc-event--violet {
-    background: hsl(255 100% 97%);
-    border-color: hsl(250 68% 68%);
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.34), transparent 24%),
+      linear-gradient(180deg, hsl(255 100% 98% / 0.82), hsl(251 100% 95% / 0.58));
+    border-color: hsl(250 68% 68% / 0.42);
     color: hsl(248 38% 34%);
   }
 
   .delphi-fc-event--emerald {
-    background: hsl(147 50% 95%);
-    border-color: hsl(147 36% 58%);
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.34), transparent 24%),
+      linear-gradient(180deg, hsl(147 56% 97% / 0.82), hsl(150 44% 92% / 0.58));
+    border-color: hsl(147 36% 58% / 0.42);
     color: hsl(149 34% 28%);
   }
 
   .delphi-fc-event--rose {
-    background: hsl(350 100% 97%);
-    border-color: hsl(352 72% 66%);
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.34), transparent 24%),
+      linear-gradient(180deg, hsl(350 100% 98% / 0.82), hsl(348 100% 94% / 0.58));
+    border-color: hsl(352 72% 66% / 0.42);
     color: hsl(348 48% 36%);
   }
 
   .delphi-fc-event--amber {
-    background: hsl(45 100% 96%);
-    border-color: hsl(41 80% 62%);
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.34), transparent 24%),
+      linear-gradient(180deg, hsl(45 100% 97% / 0.84), hsl(42 100% 92% / 0.6));
+    border-color: hsl(41 80% 62% / 0.44);
     color: hsl(34 46% 34%);
   }
 
   .dark .delphi-fc-event--cyan {
-    background: linear-gradient(180deg, hsl(198 98% 56% / 0.96), hsl(217 90% 44% / 0.9));
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.18), transparent 22%),
+      radial-gradient(circle at 82% 82%, hsl(196 100% 82% / 0.18), transparent 28%),
+      linear-gradient(180deg, hsl(195 96% 58% / 0.82), hsl(216 90% 42% / 0.68));
+    border-color: hsl(199 94% 70% / 0.58);
     color: hsl(210 100% 98%);
   }
 
   .dark .delphi-fc-event--violet {
-    background: linear-gradient(180deg, hsl(252 90% 66% / 0.96), hsl(241 74% 54% / 0.9));
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.18), transparent 22%),
+      radial-gradient(circle at 82% 82%, hsl(270 100% 84% / 0.16), transparent 28%),
+      linear-gradient(180deg, hsl(255 92% 70% / 0.82), hsl(244 74% 54% / 0.68));
+    border-color: hsl(258 96% 78% / 0.58);
     color: hsl(244 100% 98%);
   }
 
   .dark .delphi-fc-event--emerald {
-    background: linear-gradient(180deg, hsl(158 72% 44% / 0.96), hsl(169 70% 30% / 0.9));
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.18), transparent 22%),
+      radial-gradient(circle at 82% 82%, hsl(151 100% 80% / 0.18), transparent 28%),
+      linear-gradient(180deg, hsl(154 78% 46% / 0.82), hsl(168 72% 28% / 0.68));
+    border-color: hsl(154 84% 68% / 0.58);
     color: hsl(156 100% 98%);
   }
 
   .dark .delphi-fc-event--rose {
-    background: linear-gradient(180deg, hsl(346 78% 56% / 0.96), hsl(352 70% 45% / 0.9));
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.14), transparent 24%),
+      linear-gradient(180deg, hsl(346 78% 56% / 0.62), hsl(352 70% 45% / 0.48));
     color: hsl(350 100% 98%);
   }
 
   .dark .delphi-fc-event--amber {
-    background: linear-gradient(180deg, hsl(41 92% 58% / 0.96), hsl(31 84% 46% / 0.9));
+    background:
+      radial-gradient(circle at 18% 14%, hsl(0 0% 100% / 0.14), transparent 24%),
+      linear-gradient(180deg, hsl(41 92% 58% / 0.62), hsl(31 84% 46% / 0.48));
     color: hsl(42 100% 98%);
   }
 
@@ -3451,6 +3958,131 @@ All colors MUST be HSL.
 
   .delphi-fc-event--manual {
     box-shadow: none;
+  }
+
+  .delphi-fc-event--task.delphi-fc-event--emerald {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.72),
+      inset 0 -1px 0 hsl(152 86% 74% / 0.32),
+      0 16px 30px -20px hsl(151 72% 18% / 0.38),
+      0 0 26px hsl(154 92% 70% / 0.3);
+  }
+
+  .delphi-fc-event--task.delphi-fc-event--cyan {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.72),
+      inset 0 -1px 0 hsl(201 92% 78% / 0.32),
+      0 16px 30px -20px hsl(212 72% 20% / 0.38),
+      0 0 26px hsl(198 100% 74% / 0.3);
+  }
+
+  .delphi-fc-event--task.delphi-fc-event--violet {
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.72),
+      inset 0 -1px 0 hsl(256 92% 82% / 0.32),
+      0 16px 30px -20px hsl(252 62% 20% / 0.38),
+      0 0 26px hsl(260 100% 80% / 0.3);
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--emerald {
+    background:
+      radial-gradient(circle at 16% 14%, hsl(0 0% 100% / 0.18), transparent 20%),
+      radial-gradient(circle at 84% 84%, hsl(150 100% 78% / 0.22), transparent 30%),
+      linear-gradient(180deg, hsl(151 78% 44% / 0.9), hsl(166 76% 26% / 0.82)) !important;
+    border: 1px solid hsl(154 88% 68% / 0.72) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 -1px 0 hsl(151 100% 80% / 0.22),
+      0 18px 34px -22px hsl(149 74% 18% / 0.54),
+      0 0 28px hsl(153 94% 66% / 0.34) !important;
+    color: hsl(156 100% 98%) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--cyan {
+    background:
+      radial-gradient(circle at 16% 14%, hsl(0 0% 100% / 0.18), transparent 20%),
+      radial-gradient(circle at 84% 84%, hsl(194 100% 80% / 0.22), transparent 30%),
+      linear-gradient(180deg, hsl(197 96% 56% / 0.9), hsl(216 88% 40% / 0.82)) !important;
+    border: 1px solid hsl(199 98% 72% / 0.72) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 -1px 0 hsl(199 100% 82% / 0.22),
+      0 18px 34px -22px hsl(212 78% 18% / 0.54),
+      0 0 28px hsl(198 100% 72% / 0.34) !important;
+    color: hsl(210 100% 98%) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--violet {
+    background:
+      radial-gradient(circle at 16% 14%, hsl(0 0% 100% / 0.18), transparent 20%),
+      radial-gradient(circle at 84% 84%, hsl(264 100% 84% / 0.22), transparent 30%),
+      linear-gradient(180deg, hsl(255 90% 68% / 0.9), hsl(244 74% 52% / 0.82)) !important;
+    border: 1px solid hsl(258 100% 80% / 0.72) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.18),
+      inset 0 -1px 0 hsl(258 100% 84% / 0.22),
+      0 18px 34px -22px hsl(252 68% 18% / 0.54),
+      0 0 28px hsl(260 100% 80% / 0.34) !important;
+    color: hsl(244 100% 98%) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--emerald::before {
+    background:
+      linear-gradient(145deg, hsl(0 0% 100% / 0.2), transparent 30%, transparent 70%, hsl(147 100% 82% / 0.14)),
+      radial-gradient(circle at 20% 16%, hsl(0 0% 100% / 0.18), transparent 24%),
+      radial-gradient(circle at 82% 82%, hsl(149 100% 78% / 0.16), transparent 24%) !important;
+    opacity: 1;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--cyan::before {
+    background:
+      linear-gradient(145deg, hsl(0 0% 100% / 0.2), transparent 30%, transparent 70%, hsl(196 100% 82% / 0.14)),
+      radial-gradient(circle at 20% 16%, hsl(0 0% 100% / 0.18), transparent 24%),
+      radial-gradient(circle at 82% 82%, hsl(194 100% 80% / 0.16), transparent 24%) !important;
+    opacity: 1;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--violet::before {
+    background:
+      linear-gradient(145deg, hsl(0 0% 100% / 0.2), transparent 30%, transparent 70%, hsl(262 100% 84% / 0.14)),
+      radial-gradient(circle at 20% 16%, hsl(0 0% 100% / 0.18), transparent 24%),
+      radial-gradient(circle at 82% 82%, hsl(262 100% 82% / 0.16), transparent 24%) !important;
+    opacity: 1;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--emerald::after {
+    border: 1px solid hsl(151 100% 82% / 0.2) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -12px 18px hsl(148 100% 78% / 0.1) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--cyan::after {
+    border: 1px solid hsl(199 100% 84% / 0.2) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -12px 18px hsl(196 100% 80% / 0.1) !important;
+  }
+
+  .dark .calendar-light-page .delphi-fc-shell .fc-event.delphi-fc-event--task.delphi-fc-event--violet::after {
+    border: 1px solid hsl(260 100% 86% / 0.2) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -12px 18px hsl(262 100% 82% / 0.1) !important;
+  }
+
+  .delphi-fc-shell .fc-timegrid-event .fc-event-resizer {
+    border-radius: 999px;
+    background: hsl(0 0% 100% / 0.92);
+    height: 0.32rem;
+    left: 0.45rem;
+    right: 0.45rem;
+    bottom: 0.18rem;
+    opacity: 0.9;
+  }
+
+  .delphi-fc-shell .fc-timegrid-event:hover {
+    filter: saturate(1.03) brightness(1.01);
   }
 
   .delphi-fc-shell .fc-timegrid-axis-frame,
@@ -3579,6 +4211,163 @@ All colors MUST be HSL.
       radial-gradient(circle at 50% -24%, hsl(216 100% 88% / 0.24), transparent 52%),
       linear-gradient(180deg, hsl(226 46% 22% / 0.88), hsl(227 54% 18% / 0.8)),
       linear-gradient(135deg, hsl(216 100% 72% / 0.06), transparent 56%, hsl(257 70% 80% / 0.04));
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day {
+    padding: 1.15rem 1.15rem 1.25rem;
+    border-radius: 2.35rem;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.5), hsl(210 100% 98% / 0.26)),
+      linear-gradient(140deg, hsl(206 100% 99% / 0.22), transparent 40%, hsl(211 100% 94% / 0.14) 100%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc {
+    background: transparent !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid table,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid table,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-body,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-body,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-cols,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-cols,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slots,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slots {
+    background: transparent !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-scrollgrid,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-scrollgrid {
+    border: 0 !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-divider,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-divider-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-divider,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-divider-frame {
+    display: none !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header {
+    margin-bottom: 0.2rem;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.82), hsl(210 100% 99% / 0.5)) !important;
+    border-top: 1px solid hsl(0 0% 100% / 0.7) !important;
+    border-bottom: 1px solid hsl(210 46% 86% / 0.38) !important;
+    border-left-color: hsl(211 42% 86% / 0.36) !important;
+    border-right-color: hsl(211 42% 86% / 0.36) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.92),
+      inset 0 -1px 0 hsl(209 42% 88% / 0.12);
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell:first-child,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell:first-child {
+    border-top-left-radius: 2rem;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell:last-child,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell:last-child {
+    border-top-right-radius: 2rem;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-col-header-cell.fc-day-today,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-col-header-cell.fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.88), hsl(208 100% 99% / 0.56)) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-label-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-label-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis-frame {
+    background: transparent !important;
+    border-right: 0 !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-axis-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-label-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-axis-cushion,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-label-cushion {
+    padding-left: 0.1rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: hsl(214 28% 68%) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week tr.fc-timegrid-slot-minor > td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day tr.fc-timegrid-slot-minor > td {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-top-color: hsl(211 40% 86% / 0.44) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-slot-minor td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week tr.fc-timegrid-slot-minor > td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-slot-minor td,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day td.fc-timegrid-slot.fc-timegrid-slot-minor,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day tr.fc-timegrid-slot-minor > td {
+    border-top-color: hsl(211 40% 88% / 0.22) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col-frame {
+    background: transparent !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col {
+    border-right-color: hsl(211 40% 86% / 0.38) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col:first-child,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col:first-child {
+    border-left: 1px solid hsl(211 40% 86% / 0.3) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col.fc-day-today,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col.fc-day-today {
+    background:
+      linear-gradient(180deg, hsl(210 100% 98% / 0.22), hsl(209 100% 97% / 0.12)) !important;
+    box-shadow:
+      inset 0 0 0 1px hsl(212 76% 72% / 0.16),
+      inset 0 1px 0 hsl(0 0% 100% / 0.22) !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-timegrid-col.fc-day-today .fc-timegrid-col-frame {
+    background: transparent !important;
+  }
+
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--week .fc-day-today::after,
+  :root:not(.dark) .calendar-light-page .delphi-fc-shell--day .fc-day-today::after {
+    display: none !important;
   }
 
   .dark .calendar-light-page .delphi-fc-shell .fc-theme-standard td,
@@ -5178,21 +5967,42 @@ All colors MUST be HSL.
   }
 
   .lobby-sky {
-    background-image:
-      radial-gradient(circle at 18% 8%, hsl(198 97% 74% / 0.3) 0%, transparent 34%),
-      radial-gradient(circle at 79% 15%, hsl(232 84% 72% / 0.18) 0%, transparent 34%),
-      radial-gradient(circle at 49% 22%, hsl(260 78% 69% / 0.1) 0%, transparent 36%),
-      linear-gradient(180deg, hsl(220 46% 18%) 0%, hsl(223 49% 12%) 44%, hsl(224 55% 7%) 100%);
+    background:
+      linear-gradient(180deg, hsl(232 64% 12% / 0.26), hsl(232 72% 8% / 0.42)),
+      var(--lobby-background-image) center / cover no-repeat,
+      linear-gradient(180deg, hsl(231 72% 18%) 0%, hsl(230 78% 12%) 48%, hsl(230 84% 8%) 100%);
+  }
+
+  .lobby-sky::before,
+  .lobby-sky::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .lobby-sky::before {
+    background:
+      radial-gradient(circle at 18% 84%, hsl(214 100% 70% / 0.09) 0%, transparent 24%),
+      radial-gradient(circle at 76% 18%, hsl(252 88% 74% / 0.12) 0%, transparent 26%),
+      radial-gradient(circle at 54% 22%, hsl(230 90% 66% / 0.12) 0%, transparent 30%);
+    opacity: 0.92;
+  }
+
+  .lobby-sky::after {
+    background:
+      linear-gradient(180deg, hsl(234 70% 8% / 0.08), transparent 20%, transparent 78%, hsl(233 72% 6% / 0.3)),
+      radial-gradient(circle at 50% 50%, transparent 0%, transparent 54%, hsl(231 82% 5% / 0.18) 100%);
   }
 
   .lobby-haze {
     position: absolute;
-    inset: auto -10% -12% -10%;
-    height: 48%;
+    inset: auto -12% -16% -12%;
+    height: 54%;
     background:
-      radial-gradient(ellipse at center, hsl(199 84% 72% / 0.19) 0%, hsl(217 64% 54% / 0.08) 44%, transparent 72%),
-      linear-gradient(180deg, transparent 0%, hsl(222 57% 7% / 0.75) 100%);
-    filter: blur(5px);
+      radial-gradient(ellipse at center, hsl(210 100% 78% / 0.18) 0%, hsl(228 74% 52% / 0.08) 44%, transparent 72%),
+      linear-gradient(180deg, transparent 0%, hsl(233 60% 8% / 0.82) 100%);
+    filter: blur(10px);
   }
 
   .lobby-dust-cloud {
@@ -5200,11 +6010,11 @@ All colors MUST be HSL.
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(circle at 12% 34%, hsl(196 100% 95% / 0.09) 0%, transparent 30%),
-      radial-gradient(circle at 86% 66%, hsl(210 100% 90% / 0.08) 0%, transparent 34%),
-      radial-gradient(circle at 54% 48%, hsl(228 100% 94% / 0.05) 0%, transparent 42%);
-    filter: blur(2px);
-    opacity: 0.85;
+      radial-gradient(circle at 12% 34%, hsl(196 100% 95% / 0.06) 0%, transparent 30%),
+      radial-gradient(circle at 86% 66%, hsl(210 100% 90% / 0.07) 0%, transparent 34%),
+      radial-gradient(circle at 54% 48%, hsl(228 100% 94% / 0.06) 0%, transparent 42%);
+    filter: blur(6px);
+    opacity: 0.42;
   }
 
   .lobby-nebula {
@@ -5217,38 +6027,41 @@ All colors MUST be HSL.
   }
 
   .lobby-nebula-a {
-    width: 54vw;
-    height: 38vh;
-    left: -8vw;
-    top: 4vh;
+    width: 56vw;
+    height: 34vh;
+    left: -10vw;
+    top: 2vh;
     background:
-      radial-gradient(circle at 34% 46%, hsl(193 100% 78% / 0.42) 0%, hsl(208 96% 64% / 0.24) 42%, transparent 74%),
-      radial-gradient(circle at 72% 36%, hsl(224 96% 70% / 0.26) 0%, transparent 66%);
-    filter: blur(26px);
+      radial-gradient(circle at 34% 46%, hsl(201 100% 76% / 0.24) 0%, hsl(219 96% 62% / 0.14) 42%, transparent 74%),
+      radial-gradient(circle at 72% 36%, hsl(238 96% 70% / 0.18) 0%, transparent 66%);
+    filter: blur(42px);
+    opacity: 0.74;
     animation-delay: -4s;
   }
 
   .lobby-nebula-b {
-    width: 44vw;
-    height: 34vh;
+    width: 48vw;
+    height: 36vh;
     right: -5vw;
-    top: 10vh;
+    top: 8vh;
     background:
-      radial-gradient(circle at 52% 42%, hsl(217 90% 72% / 0.38) 0%, hsl(237 84% 67% / 0.2) 46%, transparent 76%),
-      radial-gradient(circle at 18% 64%, hsl(193 100% 80% / 0.22) 0%, transparent 66%);
-    filter: blur(24px);
+      radial-gradient(circle at 52% 42%, hsl(236 90% 72% / 0.24) 0%, hsl(249 84% 67% / 0.14) 46%, transparent 76%),
+      radial-gradient(circle at 18% 64%, hsl(204 100% 80% / 0.14) 0%, transparent 66%);
+    filter: blur(40px);
+    opacity: 0.68;
     animation-delay: -9s;
   }
 
   .lobby-nebula-c {
-    width: 62vw;
-    height: 42vh;
-    left: 18vw;
-    bottom: -14vh;
+    width: 68vw;
+    height: 40vh;
+    left: 14vw;
+    bottom: -18vh;
     background:
-      radial-gradient(ellipse at 48% 36%, hsl(201 96% 74% / 0.24) 0%, hsl(220 82% 58% / 0.14) 48%, transparent 76%),
-      radial-gradient(ellipse at 66% 58%, hsl(190 100% 80% / 0.16) 0%, transparent 66%);
-    filter: blur(28px);
+      radial-gradient(ellipse at 48% 36%, hsl(214 96% 74% / 0.18) 0%, hsl(228 82% 58% / 0.12) 48%, transparent 76%),
+      radial-gradient(ellipse at 66% 58%, hsl(198 100% 80% / 0.12) 0%, transparent 66%);
+    filter: blur(46px);
+    opacity: 0.66;
     animation-delay: -14s;
   }
 
@@ -5258,9 +6071,10 @@ All colors MUST be HSL.
     right: 8vw;
     bottom: 10vh;
     background:
-      radial-gradient(circle at 40% 44%, hsl(202 100% 76% / 0.18) 0%, hsl(223 90% 62% / 0.08) 54%, transparent 78%),
-      radial-gradient(circle at 72% 30%, hsl(262 100% 82% / 0.1) 0%, transparent 66%);
-    filter: blur(20px);
+      radial-gradient(circle at 40% 44%, hsl(208 100% 76% / 0.12) 0%, hsl(223 90% 62% / 0.07) 54%, transparent 78%),
+      radial-gradient(circle at 72% 30%, hsl(262 100% 82% / 0.08) 0%, transparent 66%);
+    filter: blur(30px);
+    opacity: 0.54;
     animation-delay: -6s;
   }
 
@@ -5270,8 +6084,9 @@ All colors MUST be HSL.
     left: 12vw;
     top: 42vh;
     background:
-      radial-gradient(circle at 46% 52%, hsl(190 100% 80% / 0.14) 0%, hsl(214 92% 62% / 0.06) 56%, transparent 78%);
-    filter: blur(18px);
+      radial-gradient(circle at 46% 52%, hsl(202 100% 80% / 0.1) 0%, hsl(221 92% 62% / 0.05) 56%, transparent 78%);
+    filter: blur(26px);
+    opacity: 0.42;
     animation-delay: -11s;
   }
 
@@ -5280,20 +6095,19 @@ All colors MUST be HSL.
     --lobby-cursor-y: 50%;
     --lobby-cursor-alpha: 0.45;
     background:
-      radial-gradient(circle at 50% 4%, hsl(213 100% 90% / 0.28) 0%, transparent 28%),
-      radial-gradient(circle at 14% 24%, hsl(205 100% 80% / 0.18) 0%, transparent 24%),
-      radial-gradient(circle at 88% 18%, hsl(263 100% 84% / 0.12) 0%, transparent 24%),
-      radial-gradient(circle at 96% 84%, hsl(208 100% 74% / 0.16) 0%, transparent 26%),
-      linear-gradient(180deg, hsl(219 82% 84% / 0.18) 0%, hsl(221 58% 42% / 0.18) 34%, hsl(225 48% 14% / 0.46) 100%);
-    border: 1px solid hsl(212 100% 92% / 0.34);
+      radial-gradient(circle at 50% 0%, hsl(202 100% 86% / 0.16) 0%, transparent 26%),
+      radial-gradient(circle at 20% 12%, hsl(211 100% 78% / 0.09) 0%, transparent 22%),
+      radial-gradient(circle at 84% 14%, hsl(246 100% 82% / 0.09) 0%, transparent 24%),
+      linear-gradient(180deg, hsl(222 72% 66% / 0.06) 0%, hsl(226 70% 40% / 0.08) 34%, hsl(232 60% 16% / 0.18) 100%);
+    border: 1px solid hsl(220 100% 92% / 0.14);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.42),
-      inset 0 -1px 0 hsl(209 100% 80% / 0.18),
-      inset 0 28px 64px -40px hsl(200 100% 86% / 0.4),
-      0 42px 84px -36px hsl(231 66% 5% / 0.96),
-      0 0 38px hsl(210 100% 78% / 0.16);
-    backdrop-filter: blur(42px) saturate(155%);
-    -webkit-backdrop-filter: blur(42px) saturate(155%);
+      inset 0 1px 0 hsl(0 0% 100% / 0.14),
+      inset 0 -1px 0 hsl(210 100% 80% / 0.03),
+      inset 0 14px 22px -20px hsl(206 100% 84% / 0.08),
+      0 18px 40px -26px hsl(238 74% 4% / 0.58),
+      0 0 20px hsl(218 100% 78% / 0.1);
+    backdrop-filter: blur(14px) saturate(108%);
+    -webkit-backdrop-filter: blur(14px) saturate(108%);
   }
 
   .lobby-panel-cursor-glow {
@@ -5301,63 +6115,65 @@ All colors MUST be HSL.
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    opacity: calc(0.54 * var(--lobby-cursor-alpha));
+    opacity: calc(0.42 * var(--lobby-cursor-alpha));
     background:
       radial-gradient(
-        320px 240px at var(--lobby-cursor-x) var(--lobby-cursor-y),
-        hsl(194 100% 82% / 0.42) 0%,
-        hsl(215 100% 74% / 0.28) 36%,
-        hsl(255 86% 76% / 0.18) 52%,
+        220px 160px at var(--lobby-cursor-x) var(--lobby-cursor-y),
+        hsl(194 100% 82% / 0.18) 0%,
+        hsl(219 100% 74% / 0.11) 38%,
+        hsl(250 86% 76% / 0.06) 54%,
         transparent 76%
       );
-    filter: blur(12px) saturate(125%);
+    filter: blur(14px) saturate(112%);
     transition:
       opacity 220ms ease;
   }
 
   .lobby-panel-glow {
     position: absolute;
-    inset: -8% -16% auto -16%;
-    height: 56%;
+    inset: -8% -14% auto -14%;
+    height: 34%;
     background:
-      radial-gradient(circle at 50% 18%, hsl(211 100% 86% / 0.36) 0%, hsl(220 100% 76% / 0.18) 40%, transparent 72%);
-    filter: blur(26px);
+      radial-gradient(circle at 50% 22%, hsl(209 100% 84% / 0.14) 0%, hsl(226 100% 72% / 0.05) 40%, transparent 74%);
+    filter: blur(14px);
     pointer-events: none;
   }
 
   .lobby-panel-edge {
     position: absolute;
-    inset: 0.55rem;
+    inset: 0.7rem;
     border-radius: inherit;
-    border: 1px solid hsl(0 0% 100% / 0.16);
-    box-shadow: inset 0 0 0 1px hsl(0 0% 100% / 0.03);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+    box-shadow:
+      inset 0 0 0 1px hsl(0 0% 100% / 0.02),
+      inset 0 8px 18px -16px hsl(0 0% 100% / 0.05);
     pointer-events: none;
   }
 
   .lobby-panel-rim {
     position: absolute;
-    inset: -0.2rem;
+    inset: -0.02rem;
     border-radius: inherit;
-    border: 1px solid hsl(209 100% 88% / 0.34);
+    border: 1px solid hsl(222 100% 88% / 0.24);
     box-shadow:
-      0 0 0 1px hsl(213 100% 88% / 0.12),
-      0 0 24px hsl(209 100% 78% / 0.26),
-      0 0 56px hsl(221 100% 74% / 0.14);
+      0 0 0 1px hsl(218 100% 88% / 0.04),
+      0 0 12px hsl(214 100% 78% / 0.12),
+      0 0 28px hsl(226 100% 74% / 0.06);
     pointer-events: none;
   }
 
   .lobby-panel-floor {
     position: absolute;
-    left: 9%;
-    right: 9%;
-    bottom: -1.1rem;
-    height: 0.38rem;
+    left: 20%;
+    right: 20%;
+    bottom: -0.24rem;
+    height: 0.1rem;
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, hsl(205 100% 84% / 0.84) 10%, hsl(210 100% 92% / 0.98) 50%, hsl(205 100% 84% / 0.84) 90%, transparent);
+    background: linear-gradient(90deg, transparent, hsl(206 100% 84% / 0.28) 14%, hsl(214 100% 92% / 0.48) 50%, hsl(206 100% 84% / 0.28) 86%, transparent);
     box-shadow:
-      0 0 14px hsl(205 100% 80% / 0.54),
-      0 0 30px hsl(215 100% 78% / 0.28);
-    opacity: 0.92;
+      0 0 6px hsl(206 100% 80% / 0.24),
+      0 0 12px hsl(218 100% 78% / 0.08);
+    opacity: 0.72;
     pointer-events: none;
   }
 
@@ -5366,25 +6182,25 @@ All colors MUST be HSL.
     inset: 0;
     border-radius: inherit;
     background-image:
-      radial-gradient(circle at 22% 16%, hsl(0 0% 100% / 0.2) 0%, transparent 30%),
-      radial-gradient(circle at 80% 14%, hsl(196 100% 80% / 0.18) 0%, transparent 26%),
-      linear-gradient(180deg, hsl(0 0% 100% / 0.08) 0%, transparent 38%);
+      radial-gradient(circle at 22% 16%, hsl(0 0% 100% / 0.08) 0%, transparent 28%),
+      radial-gradient(circle at 80% 14%, hsl(196 100% 80% / 0.06) 0%, transparent 24%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.03) 0%, transparent 36%);
     mix-blend-mode: screen;
-    opacity: 0.75;
+    opacity: 0.42;
     pointer-events: none;
   }
 
   .lobby-panel-swirl {
     position: absolute;
     inset: auto -6% -8% -6%;
-    height: 42%;
+    height: 34%;
     border-radius: inherit;
     background:
-      radial-gradient(circle at 78% 86%, hsl(203 100% 82% / 0.3) 0%, transparent 18%),
-      radial-gradient(circle at 54% 94%, hsl(212 100% 88% / 0.24) 0%, transparent 22%),
-      linear-gradient(180deg, transparent 0%, hsl(221 68% 12% / 0.08) 100%);
-    filter: blur(10px);
-    opacity: 0.95;
+      radial-gradient(circle at 78% 86%, hsl(203 100% 82% / 0.08) 0%, transparent 18%),
+      radial-gradient(circle at 54% 94%, hsl(212 100% 88% / 0.07) 0%, transparent 22%),
+      linear-gradient(180deg, transparent 0%, hsl(225 68% 12% / 0.05) 100%);
+    filter: blur(14px);
+    opacity: 0.52;
     pointer-events: none;
   }
 
@@ -5392,40 +6208,66 @@ All colors MUST be HSL.
   .lobby-panel-swirl::after {
     content: "";
     position: absolute;
-    inset: auto 4% 6% 4%;
-    height: 56%;
+    inset: auto 6% 8% 6%;
+    height: 38%;
     border-radius: 999px;
     background:
-      radial-gradient(circle at 10% 50%, hsl(0 0% 100% / 0.18), transparent 18%),
-      linear-gradient(90deg, transparent 0%, hsl(203 100% 88% / 0.08) 14%, hsl(219 100% 84% / 0.16) 34%, hsl(204 100% 84% / 0.1) 56%, transparent 80%);
-    filter: blur(12px);
+      radial-gradient(circle at 10% 50%, hsl(0 0% 100% / 0.08), transparent 18%),
+      linear-gradient(90deg, transparent 0%, hsl(203 100% 88% / 0.04) 14%, hsl(219 100% 84% / 0.07) 34%, hsl(204 100% 84% / 0.05) 56%, transparent 80%);
+    filter: blur(14px);
     transform: rotate(-6deg);
-    opacity: 0.9;
+    opacity: 0.46;
   }
 
   .lobby-panel-swirl::after {
-    inset: auto 10% 18% 14%;
-    height: 42%;
+    inset: auto 12% 18% 16%;
+    height: 26%;
     transform: rotate(8deg);
-    opacity: 0.66;
+    opacity: 0.28;
+  }
+
+  .lobby-panel-streak {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, hsl(214 100% 88% / 0.12), transparent);
+    filter: blur(0.8px);
+    opacity: 0.42;
+  }
+
+  .lobby-panel-streak-a {
+    left: -6%;
+    right: 32%;
+    top: 18%;
+    height: 1px;
+    transform: rotate(-10deg);
+  }
+
+  .lobby-panel-streak-b {
+    left: 48%;
+    right: -8%;
+    bottom: 16%;
+    height: 1px;
+    transform: rotate(7deg);
+    opacity: 0.58;
   }
 
   .lobby-orb-wrap {
     position: relative;
     width: fit-content;
-    margin: 0 auto 1.15rem;
-    padding-bottom: 0.8rem;
+    margin: 0 auto 0.65rem;
+    padding-bottom: 0.46rem;
   }
 
   .lobby-orb-image {
     position: relative;
     z-index: 2;
-    width: 5.7rem;
-    height: 5.7rem;
-    padding: 0.15rem;
+    width: 3.9rem;
+    height: 3.9rem;
+    padding: 0.1rem;
     filter:
-      drop-shadow(0 8px 18px hsl(204 100% 80% / 0.38))
-      drop-shadow(0 16px 28px hsl(221 72% 12% / 0.36));
+      drop-shadow(0 3px 8px hsl(204 100% 80% / 0.26))
+      drop-shadow(0 8px 14px hsl(229 72% 10% / 0.28));
   }
 
   .lobby-orb-pedestal {
@@ -5433,59 +6275,59 @@ All colors MUST be HSL.
     left: 50%;
     bottom: 0;
     z-index: 1;
-    width: 3.6rem;
-    height: 0.8rem;
+    width: 2.15rem;
+    height: 0.3rem;
     border-radius: 999px / 65%;
     transform: translateX(-50%);
     background:
-      linear-gradient(180deg, hsl(211 100% 92% / 0.44), hsl(219 90% 60% / 0.22)),
-      linear-gradient(90deg, transparent, hsl(205 100% 82% / 0.54), transparent);
-    border: 1px solid hsl(211 100% 90% / 0.34);
+      linear-gradient(180deg, hsl(211 100% 92% / 0.22), hsl(219 90% 60% / 0.12)),
+      linear-gradient(90deg, transparent, hsl(205 100% 82% / 0.28), transparent);
+    border: 1px solid hsl(211 100% 90% / 0.12);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.26),
-      0 0 14px hsl(210 100% 80% / 0.26);
+      inset 0 1px 0 hsl(0 0% 100% / 0.12),
+      0 0 8px hsl(210 100% 80% / 0.14);
   }
 
   .lobby-kicker {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: 0.88rem;
+    font-size: 0.56rem;
     font-weight: 700;
-    letter-spacing: 0.42em;
+    letter-spacing: 0.34em;
     text-transform: uppercase;
-    color: hsl(197 100% 90% / 0.86);
+    color: hsl(205 100% 90% / 0.88);
   }
 
   .lobby-title {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(3.8rem, 7vw, 7rem);
+    font-size: clamp(3.15rem, 5.1vw, 4.15rem);
     font-weight: 700;
     line-height: 0.98;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.045em;
     color: hsl(0 0% 100% / 0.98);
-    text-shadow: 0 4px 24px hsl(218 100% 86% / 0.12);
+    text-shadow: 0 3px 18px hsl(218 100% 86% / 0.1);
   }
 
   .lobby-copy {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(1.35rem, 2vw, 2rem);
+    font-size: clamp(0.98rem, 1.2vw, 1.14rem);
     line-height: 1.48;
     font-weight: 500;
-    color: hsl(0 0% 100% / 0.9);
+    color: hsl(0 0% 100% / 0.88);
   }
 
   .lobby-cta {
     position: relative;
     overflow: hidden;
-    border: 1px solid hsl(207 100% 90% / 0.38);
+    border: 1px solid hsl(215 100% 88% / 0.22);
     background:
-      radial-gradient(circle at 50% 0%, hsl(209 100% 90% / 0.18), transparent 42%),
-      linear-gradient(180deg, hsl(211 100% 72% / 0.82), hsl(224 88% 60% / 0.84));
+      radial-gradient(circle at 50% 0%, hsl(209 100% 90% / 0.12), transparent 42%),
+      linear-gradient(180deg, hsl(214 96% 67% / 0.72), hsl(227 84% 58% / 0.74));
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.58),
-      inset 0 -1px 0 hsl(0 0% 100% / 0.12),
-      0 18px 38px -20px hsl(212 100% 70% / 0.72),
-      0 0 24px hsl(211 100% 80% / 0.26);
-    backdrop-filter: blur(18px);
+      inset 0 1px 0 hsl(0 0% 100% / 0.34),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.06),
+      0 10px 20px -16px hsl(223 100% 64% / 0.4),
+      0 0 16px hsl(214 100% 80% / 0.16);
+    backdrop-filter: blur(12px);
     transition:
       transform 180ms cubic-bezier(0.2, 0.7, 0.2, 1),
       box-shadow 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -5505,10 +6347,10 @@ All colors MUST be HSL.
   .lobby-cta:hover {
     transform: translateY(-2px) scale(1.015);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100% / 0.72),
-      inset 0 -1px 0 hsl(0 0% 100% / 0.16),
-      0 20px 40px -18px hsl(206 100% 72% / 0.88),
-      0 0 24px hsl(208 100% 82% / 0.36);
+      inset 0 1px 0 hsl(0 0% 100% / 0.62),
+      inset 0 -1px 0 hsl(0 0% 100% / 0.12),
+      0 16px 28px -18px hsl(214 100% 68% / 0.6),
+      0 0 20px hsl(214 100% 82% / 0.28);
   }
 
   .lobby-cta:hover::after {
@@ -5533,45 +6375,46 @@ All colors MUST be HSL.
 
   .lobby-corner-label {
     font-family: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-    font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+    font-size: clamp(0.94rem, 1.05vw, 1.08rem);
     font-weight: 500;
-    letter-spacing: -0.02em;
-    color: hsl(0 0% 100% / 0.86);
-    text-shadow: 0 2px 10px hsl(220 76% 10% / 0.28);
+    letter-spacing: -0.01em;
+    color: hsl(0 0% 100% / 0.84);
+    text-shadow: 0 2px 10px hsl(232 76% 10% / 0.14);
   }
 
   .lobby-corner-label:hover {
     color: hsl(0 0% 100%);
   }
 
-  .lobby-corner-label--left {
-    left: 0.5rem;
+  .lobby-panel-bottom {
+    min-height: 1.4rem;
   }
 
+  .lobby-corner-label--left,
   .lobby-corner-label--right {
-    right: 0.5rem;
+    position: static;
   }
 
   @media (max-width: 768px) {
     .lobby-panel {
-      border-radius: 2rem;
+      border-radius: 1.45rem;
     }
 
     .lobby-title {
-      font-size: clamp(2.7rem, 12vw, 4.3rem);
+      font-size: clamp(2.35rem, 11vw, 3.1rem);
     }
 
     .lobby-copy {
-      font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+      font-size: clamp(0.9rem, 4vw, 1.02rem);
     }
 
     .lobby-corner-label {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .lobby-panel-floor {
-      left: 6%;
-      right: 6%;
+      left: 14%;
+      right: 14%;
     }
   }
 
@@ -5987,6 +6830,10 @@ All colors MUST be HSL.
     border-radius: 9999px;
     transition: transform 46ms linear;
     will-change: transform;
+    transform: translate(
+      calc(var(--lobby-offset-x) * var(--star-depth)),
+      calc(var(--lobby-offset-y) * var(--star-depth))
+    );
   }
 
   .lobby-star-far {
@@ -6012,23 +6859,44 @@ All colors MUST be HSL.
   .lobby-shooting-star {
     position: absolute;
     width: var(--shoot-length, 160px);
-    height: 1.4px;
-    background: linear-gradient(90deg, hsl(0 0% 100% / 0.86), hsl(195 100% 84% / 0.42), transparent 84%);
+    height: 1.55px;
+    background: linear-gradient(
+      90deg,
+      hsl(0 0% 100% / 0.98) 0%,
+      hsl(198 100% 90% / 0.9) 12%,
+      hsl(204 100% 82% / 0.42) 42%,
+      transparent 88%
+    );
     border-radius: 9999px;
     opacity: 0;
     transform-origin: left center;
-    transform: rotate(var(--shoot-angle, -22deg)) translateX(0) scaleX(0.2);
-    filter: drop-shadow(0 0 8px hsl(197 100% 86% / 0.34));
+    transform: rotate(var(--shoot-angle, -22deg)) translateX(0) scaleX(0.18);
+    filter: drop-shadow(0 0 10px hsl(197 100% 86% / 0.36));
     animation: lobby-shooting-star linear infinite;
+    will-change: transform, opacity, filter;
+  }
+
+  .lobby-shooting-star::before {
+    content: "";
+    position: absolute;
+    right: calc(var(--shoot-length, 160px) - 10px);
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, hsl(0 0% 100% / 0.98) 0%, hsl(195 100% 84% / 0.68) 62%, transparent 100%);
+    transform: translateY(-50%);
+    box-shadow:
+      0 0 10px hsl(0 0% 100% / 0.6),
+      0 0 20px hsl(197 100% 82% / 0.46);
+    opacity: 0.95;
   }
 
   .lobby-starfield {
     position: absolute;
-    inset: -6%;
+    inset: 0;
     pointer-events: none;
-    transform-origin: 50% 50%;
-    animation: lobby-starfield-orbit 210s linear infinite;
-    will-change: transform;
+    will-change: auto;
   }
 
   .lobby-starfield-warp {
@@ -6099,6 +6967,14 @@ All colors MUST be HSL.
     will-change: transform, opacity;
   }
 
+  .lobby-star-drift {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: lobby-star-drift ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
   .lobby-starfield-warp .lobby-star-dot {
     animation: lobby-star-warp-stretch 0.86s cubic-bezier(0.1, 0.78, 0.2, 1) forwards;
   }
@@ -6138,35 +7014,56 @@ All colors MUST be HSL.
     }
   }
 
-  @keyframes lobby-starfield-orbit {
-    0% {
-      transform: rotate(0deg) scale(1.015);
-    }
-    100% {
-      transform: rotate(360deg) scale(1.015);
-    }
-  }
-
   @keyframes lobby-shooting-star {
     0% {
       opacity: 0;
-      transform: rotate(var(--shoot-angle, -22deg)) translateX(0) scaleX(0.2);
+      filter: drop-shadow(0 0 2px hsl(197 100% 86% / 0.12));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(0) scaleX(0.14);
     }
-    8% {
-      opacity: 0.86;
-      transform: rotate(var(--shoot-angle, -22deg)) translateX(8px) scaleX(1);
-    }
-    32% {
-      opacity: 0.62;
-      transform: rotate(var(--shoot-angle, -22deg)) translateX(180px) scaleX(1.05);
-    }
-    56% {
+    6% {
       opacity: 0;
-      transform: rotate(var(--shoot-angle, -22deg)) translateX(320px) scaleX(0.94);
+      filter: drop-shadow(0 0 4px hsl(197 100% 86% / 0.18));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(0) scaleX(0.18);
+    }
+    16% {
+      opacity: 0.96;
+      filter: drop-shadow(0 0 12px hsl(197 100% 86% / 0.5));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(calc(var(--shoot-travel, 300px) * 0.08)) scaleX(1);
+    }
+    42% {
+      opacity: 0.7;
+      filter: drop-shadow(0 0 9px hsl(197 100% 86% / 0.32));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(calc(var(--shoot-travel, 300px) * 0.52)) scaleX(0.9);
+    }
+    68% {
+      opacity: 0.18;
+      filter: drop-shadow(0 0 5px hsl(197 100% 86% / 0.18));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(calc(var(--shoot-travel, 300px) * 0.88)) scaleX(0.46);
+    }
+    82% {
+      opacity: 0;
+      filter: drop-shadow(0 0 2px hsl(197 100% 86% / 0.1));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(var(--shoot-travel, 300px)) scaleX(0.2);
     }
     100% {
       opacity: 0;
-      transform: rotate(var(--shoot-angle, -22deg)) translateX(320px) scaleX(0.94);
+      filter: drop-shadow(0 0 2px hsl(197 100% 86% / 0.08));
+      transform: rotate(var(--shoot-angle, -22deg)) translateX(var(--shoot-travel, 300px)) scaleX(0.2);
+    }
+  }
+
+  @keyframes lobby-star-drift {
+    0% {
+      transform: translate(
+        calc(var(--star-drift-x, 0px) * -0.45),
+        calc(var(--star-drift-y, 0px) * -0.45)
+      );
+    }
+    100% {
+      transform: translate(
+        calc(var(--star-drift-x, 0px) * 0.45),
+        calc(var(--star-drift-y, 0px) * 0.45)
+      );
     }
   }
 

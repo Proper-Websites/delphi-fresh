@@ -30,6 +30,7 @@ interface WorkTask {
   title: string;
   project: string;
   priority: "crucial" | "high" | "medium" | "low";
+  badgeLabel?: string;
   required?: boolean;
   date: string; // YYYY-MM-DD
   startTime: string; // HH:mm
@@ -147,8 +148,14 @@ const formatClock = (time: string, format: "12h" | "24h") => {
 const hasTimedWindow = (task: Pick<WorkTask, "startTime" | "endTime">) => hasAssignedTime(task.startTime) && hasAssignedTime(task.endTime);
 const formatTaskWindow = (task: Pick<WorkTask, "startTime" | "endTime">, format: "12h" | "24h") =>
   hasTimedWindow(task) ? `${formatClock(task.startTime, format)}-${formatClock(task.endTime, format)}` : "No time assigned";
+const formatGroupedItemWindow = (
+  item: Pick<DateOnlyDepartmentDisplayItem<WorkTask> & { kind: "group" }, "startTime" | "endTime">,
+  format: "12h" | "24h"
+) =>
+  hasAssignedTime(item.startTime) && hasAssignedTime(item.endTime)
+    ? `${formatClock(item.startTime, format)}-${formatClock(item.endTime, format)}`
+    : "No time assigned";
 
-const getPriorityLabel = (priority: WorkTask["priority"]) => priority.toUpperCase();
 const getCoreMatterBadgeClass = () =>
   "border border-fuchsia-300/70 bg-fuchsia-200/45 text-fuchsia-900 shadow-[inset_0_1px_0_hsl(0_0%_100%/.46)] dark:border-fuchsia-300/38 dark:bg-fuchsia-300/18 dark:text-fuchsia-100";
 const myWorkViews: MyWorkView[] = ["command", "list", "cards", "bubble"];
@@ -156,6 +163,20 @@ const resolveScheduleMode = (value: string | null): ScheduleMode => (value === "
 const resolveMyWorkView = (value: string | null): MyWorkView => {
   if (!value || value === "calendar") return "command";
   return myWorkViews.includes(value as MyWorkView) ? (value as MyWorkView) : "command";
+};
+
+const getTaskBadgeLabel = (task: WorkTask) => {
+  if (task.badgeLabel?.trim()) return task.badgeLabel.trim();
+  if (task.linkedSource === "sales") return "Follow-up";
+  if (task.linkedSource === "subscriptions") {
+    if (task.linkedKey?.includes(":billing")) return "Billing";
+    if (task.linkedKey?.includes(":revision")) return "Revision";
+  }
+  if (task.linkedSource === "development") {
+    if (task.linkedKey?.includes(":start")) return "Kickoff";
+    if (task.linkedKey?.includes(":deadline")) return "Deadline";
+  }
+  return "Task";
 };
 
 export default function MyWork() {
@@ -180,7 +201,9 @@ export default function MyWork() {
   const [syncMessage, setSyncMessage] = useState("");
   const [completedBurstTaskId, setCompletedBurstTaskId] = useState<number | null>(null);
   const [todayPulseCollapsed, setTodayPulseCollapsed] = useState(true);
+  const [nowCollapsed, setNowCollapsed] = useState(false);
   const [nextCollapsed, setNextCollapsed] = useState(false);
+  const [moreCollapsed, setMoreCollapsed] = useState(true);
   const [laterCollapsed, setLaterCollapsed] = useState(true);
   const [overdueCollapsed, setOverdueCollapsed] = useState(true);
   const [unscheduledCollapsed, setUnscheduledCollapsed] = useState(true);
@@ -531,6 +554,7 @@ export default function MyWork() {
         title: nextStepTitle,
         project: target.project,
         priority: target.priority,
+        badgeLabel: "Task",
         required: false,
         date: "",
         startTime: "",
@@ -626,6 +650,7 @@ export default function MyWork() {
                   title: task.name,
                   department: task.department,
                   priority: task.priority,
+                  badgeLabel: current.badgeLabel || "Task",
                   required: task.required,
                   date: task.date,
                   startTime: task.startTime,
@@ -650,6 +675,7 @@ export default function MyWork() {
           title: task.name,
           project: "New Project",
           priority: task.priority,
+          badgeLabel: "Task",
           required: task.required,
           date: task.date,
           startTime: task.startTime,
@@ -872,9 +898,9 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
         {scheduleMode === "work" ? (
           <Tabs value={activeView} onValueChange={handleViewChange} className="flex min-h-0 flex-1 flex-col gap-4">
 
-          <TabsContent value="command" className="min-h-0 flex-1">
-            <div className="relative grid h-full min-h-0 gap-4 xl:grid-cols-[1.5fr_1fr]">
-              <Card className={cn("schedule-light-shell relative min-h-0 overflow-hidden border-0 bg-transparent p-6 shadow-none before:content-none hover:translate-y-0 hover:scale-100 hover:shadow-none", todayPulseCollapsed && "xl:col-span-2")}>
+          <TabsContent value="command" className="mt-0 min-h-0 flex-1">
+            <div className="relative grid gap-4 xl:min-h-[calc(100dvh-14rem)] xl:grid-cols-[1.5fr_1fr]">
+              <Card className={cn("schedule-light-shell relative flex h-full min-h-[calc(100dvh-14rem)] flex-col border-0 bg-transparent p-6 shadow-none before:content-none hover:translate-y-0 hover:scale-100 hover:shadow-none", todayPulseCollapsed && "xl:col-span-2")}>
                 <div className="schedule-light-filter-corner" role="tablist" aria-label="Task status filter">
                   <button
                     type="button"
@@ -918,8 +944,8 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
 
                 </div>
 
-                <div className="relative grid min-h-0 flex-1 gap-4 xl:grid-cols-[minmax(0,1.85fr)_minmax(320px,35%)]">
-                  <div className="space-y-3 pr-1">
+                <div className="relative grid h-full min-h-0 flex-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1.85fr)_minmax(320px,35%)]">
+                  <div className="glass-scrollbar min-h-0 space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
                     {overdueTasks.length > 0 && (
                       <div className="schedule-light-row rounded-[28px] p-4">
                         <button
@@ -948,7 +974,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                       <Badge variant="outline" className="tracking-[0.08em]">GROUP</Badge>
                                     </div>
                                     <p className="mt-1 text-xs text-muted-foreground">
-                                      {getDateLabel(item.date, timeZone)} • No time assigned
+                                      {getDateLabel(item.date, timeZone)} • {formatGroupedItemWindow(item, timeFormat)}
                                     </p>
                                   </button>
                                   {expandedTaskGroups.includes(item.key) && (
@@ -962,11 +988,11 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                           <div className="flex items-center justify-between gap-2">
                                             <p className="truncate text-sm font-semibold">{task.title}</p>
                                             <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
-                                              {getPriorityLabel(task.priority)}
+                                              {getTaskBadgeLabel(task)}
                                             </Badge>
                                           </div>
                                           <p className="mt-1 text-xs text-muted-foreground">
-                                            {task.department} • No time assigned
+                                            {task.department} • {formatTaskWindow(task, timeFormat)}
                                           </p>
                                         </button>
                                       ))}
@@ -982,7 +1008,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                   <div className="flex items-center justify-between gap-2">
                                     <p className="truncate text-sm font-semibold">{item.task.title}</p>
                                     <Badge className={`${getPriorityColor(item.task.priority)} tracking-[0.08em]`}>
-                                      {getPriorityLabel(item.task.priority)}
+                                      {getTaskBadgeLabel(item.task)}
                                     </Badge>
                                   </div>
                                   <p className="mt-1 text-xs text-muted-foreground">
@@ -997,11 +1023,15 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                     )}
 
                     <div className="schedule-light-row rounded-[28px] p-4">
-                      <div className="flex items-center justify-between gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setNowCollapsed((prev) => !prev)}
+                        className="schedule-light-section-header flex w-full items-center justify-between gap-3 text-left"
+                      >
                         <p className="schedule-light-section-label text-xs font-semibold tracking-[0.08em] text-muted-foreground">NOW</p>
-                        <span className="schedule-light-row-control" aria-hidden />
-                      </div>
-                      {nowTask ? (
+                        <span className={cn("schedule-light-row-control", !nowCollapsed && "schedule-light-row-control-open")} aria-hidden />
+                      </button>
+                      {!nowCollapsed && (nowTask ? (
                         <button
                           onClick={() => setFocusTaskId(nowTask.id)}
                           className="schedule-light-task-card mt-2 block w-full rounded-[20px] p-3 text-left"
@@ -1020,7 +1050,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                         </button>
                       ) : (
                         <p className="mt-2 text-sm text-muted-foreground">Empty</p>
-                      )}
+                      ))}
                     </div>
 
                     <div className="schedule-light-row rounded-[28px] p-4">
@@ -1092,7 +1122,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                       </Badge>
                                     ) : null}
                                     <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
-                                      {getPriorityLabel(task.priority)}
+                                      {getTaskBadgeLabel(task)}
                                     </Badge>
                                   </div>
                                 </div>
@@ -1108,7 +1138,169 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                       ))}
                     </div>
 
-                    <div className="schedule-light-row rounded-[28px] p-4">
+                    <div className="px-4 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setMoreCollapsed((prev) => !prev)}
+                        className="inline-flex items-center gap-1.5 text-left text-[0.75rem] leading-none text-muted-foreground transition-opacity hover:opacity-80"
+                      >
+                        <span>View More</span>
+                        <span
+                          className={cn(
+                            "inline-block transition-transform duration-200",
+                            !moreCollapsed && "rotate-180"
+                          )}
+                          aria-hidden
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </span>
+                      </button>
+                    </div>
+                    {!moreCollapsed && (
+                      <div className="mt-3 space-y-3">
+                        <div className="schedule-light-row rounded-[28px] p-4">
+                            <button
+                              type="button"
+                              onClick={() => setLaterCollapsed((prev) => !prev)}
+                              className="schedule-light-section-header flex w-full items-center justify-between gap-3 text-left"
+                            >
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">LATER</p>
+                                <Badge variant="outline" className="h-5 px-2 text-[10px]">{laterTasks.length}</Badge>
+                              </div>
+                              <span className={cn("schedule-light-row-control", !laterCollapsed && "schedule-light-row-control-open")} aria-hidden />
+                            </button>
+                            {!laterCollapsed && (
+                              <div className="glass-scrollbar mt-2 max-h-[52vh] space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
+                                {laterTaskGroups.length > 0 ? laterTaskGroups.map(([date, items]) => (
+                                  <div key={date} className="space-y-2">
+                                    <p className="text-[11px] font-semibold tracking-[0.08em] text-muted-foreground">{getDateLabel(date, timeZone)}</p>
+                                    {items.map((item) =>
+                                      item.kind === "group" ? (
+                                        <div key={item.key} className="space-y-2">
+                                          <button
+                                            type="button"
+                                            onClick={() => toggleTaskGroup(item.key)}
+                                            className="schedule-light-task-card block w-full rounded-[20px] p-3 text-left"
+                                          >
+                                            <div className="flex items-center justify-between gap-2">
+                                              <p className="truncate text-sm font-semibold">{item.department} ({item.count})</p>
+                                              <Badge variant="outline" className="tracking-[0.08em]">GROUP</Badge>
+                                            </div>
+                                            <p className="mt-1 text-xs text-muted-foreground">{formatGroupedItemWindow(item, timeFormat)}</p>
+                                          </button>
+                                          {expandedTaskGroups.includes(item.key) && (
+                                            <div className="space-y-2 pl-3">
+                                              {item.tasks.map((task) => (
+                                                <button
+                                                  key={task.id}
+                                                  onClick={() => setFocusTaskId(task.id)}
+                                                  className="schedule-light-task-card block w-full rounded-[20px] p-3 text-left"
+                                                >
+                                                  <div className="flex items-center justify-between gap-2">
+                                                    <div className="flex min-w-0 items-center gap-2">
+                                                      <p className="truncate text-sm font-semibold">{task.title}</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                      {task.required ? (
+                                                        <Badge className={`${getCoreMatterBadgeClass()} tracking-[0.08em]`}>
+                                                          ATTENTION
+                                                        </Badge>
+                                                      ) : null}
+                                                      <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
+                                                        {getTaskBadgeLabel(task)}
+                                                      </Badge>
+                                                    </div>
+                                                  </div>
+                                                  <p className="mt-1 text-xs text-muted-foreground">
+                                                    {task.department} • {formatTaskWindow(task, timeFormat)}
+                                                  </p>
+                                                </button>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
+                                      ) : (
+                                        <button
+                                          key={item.key}
+                                          onClick={() => setFocusTaskId(item.task.id)}
+                                          className="schedule-light-task-card block w-full rounded-[20px] p-3 text-left"
+                                        >
+                                          <div className="flex items-center justify-between gap-2">
+                                            <div className="flex min-w-0 items-center gap-2">
+                                              <p className="truncate text-sm font-semibold">{item.task.title}</p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                              {item.task.required ? (
+                                                <Badge className={`${getCoreMatterBadgeClass()} tracking-[0.08em]`}>
+                                                  ATTENTION
+                                                </Badge>
+                                              ) : null}
+                                              <Badge className={`${getPriorityColor(item.task.priority)} tracking-[0.08em]`}>
+                                                {getTaskBadgeLabel(item.task)}
+                                              </Badge>
+                                            </div>
+                                          </div>
+                                          <p className="mt-1 text-xs text-muted-foreground">
+                                            {isDateOnlyTask(item.task) ? "No time assigned" : formatClock(item.task.startTime, timeFormat)} • {item.task.department}
+                                          </p>
+                                        </button>
+                                      )
+                                    )}
+                                  </div>
+                                )) : <p className="text-sm text-muted-foreground">Empty</p>}
+                              </div>
+                            )}
+                        </div>
+
+                        <div className="schedule-light-row rounded-[28px] p-4">
+                            <button
+                              type="button"
+                              onClick={() => setUnscheduledCollapsed((prev) => !prev)}
+                              className="schedule-light-section-header flex w-full items-center justify-between gap-3 text-left"
+                            >
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground">UNSCHEDULED</p>
+                                <Badge variant="outline" className="h-5 px-2 text-[10px]">{unscheduledTasks.length}</Badge>
+                              </div>
+                              <span className={cn("schedule-light-row-control", !unscheduledCollapsed && "schedule-light-row-control-open")} aria-hidden />
+                            </button>
+                            {!unscheduledCollapsed && (
+                              <div className="glass-scrollbar mt-2 max-h-[52vh] space-y-2 overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
+                                {unscheduledTasks.length > 0 ? unscheduledTasks.map((task) => (
+                                  <button
+                                    key={task.id}
+                                    onClick={() => setFocusTaskId(task.id)}
+                                    className="schedule-light-task-card block w-full rounded-[20px] p-3 text-left"
+                                  >
+                                    <div className="flex items-center justify-between gap-2">
+                                      <div className="flex min-w-0 items-center gap-2">
+                                        <p className="truncate text-sm font-semibold">{task.title}</p>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        {task.required ? (
+                                          <Badge className={`${getCoreMatterBadgeClass()} tracking-[0.08em]`}>
+                                            ATTENTION
+                                          </Badge>
+                                        ) : null}
+                                        <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
+                                          {getTaskBadgeLabel(task)}
+                                        </Badge>
+                                      </div>
+                                    </div>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                      No date assigned • {task.department}
+                                    </p>
+                                  </button>
+                                )) : <p className="text-sm text-muted-foreground">Empty</p>}
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Hidden behind MORE to keep the command view tighter by default. */}
+                    {false && <div className="schedule-light-row rounded-[28px] p-4">
                         <button
                           type="button"
                           onClick={() => setLaterCollapsed((prev) => !prev)}
@@ -1121,7 +1313,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                         <span className={cn("schedule-light-row-control", !laterCollapsed && "schedule-light-row-control-open")} aria-hidden />
                       </button>
                       {!laterCollapsed && (
-                        <div className="mt-2 space-y-3">
+                        <div className="glass-scrollbar mt-2 max-h-[52vh] space-y-3 overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
                           {laterTaskGroups.length > 0 ? laterTaskGroups.map(([date, items]) => (
                             <div key={date} className="space-y-2">
                               <p className="text-[11px] font-semibold tracking-[0.08em] text-muted-foreground">{getDateLabel(date, timeZone)}</p>
@@ -1137,7 +1329,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                         <p className="truncate text-sm font-semibold">{item.department} ({item.count})</p>
                                         <Badge variant="outline" className="tracking-[0.08em]">GROUP</Badge>
                                       </div>
-                                      <p className="mt-1 text-xs text-muted-foreground">No time assigned</p>
+                                      <p className="mt-1 text-xs text-muted-foreground">{formatGroupedItemWindow(item, timeFormat)}</p>
                                     </button>
                                     {expandedTaskGroups.includes(item.key) && (
                                       <div className="space-y-2 pl-3">
@@ -1158,12 +1350,12 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                                   </Badge>
                                                 ) : null}
                                                 <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
-                                                  {getPriorityLabel(task.priority)}
+                                                  {getTaskBadgeLabel(task)}
                                                 </Badge>
                                               </div>
                                             </div>
                                             <p className="mt-1 text-xs text-muted-foreground">
-                                              {task.department} • No time assigned
+                                              {task.department} • {formatTaskWindow(task, timeFormat)}
                                             </p>
                                           </button>
                                         ))}
@@ -1187,7 +1379,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                           </Badge>
                                         ) : null}
                                         <Badge className={`${getPriorityColor(item.task.priority)} tracking-[0.08em]`}>
-                                          {getPriorityLabel(item.task.priority)}
+                                          {getTaskBadgeLabel(item.task)}
                                         </Badge>
                                       </div>
                                     </div>
@@ -1201,9 +1393,9 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                           )) : <p className="text-sm text-muted-foreground">Empty</p>}
                         </div>
                       )}
-                    </div>
+                    </div>}
 
-                    <div className="schedule-light-row rounded-[28px] p-4">
+                    {false && <div className="schedule-light-row rounded-[28px] p-4">
                         <button
                           type="button"
                           onClick={() => setUnscheduledCollapsed((prev) => !prev)}
@@ -1234,7 +1426,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                                     </Badge>
                                   ) : null}
                                   <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>
-                                    {getPriorityLabel(task.priority)}
+                                    {getTaskBadgeLabel(task)}
                                   </Badge>
                                 </div>
                               </div>
@@ -1245,14 +1437,14 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                           )) : <p className="text-sm text-muted-foreground">Empty</p>}
                         </div>
                       )}
-                    </div>
+                    </div>}
                   </div>
 
                   <div className="schedule-light-required flex min-h-0 h-full flex-col self-stretch rounded-[30px] p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <p className="schedule-light-section-label text-xs font-semibold tracking-[0.08em] text-muted-foreground">CORE MATTER</p>
                     </div>
-                    <div className="flex-1 space-y-2 pr-1">
+                    <div className="glass-scrollbar flex-1 min-h-0 space-y-2 overflow-y-auto overflow-x-hidden overscroll-contain pr-1">
                       {requiredTasks.map((task) => (
                         <button
                           key={task.id}
@@ -1446,7 +1638,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                           {task.title}
                         </p>
                         <Badge className={`${getPriorityColor(task.priority)} h-8 px-4 text-sm font-semibold tracking-[0.08em]`}>
-                          {getPriorityLabel(task.priority)}
+                          {getTaskBadgeLabel(task)}
                         </Badge>
                       </div>
                       <p className={`${listMetaClasses[listSize]} text-muted-foreground mt-1`}>
@@ -1598,7 +1790,7 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                         <div className="flex h-full flex-col justify-between">
                           <div>
                             <div className="mb-3 flex items-center justify-between">
-                              <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>{getPriorityLabel(task.priority)}</Badge>
+                              <Badge className={`${getPriorityColor(task.priority)} tracking-[0.08em]`}>{getTaskBadgeLabel(task)}</Badge>
                               <span className="text-xs text-muted-foreground">{task.department}</span>
                             </div>
                             <h3 className="text-lg font-semibold">{task.title}</h3>
@@ -1747,9 +1939,9 @@ const getPriorityColor = (priority: WorkTask["priority"]) => {
                     </p>
                   </Card>
                   <Card className="p-5">
-                    <p className="text-sm text-muted-foreground">Priority / Duration</p>
+                    <p className="text-sm text-muted-foreground">Label / Duration</p>
                     <div className="mt-1 flex items-center gap-3">
-                      <Badge className={`${getPriorityColor(focusedTask.priority)} tracking-[0.08em]`}>{getPriorityLabel(focusedTask.priority)}</Badge>
+                      <Badge className={`${getPriorityColor(focusedTask.priority)} tracking-[0.08em]`}>{getTaskBadgeLabel(focusedTask)}</Badge>
                       <span className="text-lg text-muted-foreground">{formatMinutes(focusedTask.durationMinutes)}</span>
                     </div>
                   </Card>

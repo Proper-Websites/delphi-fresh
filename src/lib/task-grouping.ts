@@ -11,6 +11,8 @@ export interface DateOnlyDepartmentTaskGroup<T extends DateOnlyDepartmentTaskLik
   key: string;
   date: string;
   department: string;
+  startTime: string;
+  endTime: string;
   count: number;
   tasks: T[];
 }
@@ -33,48 +35,43 @@ export const isDateOnlyTask = <T extends DateOnlyDepartmentTaskLike>(task: T) =>
 export const groupDateOnlyTasksByDepartment = <T extends DateOnlyDepartmentTaskLike>(
   tasks: T[]
 ): DateOnlyDepartmentDisplayItem<T>[] => {
-  const byDepartment = new Map<string, T[]>();
+  const byBucket = new Map<string, T[]>();
 
   tasks.forEach((task) => {
-    const bucketKey = `${task.date}__${task.department.trim().toLowerCase()}`;
-    const bucket = byDepartment.get(bucketKey) ?? [];
+    const normalizedDepartment = task.department.trim().toLowerCase();
+    const timeBucket = isDateOnlyTask(task)
+      ? "date-only"
+      : `${task.startTime.trim().toLowerCase()}__${task.endTime.trim().toLowerCase()}`;
+    const bucketKey = `${task.date}__${normalizedDepartment}__${timeBucket}`;
+    const bucket = byBucket.get(bucketKey) ?? [];
     bucket.push(task);
-    byDepartment.set(bucketKey, bucket);
+    byBucket.set(bucketKey, bucket);
   });
 
   const items: DateOnlyDepartmentDisplayItem<T>[] = [];
 
-  byDepartment.forEach((bucket, bucketKey) => {
+  byBucket.forEach((bucket, bucketKey) => {
     const [sample] = bucket;
-    const dateOnlyTasks = bucket.filter(isDateOnlyTask);
-    const timedTasks = bucket.filter((task) => !isDateOnlyTask(task));
-
-    timedTasks.forEach((task) => {
-      items.push({
-        kind: "task",
-        key: `task-${task.id}`,
-        task,
-      });
-    });
-
-    if (dateOnlyTasks.length >= 2) {
-      items.push({
-        kind: "group",
-        key: `group-${bucketKey}`,
-        date: sample.date,
-        department: sample.department,
-        count: dateOnlyTasks.length,
-        tasks: dateOnlyTasks.slice().sort((a, b) => a.id - b.id),
+    if (bucket.length < 2) {
+      bucket.forEach((task) => {
+        items.push({
+          kind: "task",
+          key: `task-${task.id}`,
+          task,
+        });
       });
       return;
     }
 
-    dateOnlyTasks.forEach((task) => {
-      items.push({
-        kind: "task",
-        key: `task-${task.id}`,
-        task,
-      });
+    items.push({
+      kind: "group",
+      key: `group-${bucketKey}`,
+      date: sample.date,
+      department: sample.department,
+      startTime: sample.startTime,
+      endTime: sample.endTime,
+      count: bucket.length,
+      tasks: bucket.slice().sort((a, b) => a.id - b.id),
     });
   });
 
@@ -85,6 +82,10 @@ export const groupDateOnlyTasksByDepartment = <T extends DateOnlyDepartmentTaskL
 
     const aDepartment = a.kind === "group" ? a.department : a.task.department;
     const bDepartment = b.kind === "group" ? b.department : b.task.department;
-    return aDepartment.localeCompare(bDepartment);
+    if (aDepartment !== bDepartment) return aDepartment.localeCompare(bDepartment);
+
+    const aStart = a.kind === "group" ? a.startTime : a.task.startTime;
+    const bStart = b.kind === "group" ? b.startTime : b.task.startTime;
+    return aStart.localeCompare(bStart);
   });
 };
