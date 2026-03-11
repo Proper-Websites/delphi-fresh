@@ -1214,8 +1214,13 @@ export default function Sales() {
     const industryValue = isRealtorRoleValue(roleValue) ? REALTOR_INDUSTRY : toSmartTitleCase(prospectForm.industry);
     const email = prospectForm.email.trim().toLowerCase();
     const secondaryEmail = prospectForm.secondaryEmail.trim().toLowerCase();
+    const rawProspectLabel = toSmartTitleCase(prospectForm.prospect);
     const prospect =
-      companyName || prospectName || toSmartTitleCase(prospectForm.prospect) || target.prospect;
+      rawProspectLabel ||
+      (companyName && prospectName ? `${companyName} — ${prospectName}` : "") ||
+      companyName ||
+      prospectName ||
+      target.prospect;
     const contact = email || secondaryEmail || prospectName || prospectForm.contact.trim() || target.contact;
     const responseSelections = normalizeResponseSelections(prospectForm.responses);
 
@@ -1347,7 +1352,13 @@ export default function Sales() {
     const secondaryEmail = prospectForm.secondaryEmail.trim().toLowerCase();
     if (hasDuplicateConflict) return;
     const fallbackProspect = `Untitled Prospect ${new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}`;
-    const prospect = companyName || prospectName || toSmartTitleCase(prospectForm.prospect) || fallbackProspect;
+    const rawProspectLabel = toSmartTitleCase(prospectForm.prospect);
+    const prospect =
+      rawProspectLabel ||
+      (companyName && prospectName ? `${companyName} — ${prospectName}` : "") ||
+      companyName ||
+      prospectName ||
+      fallbackProspect;
     const contact = email || secondaryEmail || prospectName || companyName || toSmartTitleCase(prospectForm.contact) || "No Contact Yet";
     const responseSelections = normalizeResponseSelections(prospectForm.responses);
 
