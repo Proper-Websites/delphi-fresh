@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
 
-export type SubscriptionClientStatus = "active" | "limit_reached" | "pending_payment";
+type LegacySubscriptionClientStatus = "active" | "limit_reached" | "pending_payment";
+
+export type SubscriptionClientStatus = "active" | "pending_payment";
 
 export interface SubscriptionClientRow {
   id: number;
@@ -13,7 +15,7 @@ export interface SubscriptionClientRow {
   mrr: string;
   revisions_used: number;
   revisions_total: number;
-  status: SubscriptionClientStatus;
+  status: LegacySubscriptionClientStatus;
   next_billing: string | null;
   last_revision: string;
   last_revision_date: string | null;
@@ -30,8 +32,6 @@ export interface SubscriptionClientRecord {
   clientSince: string;
   plan: string;
   mrr: string;
-  revisionsUsed: number;
-  revisionsTotal: number;
   status: SubscriptionClientStatus;
   nextBilling: string;
   lastRevision: string;
@@ -48,9 +48,7 @@ export function mapSubscriptionClientRowToRecord(row: SubscriptionClientRow): Su
     clientSince: row.client_since ?? "",
     plan: row.plan,
     mrr: row.mrr,
-    revisionsUsed: row.revisions_used,
-    revisionsTotal: row.revisions_total,
-    status: row.status,
+    status: row.status === "pending_payment" ? "pending_payment" : "active",
     nextBilling: row.next_billing ?? "",
     lastRevision: row.last_revision,
     lastRevisionDate: row.last_revision_date ?? "N/A",
@@ -79,8 +77,8 @@ export async function replaceSubscriptionClients(items: SubscriptionClientRecord
     client_since: item.clientSince?.trim() ? item.clientSince : null,
     plan: item.plan,
     mrr: item.mrr,
-    revisions_used: item.revisionsUsed,
-    revisions_total: item.revisionsTotal,
+    revisions_used: 0,
+    revisions_total: 0,
     status: item.status,
     next_billing: item.nextBilling?.trim() ? item.nextBilling : null,
     last_revision: item.lastRevision,

@@ -24,6 +24,14 @@ import { replaceDevelopmentProjects } from "./lib/supabase-development-projects"
 import { replaceSubscriptionClients } from "./lib/supabase-subscriptions-clients";
 import { runLinkedScheduleSync } from "./lib/linked-schedule-engine";
 import { logActivity } from "./lib/activity-log";
+import {
+  isStaleDevelopmentAutoEvent,
+  isStaleDevelopmentAutoTask,
+  isStaleSalesAutoEvent,
+  isStaleSalesAutoTask,
+  isStaleSubscriptionAutoEvent,
+  isStaleSubscriptionAutoTask,
+} from "./lib/development-task-cleanup";
 
 const queryClient = new QueryClient();
 const EXIT_DRAFT_KEY = "delphi_exit_draft_v1";
@@ -33,6 +41,8 @@ const DATA_RESET_VERSION_KEY = "delphi_data_reset_version";
 const DATA_RESET_VERSION = "2026-03-03-clear-seed-data-v1";
 const SCHEDULE_RESET_VERSION_KEY = "delphi_schedule_reset_version";
 const SCHEDULE_RESET_VERSION = "2026-03-09-clear-schedule-v1";
+const DEVELOPMENT_TASK_PURGE_VERSION_KEY = "delphi_development_task_purge_version";
+const DEVELOPMENT_TASK_PURGE_VERSION = "2026-03-11-remove-development-linked-tasks-v4";
 const FORCE_SYNC_THROTTLE_MS = 12_000;
 const FORCE_SYNC_INTERVAL_MS = 20_000;
 const UNDO_HISTORY_LIMIT = 120;
@@ -213,6 +223,45 @@ const App = () => {
     if (localStorage.getItem(SCHEDULE_RESET_VERSION_KEY) === SCHEDULE_RESET_VERSION) return;
     // Historical schedule reset is retired. Never auto-clear scheduling fields on boot.
     localStorage.setItem(SCHEDULE_RESET_VERSION_KEY, SCHEDULE_RESET_VERSION);
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem(DEVELOPMENT_TASK_PURGE_VERSION_KEY) === DEVELOPMENT_TASK_PURGE_VERSION) return;
+
+    const myWork = readLocalArray("delphi_my_work_tasks_v3");
+    const calendar = readLocalArray("delphi_calendar_events_v2");
+    const nextMyWork = myWork.filter(
+      (task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task)
+    );
+    const nextCalendar = calendar.filter(
+      (event) => !isStaleDevelopmentAutoEvent(event) && !isStaleSalesAutoEvent(event) && !isStaleSubscriptionAutoEvent(event)
+    );
+    const changed = nextMyWork.length !== myWork.length || nextCalendar.length !== calendar.length;
+
+    localStorage.setItem(DEVELOPMENT_TASK_PURGE_VERSION_KEY, DEVELOPMENT_TASK_PURGE_VERSION);
+    if (!changed) return;
+
+    const nextMyWorkRaw = JSON.stringify(nextMyWork);
+    const nextCalendarRaw = JSON.stringify(nextCalendar);
+    localStorage.setItem("delphi_my_work_tasks_v3", nextMyWorkRaw);
+    localStorage.setItem("delphi_calendar_events_v2", nextCalendarRaw);
+    window.dispatchEvent(
+      new CustomEvent("delphi-localstorage-apply", {
+        detail: { key: "delphi_my_work_tasks_v3", raw: nextMyWorkRaw },
+      })
+    );
+    window.dispatchEvent(
+      new CustomEvent("delphi-localstorage-apply", {
+        detail: { key: "delphi_calendar_events_v2", raw: nextCalendarRaw },
+      })
+    );
+    window.dispatchEvent(new Event("delphi-linked-schedule-sync"));
+
+    if (!isSupabaseConfigured) return;
+    void Promise.allSettled([
+      replaceMyWorkTasks(nextMyWork as Parameters<typeof replaceMyWorkTasks>[0]),
+      replaceCalendarEvents(nextCalendar as Parameters<typeof replaceCalendarEvents>[0]),
+    ]);
   }, []);
 
   useEffect(() => {

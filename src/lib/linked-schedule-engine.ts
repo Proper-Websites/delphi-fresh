@@ -6,8 +6,6 @@ import { convertProspectFollowUpToUserTime, getUserTimeZone, type ProspectTimeZo
 
 const MY_WORK_KEY = "delphi_my_work_tasks_v3";
 const CALENDAR_KEY = "delphi_calendar_events_v2";
-const DEVELOPMENT_KEY = "delphi_development_projects_v2";
-const DEVELOPMENT_WORKFLOW_KEY = "delphi_development_project_workflows_v2";
 const SALES_KEY = "delphi_sales_outreach_v2";
 const SUBSCRIPTIONS_KEY = "delphi_subscriptions_clients_v2";
 const SYNC_HEALTH_KEY = "delphi_linked_sync_health_v1";
@@ -30,24 +28,6 @@ type StoredCalendarEvent = CalendarEventRecord & {
   linkedKey?: string;
   linkedRefId?: number | null;
   linkedRefSubId?: number | null;
-};
-
-type DevelopmentProject = {
-  id: number;
-  name?: string;
-  client?: string;
-  startDate?: string;
-  deadline?: string;
-  status?: "planning" | "in_progress" | "review";
-};
-
-type DevelopmentWorkflowTask = {
-  id: number;
-  title?: string;
-  done?: boolean;
-  priority?: MyWorkTaskRecord["priority"];
-  durationMinutes?: number;
-  date?: string;
 };
 
 type SalesProspect = {
@@ -149,21 +129,6 @@ const hashString = (value: string) => {
 const linkedTaskId = (key: string) => 700_000_000 + (hashString(key) % 200_000_000);
 const linkedEventId = (key: string) => 900_000_000 + (hashString(key) % 90_000_000);
 
-const normalizeWorkflowTasks = (value: unknown): DevelopmentWorkflowTask[] => {
-  if (!Array.isArray(value)) return [];
-  return value.map((task) => {
-    const source = (task && typeof task === "object" ? task : {}) as Partial<DevelopmentWorkflowTask>;
-    return {
-      id: typeof source.id === "number" ? source.id : Date.now(),
-      title: String(source.title || "").trim(),
-      done: Boolean(source.done),
-      priority: isPriority(source.priority) ? source.priority : "medium",
-      durationMinutes: Math.max(15, Number(source.durationMinutes) || 30),
-      date: String((source as { date?: unknown }).date || "").trim(),
-    };
-  });
-};
-
 const makeLinkedTask = (
   source: LinkedSource,
   linkedKey: string,
@@ -173,6 +138,7 @@ const makeLinkedTask = (
     project: string;
     department: string;
     priority?: MyWorkTaskRecord["priority"];
+    badgeLabel?: string;
     startTime?: string;
     endTime?: string;
     durationMinutes?: number;
@@ -190,6 +156,7 @@ const makeLinkedTask = (
   title,
   project: options.project,
   priority: options.priority ?? "medium",
+  badgeLabel: options.badgeLabel ?? "Task",
   date,
   startTime: options.startTime ?? "",
   endTime: options.endTime ?? "",
@@ -218,85 +185,9 @@ const makeMirrorEvent = (task: StoredTask): StoredCalendarEvent => ({
 const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: LinkedSyncIssue[] } => {
   const issues: LinkedSyncIssue[] = [];
   const userTimeZone = getUserTimeZone();
-  const development = readArray<DevelopmentProject>(DEVELOPMENT_KEY);
-  const developmentWorkflowMap = readRecord<DevelopmentWorkflowTask[]>(DEVELOPMENT_WORKFLOW_KEY);
   const sales = readArray<SalesProspect>(SALES_KEY);
   const subscriptions = readArray<SubscriptionClient>(SUBSCRIPTIONS_KEY);
   const linkedTasks: StoredTask[] = [];
-
-  development.forEach((project) => {
-    const projectName = String(project.name || "Project").trim() || "Project";
-    const clientName = String(project.client || "Development").trim() || "Development";
-
-    if (isValidDateKey(project.startDate)) {
-      const key = `development:${project.id}:start`;
-      linkedTasks.push(
-        makeLinkedTask("development", key, `Kickoff: ${projectName}`, project.startDate, {
-          project: clientName,
-          department: "Development",
-          priority: "medium",
-          linkedRefId: project.id,
-        })
-      );
-    } else {
-      issues.push({
-        category: "unscheduled_source",
-        key: `development:${project.id}:start`,
-        detail: `Project "${projectName}" is missing Start Date.`,
-      });
-    }
-
-    if (isValidDateKey(project.deadline)) {
-      const key = `development:${project.id}:deadline`;
-      linkedTasks.push(
-        makeLinkedTask("development", key, `Deadline: ${projectName}`, project.deadline, {
-          project: clientName,
-          department: "Development",
-          priority: "crucial",
-          linkedRefId: project.id,
-        })
-      );
-    } else {
-      issues.push({
-        category: "unscheduled_source",
-        key: `development:${project.id}:deadline`,
-        detail: `Project "${projectName}" is missing Launch Date.`,
-      });
-    }
-
-    const workflow = normalizeWorkflowTasks(
-      developmentWorkflowMap[String(project.id)] ?? developmentWorkflowMap[String(Number(project.id))]
-    );
-    const openWorkflow = workflow.filter((task) => !task.done && task.title);
-    openWorkflow.slice(0, 8).forEach((task, index) => {
-      const key = `development:${project.id}:workflow:${task.id}`;
-      const durationMinutes = Math.max(15, Number(task.durationMinutes) || 30);
-      const startMinutes = 9 * 60 + index * 45;
-      const taskDate =
-        (isValidDateKey(task.date) && task.date) ||
-        (isValidDateKey(project.deadline) && project.deadline) ||
-        (isValidDateKey(project.startDate) && project.startDate) ||
-        null;
-      if (!taskDate) {
-        issues.push({
-          category: "unscheduled_source",
-          key,
-          detail: `Workflow task "${String(task.title).trim()}" in "${projectName}" is missing a date.`,
-        });
-        return;
-      }
-      linkedTasks.push(
-        makeLinkedTask("development", key, `Task: ${projectName} — ${String(task.title).trim()}`, taskDate, {
-          project: clientName,
-          department: "Development",
-          priority: task.priority || "medium",
-          durationMinutes,
-          linkedRefId: project.id,
-          linkedRefSubId: task.id,
-        })
-      );
-    });
-  });
 
   sales.forEach((prospect) => {
     const followUpDate = isValidDateKey(prospect.nextFollowUpDate) ? prospect.nextFollowUpDate : null;
@@ -312,6 +203,16 @@ const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: Li
 
     const prospectName = String(prospect.prospect || "Prospect").trim() || "Prospect";
     const status = prospect.status || "follow_up";
+    const badgeLabel =
+      status === "interested"
+        ? "Interested"
+        : status === "booked"
+          ? "Booked"
+          : status === "verdict"
+            ? "Verdict"
+            : status === "no_response"
+              ? "No Response"
+              : "Follow-up";
     const rawStartTime = isValidTimeKey(prospect.nextFollowUpTime) ? prospect.nextFollowUpTime : "";
     const normalizedFollowUp = convertProspectFollowUpToUserTime(
       followUpDate,
@@ -328,6 +229,7 @@ const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: Li
         project: prospectName,
         department: "Sales",
         priority: status === "interested" || status === "booked" || status === "verdict" ? "high" : "medium",
+        badgeLabel,
         startTime,
         endTime: startTime ? toTimeKey(hour * 60 + minute + 30) : "",
         durationMinutes: 30,
@@ -345,6 +247,7 @@ const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: Li
           project: clientName,
           department: "Subscriptions",
           priority: client.status === "pending_payment" ? "crucial" : "high",
+          badgeLabel: "Billing",
           durationMinutes: 30,
           linkedRefId: client.id,
         })
@@ -363,6 +266,7 @@ const buildLinkedTasksFromSnapshot = (): { linkedTasks: StoredTask[]; issues: Li
           project: clientName,
           department: "Subscriptions",
           priority: "medium",
+          badgeLabel: "Revision",
           durationMinutes: 30,
           linkedRefId: client.id,
         })

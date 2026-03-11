@@ -23,6 +23,7 @@ import { syncDatesIntoSchedule } from "@/lib/date-funnel-sync";
 import { LinkedSyncStatusLine } from "@/components/LinkedSyncStatusLine";
 import { cn } from "@/lib/utils";
 import { promptForNextStep } from "@/lib/next-step";
+import { isStaleDevelopmentAutoTask, isStaleSalesAutoTask, isStaleSubscriptionAutoTask } from "@/lib/development-task-cleanup";
 import { groupDateOnlyTasksByDepartment, isDateOnlyTask, type DateOnlyDepartmentDisplayItem } from "@/lib/task-grouping";
 
 interface WorkTask {
@@ -406,9 +407,16 @@ export default function MyWork() {
       try {
         const rows = await fetchMyWorkTasks();
         if (cancelled) return;
+        const nextRows = rows
+          .map(mapMyWorkRowToRecord)
+          .filter((task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task));
         if (rows.length > 0) {
+          if (nextRows.length !== rows.length) {
+            await replaceMyWorkTasks(nextRows);
+            if (cancelled) return;
+          }
           suppressNextSync.current = true;
-          setTaskList(rows.map(mapMyWorkRowToRecord));
+          setTaskList(nextRows);
         } else {
           await replaceMyWorkTasks(taskList);
         }
@@ -458,6 +466,13 @@ export default function MyWork() {
   }, [taskList]);
 
   useEffect(() => {
+    if (!taskList.some((task) => isStaleDevelopmentAutoTask(task) || isStaleSalesAutoTask(task) || isStaleSubscriptionAutoTask(task))) return;
+    setTaskList(
+      taskList.filter((task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task))
+    );
+  }, [taskList, setTaskList]);
+
+  useEffect(() => {
     if (searchParams.get("add") !== "task") return;
     setSelectedTask(null);
     setIsModalOpen(true);
@@ -473,7 +488,11 @@ export default function MyWork() {
       try {
         const raw = localStorage.getItem("delphi_my_work_tasks_v3");
         const parsed = raw ? JSON.parse(raw) : [];
-        setTaskList(Array.isArray(parsed) ? parsed : []);
+        setTaskList(
+          Array.isArray(parsed)
+            ? parsed.filter((task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task))
+            : []
+        );
       } catch {
         // Ignore malformed task snapshots.
       }

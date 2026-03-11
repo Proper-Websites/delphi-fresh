@@ -2547,7 +2547,7 @@ export default function Sales() {
               </GlassScrollArea>
             </Card>
 
-            <Card className="sales-limbo-panel flex max-h-[38vh] min-h-[18rem] flex-col overflow-hidden p-6 animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
+            <Card className="sales-limbo-panel flex h-[38vh] min-h-[18rem] flex-col overflow-hidden p-6 animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
               <div className="sales-panel-header mb-3 flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-foreground">Limbo</h2>
                 <Button
@@ -2562,8 +2562,8 @@ export default function Sales() {
                 </Button>
               </div>
               <GlassScrollArea
-                containerClassName="h-full min-h-0 flex-1"
-                className={`h-full min-h-0 space-y-3 overflow-y-scroll pr-2 ${limboScrollActive ? "scroll-active" : ""}`}
+                containerClassName="min-h-0 flex-1"
+                className={`min-h-0 space-y-3 overflow-y-auto pr-2 ${limboScrollActive ? "scroll-active" : ""}`}
                 onScroll={markLimboScrolling}
                 onMouseEnter={markLimboScrolling}
                 onMouseMove={markLimboScrolling}

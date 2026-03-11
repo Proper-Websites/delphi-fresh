@@ -34,6 +34,14 @@ import { fetchCalendarEvents, mapCalendarRowToRecord, replaceCalendarEvents } fr
 import { toSmartTitleCase, toSmartTitleCaseLive } from "@/lib/text-format";
 import { applyLinkedWriteback } from "@/lib/linked-writeback";
 import { runLinkedScheduleSync } from "@/lib/linked-schedule-engine";
+import {
+  isStaleDevelopmentAutoEvent,
+  isStaleDevelopmentAutoTask,
+  isStaleSalesAutoEvent,
+  isStaleSalesAutoTask,
+  isStaleSubscriptionAutoEvent,
+  isStaleSubscriptionAutoTask,
+} from "@/lib/development-task-cleanup";
 
 type CalendarViewMode = "day" | "week" | "month" | "year" | "agenda";
 type FormMode = "onboard" | "all";
@@ -276,11 +284,11 @@ const getMyWorkCalendarColor = (task: MyWorkTask): EventColor => {
   const department = String(task.department || "").trim().toLowerCase();
 
   if (linkedSource === "sales" || linkedKey.startsWith("sales:") || department.includes("sales")) {
-    return "emerald";
+    return "cyan";
   }
 
   if (linkedSource === "development" || linkedKey.startsWith("development:") || department.includes("development")) {
-    return "cyan";
+    return "emerald";
   }
 
   if (linkedSource === "subscriptions" || linkedKey.startsWith("subscriptions:") || department.includes("subscription")) {
@@ -416,9 +424,16 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
       try {
         const rows = await fetchCalendarEvents();
         if (cancelled) return;
+        const nextRows = rows
+          .map(mapCalendarRowToRecord)
+          .filter((event) => !isStaleDevelopmentAutoEvent(event) && !isStaleSalesAutoEvent(event) && !isStaleSubscriptionAutoEvent(event));
         if (rows.length > 0) {
+          if (nextRows.length !== rows.length) {
+            await replaceCalendarEvents(nextRows);
+            if (cancelled) return;
+          }
           suppressNextSync.current = true;
-          setEvents(rows.map(mapCalendarRowToRecord));
+          setEvents(nextRows);
         } else {
           await replaceCalendarEvents(events);
         }
@@ -582,7 +597,10 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
       try {
         const raw = localStorage.getItem("delphi_my_work_tasks_v3");
         const parsed = raw ? JSON.parse(raw) : [];
-        setMyWorkTasks(Array.isArray(parsed) ? parsed : []);
+        const nextTasks = Array.isArray(parsed)
+          ? parsed.filter((task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task))
+          : [];
+        setMyWorkTasks(nextTasks);
       } catch {
         setMyWorkTasks([]);
       }
@@ -617,7 +635,11 @@ export default function CalendarPage({ embedded = false }: CalendarPageProps) {
     try {
       const raw = localStorage.getItem("delphi_my_work_tasks_v3");
       const parsed = raw ? JSON.parse(raw) : [];
-      setMyWorkTasks(Array.isArray(parsed) ? parsed : []);
+      setMyWorkTasks(
+        Array.isArray(parsed)
+          ? parsed.filter((task) => !isStaleDevelopmentAutoTask(task) && !isStaleSalesAutoTask(task) && !isStaleSubscriptionAutoTask(task))
+          : []
+      );
     } catch {
       setMyWorkTasks([]);
     }

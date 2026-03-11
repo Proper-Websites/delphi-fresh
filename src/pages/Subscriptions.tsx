@@ -29,7 +29,7 @@ import { MeetingNotesDialog } from "@/components/MeetingNotesDialog";
 import { LinkedSyncStatusLine } from "@/components/LinkedSyncStatusLine";
 import { GlassScrollArea } from "@/components/ui/glass-scroll-area";
 
-type ClientStatus = "active" | "limit_reached" | "pending_payment";
+type ClientStatus = "active" | "pending_payment";
 type ClientFormMode = "onboard" | "all";
 
 interface RetainerClient {
@@ -41,8 +41,6 @@ interface RetainerClient {
   clientSince: string;
   plan: string;
   mrr: string;
-  revisionsUsed: number;
-  revisionsTotal: number;
   status: ClientStatus;
   nextBilling: string;
   lastRevision: string;
@@ -56,7 +54,6 @@ interface ClientFormData {
   contactEmail: string;
   clientSince: string;
   mrr: string;
-  revisionsTotal: number;
   status: ClientStatus;
   nextBilling: string;
   lastRevision: string;
@@ -91,7 +88,6 @@ export default function Subscriptions() {
     contactEmail: "",
     clientSince: "",
     mrr: "",
-    revisionsTotal: 3,
     status: "active",
     nextBilling: new Date().toISOString().split("T")[0],
     lastRevision: "N/A",
@@ -106,9 +102,15 @@ export default function Subscriptions() {
       try {
         const rows = await fetchSubscriptionClients();
         if (cancelled) return;
+        const nextClients = rows.map(mapSubscriptionClientRowToRecord);
+        const hasLegacyStatus = rows.some((row) => row.status === "limit_reached");
         if (rows.length > 0) {
+          if (hasLegacyStatus) {
+            await replaceSubscriptionClients(nextClients);
+            if (cancelled) return;
+          }
           suppressNextSync.current = true;
-          setClients(rows.map(mapSubscriptionClientRowToRecord));
+          setClients(nextClients);
         } else {
           await replaceSubscriptionClients(clients);
         }
@@ -132,6 +134,16 @@ export default function Subscriptions() {
   useEffect(() => {
     void syncDatesIntoSchedule();
   }, [clients]);
+
+  useEffect(() => {
+    if (!clients.some((client) => normalizeClientStatus((client as { status?: unknown }).status) !== client.status)) return;
+    setClients((prev) =>
+      prev.map((client) => ({
+        ...client,
+        status: normalizeClientStatus((client as { status?: unknown }).status),
+      }))
+    );
+  }, [clients, setClients]);
 
   useEffect(() => {
     if (!isSupabaseConfigured || !hasLoadedFromSupabase.current) return;
@@ -165,8 +177,6 @@ export default function Subscriptions() {
     switch (status) {
       case "active":
         return "default";
-      case "limit_reached":
-        return "secondary";
       case "pending_payment":
         return "destructive";
       default:
@@ -178,14 +188,14 @@ export default function Subscriptions() {
     switch (status) {
       case "active":
         return "Active";
-      case "limit_reached":
-        return "Limit Reached";
       case "pending_payment":
         return "Pending Payment";
       default:
         return status;
     }
   };
+
+  const normalizeClientStatus = (status: unknown): ClientStatus => (status === "pending_payment" ? "pending_payment" : "active");
 
   const resetClientForm = () => {
     setClientForm({
@@ -195,7 +205,6 @@ export default function Subscriptions() {
       contactEmail: "",
       clientSince: "",
       mrr: "",
-      revisionsTotal: 3,
       status: "active",
       nextBilling: new Date().toISOString().split("T")[0],
       lastRevision: "N/A",
@@ -228,8 +237,7 @@ export default function Subscriptions() {
       contactEmail: client.contactEmail || "",
       clientSince: client.clientSince || "",
       mrr: `${formatMoney(parseMoney(client.mrr))}/mo`,
-      revisionsTotal: client.revisionsTotal,
-      status: client.status,
+      status: normalizeClientStatus(client.status),
       nextBilling: client.nextBilling,
       lastRevision: client.lastRevision,
     });
@@ -248,7 +256,8 @@ export default function Subscriptions() {
     if (!clientName) return;
     const mrrValue = parseMoney(clientForm.mrr);
     const formattedMrr = `${formatMoney(mrrValue)}/mo`;
-    const revisionsTotal = clientForm.revisionsTotal > 0 ? clientForm.revisionsTotal : 1;
+    const revisionValue = revisionLabel || "N/A";
+    const today = new Date().toISOString().split("T")[0];
 
     if (editingClientId) {
       setClients(
@@ -263,10 +272,15 @@ export default function Subscriptions() {
                 clientSince,
                 plan: DEFAULT_SUBSCRIPTION_PLAN,
                 mrr: formattedMrr,
-                revisionsTotal,
-                status: clientForm.status,
+                status: normalizeClientStatus(clientForm.status),
                 nextBilling: clientForm.nextBilling,
-                lastRevision: revisionLabel || "N/A",
+                lastRevision: revisionValue,
+                lastRevisionDate:
+                  revisionValue === "N/A"
+                    ? "N/A"
+                    : revisionValue !== client.lastRevision || client.lastRevisionDate === "N/A"
+                      ? today
+                      : client.lastRevisionDate,
               }
             : client
         )
@@ -283,12 +297,10 @@ export default function Subscriptions() {
           clientSince,
           plan: DEFAULT_SUBSCRIPTION_PLAN,
           mrr: formattedMrr,
-          revisionsUsed: 0,
-          revisionsTotal,
-          status: clientForm.status,
+          status: normalizeClientStatus(clientForm.status),
           nextBilling: clientForm.nextBilling,
-          lastRevision: revisionLabel || "N/A",
-          lastRevisionDate: "N/A",
+          lastRevision: revisionValue,
+          lastRevisionDate: revisionValue === "N/A" ? "N/A" : today,
         },
       ]);
     }
@@ -348,7 +360,8 @@ export default function Subscriptions() {
     const revisionLabel = toSmartTitleCase(clientForm.lastRevision);
     const mrrValue = parseMoney(clientForm.mrr);
     const formattedMrr = `${formatMoney(mrrValue)}/mo`;
-    const revisionsTotal = clientForm.revisionsTotal > 0 ? clientForm.revisionsTotal : 1;
+    const revisionValue = revisionLabel || "N/A";
+    const today = new Date().toISOString().split("T")[0];
 
     const nextClient: RetainerClient = {
       ...target,
@@ -359,10 +372,15 @@ export default function Subscriptions() {
       clientSince,
       plan: target.plan || DEFAULT_SUBSCRIPTION_PLAN,
       mrr: formattedMrr,
-      revisionsTotal,
-      status: clientForm.status,
+      status: normalizeClientStatus(clientForm.status),
       nextBilling: clientForm.nextBilling,
-      lastRevision: revisionLabel || "N/A",
+      lastRevision: revisionValue,
+      lastRevisionDate:
+        revisionValue === "N/A"
+          ? "N/A"
+          : revisionValue !== target.lastRevision || target.lastRevisionDate === "N/A"
+            ? today
+            : target.lastRevisionDate,
     };
 
     const hasChanged =
@@ -372,10 +390,10 @@ export default function Subscriptions() {
       target.contactEmail !== nextClient.contactEmail ||
       target.clientSince !== nextClient.clientSince ||
       target.mrr !== nextClient.mrr ||
-      target.revisionsTotal !== nextClient.revisionsTotal ||
       target.status !== nextClient.status ||
       target.nextBilling !== nextClient.nextBilling ||
-      target.lastRevision !== nextClient.lastRevision;
+      target.lastRevision !== nextClient.lastRevision ||
+      target.lastRevisionDate !== nextClient.lastRevisionDate;
 
     if (hasChanged) {
       setClients((prev) => prev.map((client) => (client.id === editingClientId ? nextClient : client)));
@@ -392,17 +410,23 @@ export default function Subscriptions() {
     openAddClientModal();
   }, [searchParams, setSearchParams]);
 
-  const handleLogRevision = (id: number) => {
+  const handleAddRevisionRequest = (id: number) => {
+    const target = clients.find((client) => client.id === id);
+    if (!target) return;
+    const nextRequest = window.prompt(
+      "Add a revision request",
+      target.lastRevision && target.lastRevision !== "N/A" ? target.lastRevision : ""
+    );
+    const requestLabel = toSmartTitleCase(String(nextRequest || "").trim());
+    if (!requestLabel) return;
+    const today = new Date().toISOString().split("T")[0];
     setClients(
       clients.map((client) => {
         if (client.id !== id) return client;
-        const revisionsUsed = Math.min(client.revisionsUsed + 1, client.revisionsTotal);
         return {
           ...client,
-          revisionsUsed,
-          status: revisionsUsed >= client.revisionsTotal ? "limit_reached" : client.status,
-          lastRevision: "Manual revision logged",
-          lastRevisionDate: new Date().toISOString().split("T")[0],
+          lastRevision: requestLabel,
+          lastRevisionDate: today,
         };
       })
     );
@@ -449,10 +473,6 @@ export default function Subscriptions() {
   const activeRetainers = clients.filter((client) => client.status === "active").length;
   const monthlyRecurring = clients.reduce((sum, client) => sum + parseMoney(client.mrr), 0);
   const pendingPayments = clients.filter((client) => client.status === "pending_payment").length;
-  const revisionsAvailable = clients.reduce(
-    (sum, client) => sum + Math.max(client.revisionsTotal - client.revisionsUsed, 0),
-    0
-  );
   const revisionRequests = useMemo(
     () =>
       clients
@@ -465,8 +485,7 @@ export default function Subscriptions() {
           status: client.status,
         }))
         .sort((a, b) => {
-          const statusRank = (value: ClientStatus) =>
-            value === "limit_reached" ? 3 : value === "pending_payment" ? 2 : 1;
+          const statusRank = (value: ClientStatus) => (value === "pending_payment" ? 2 : 1);
           if (statusRank(a.status) !== statusRank(b.status)) return statusRank(b.status) - statusRank(a.status);
           return b.date.localeCompare(a.date);
         }),
@@ -533,9 +552,9 @@ export default function Subscriptions() {
               iconColor="text-destructive"
             />
             <StatCard
-              title="Revisions Available"
-              value={String(revisionsAvailable)}
-              change="Across all clients"
+              title="Revision Requests"
+              value={String(revisionRequests.length)}
+              change="Logged across clients"
               changeType="neutral"
               icon={CheckCircle}
             />
@@ -638,17 +657,10 @@ export default function Subscriptions() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 gap-4 mb-4 md:grid-cols-3">
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Monthly Revenue</p>
                     <p className="text-lg font-semibold text-foreground">{client.mrr}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Revisions Used</p>
-                    <p className="text-lg font-semibold text-foreground">
-                      {client.revisionsUsed}/{client.revisionsTotal}
-                    </p>
                   </div>
 
                   <div className="space-y-1">
@@ -657,28 +669,9 @@ export default function Subscriptions() {
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Last Revision</p>
+                    <p className="text-sm text-muted-foreground">Latest Revision Request</p>
                     <p className="text-sm font-medium text-foreground truncate">{client.lastRevision}</p>
                     <p className="text-xs text-muted-foreground">{formatDateWritten(client.lastRevisionDate)}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Revisions Progress</span>
-                    <span className="font-medium text-foreground">
-                      {Math.round((client.revisionsUsed / client.revisionsTotal) * 100)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-500 ${
-                        client.revisionsUsed >= client.revisionsTotal
-                          ? "bg-destructive"
-                          : "bg-gradient-to-r from-primary to-primary-glow"
-                      }`}
-                      style={{ width: `${(client.revisionsUsed / client.revisionsTotal) * 100}%` }}
-                    />
                   </div>
                 </div>
 
@@ -689,10 +682,10 @@ export default function Subscriptions() {
                     className="glass-control border-[var(--glass-stroke-soft)] bg-transparent"
                     onClick={(event) => {
                       event.stopPropagation();
-                      handleLogRevision(client.id);
+                      handleAddRevisionRequest(client.id);
                     }}
                   >
-                    Log Revision
+                    Add Revision Request
                   </Button>
                   <Button
                     variant="outline"
@@ -845,7 +838,6 @@ export default function Subscriptions() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="limit_reached">Limit Reached</SelectItem>
                         <SelectItem value="pending_payment">Pending Payment</SelectItem>
                       </SelectContent>
                     </Select>
@@ -936,22 +928,14 @@ export default function Subscriptions() {
                   </section>
 
                   <section className="rounded-2xl border border-border/65 bg-card/55 p-4">
-                    <p className="mb-3 text-[11px] font-semibold tracking-[0.1em] text-muted-foreground">REVISIONS + STATUS</p>
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                      <Input
-                        type="number"
-                        value={clientForm.revisionsTotal}
-                        onChange={(event) => setClientForm({ ...clientForm, revisionsTotal: Math.max(1, Number(event.target.value) || 1) })}
-                        placeholder="Revisions Total"
-                        className="h-11"
-                      />
+                    <p className="mb-3 text-[11px] font-semibold tracking-[0.1em] text-muted-foreground">STATUS</p>
+                    <div className="grid grid-cols-1 gap-3">
                       <Select value={clientForm.status} onValueChange={(value) => setClientForm({ ...clientForm, status: value as ClientStatus })}>
                         <SelectTrigger className="h-11">
                           <SelectValue placeholder="Status" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="limit_reached">Limit Reached</SelectItem>
                           <SelectItem value="pending_payment">Pending Payment</SelectItem>
                         </SelectContent>
                       </Select>
@@ -959,7 +943,7 @@ export default function Subscriptions() {
                   </section>
 
                   <section className="rounded-2xl border border-border/65 bg-card/55 p-4">
-                    <p className="mb-3 text-[11px] font-semibold tracking-[0.1em] text-muted-foreground">BILLING + LAST REVISION</p>
+                    <p className="mb-3 text-[11px] font-semibold tracking-[0.1em] text-muted-foreground">BILLING + REVISION REQUEST</p>
                     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                       <DatePickerField
                         value={clientForm.nextBilling}
@@ -970,7 +954,7 @@ export default function Subscriptions() {
                         value={clientForm.lastRevision}
                         onChange={(event) => setClientForm({ ...clientForm, lastRevision: toSmartTitleCaseLive(event.target.value) })}
                         onBlur={(event) => setClientForm({ ...clientForm, lastRevision: toSmartTitleCase(event.target.value) })}
-                        placeholder="Last Revision Note"
+                        placeholder="Revision Request Note"
                         className="h-11"
                       />
                     </div>

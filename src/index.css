@@ -5112,18 +5112,44 @@ All colors MUST be HSL.
     line-height: 1.45rem;
   }
 
+  .dark .form-dialog-shell :where(input, textarea, [role="combobox"], [data-slot="select-trigger"]) {
+    border-color: hsl(214 40% 80% / 0.58) !important;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.84), hsl(210 100% 97% / 0.7)) !important;
+    color: hsl(220 16% 20%) !important;
+    -webkit-text-fill-color: hsl(220 16% 20%) !important;
+    caret-color: hsl(220 16% 20%) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.92),
+      0 10px 22px -20px hsl(214 54% 48% / 0.16) !important;
+  }
+
+  .dark .form-dialog-shell :where(input, textarea)::placeholder {
+    color: hsl(219 18% 52%) !important;
+    -webkit-text-fill-color: hsl(219 18% 52%) !important;
+  }
+
+  .dark .form-dialog-shell :where(input, textarea):-webkit-autofill,
+  .dark .form-dialog-shell :where(input, textarea):-webkit-autofill:hover,
+  .dark .form-dialog-shell :where(input, textarea):-webkit-autofill:focus {
+    -webkit-text-fill-color: hsl(220 16% 20%) !important;
+    caret-color: hsl(220 16% 20%) !important;
+    -webkit-box-shadow: 0 0 0 1000px hsl(0 0% 96% / 0.96) inset !important;
+    box-shadow: 0 0 0 1000px hsl(0 0% 96% / 0.96) inset !important;
+  }
+
   :root:not(.dark) .form-dialog-shell :where(input, textarea, [role="combobox"], [data-slot="select-trigger"]) {
     border-color: hsl(214 40% 80% / 0.58) !important;
     background:
       linear-gradient(180deg, hsl(0 0% 100% / 0.62), hsl(210 100% 97% / 0.34)) !important;
-    color: hsl(221 38% 34%) !important;
+    color: hsl(220 16% 20%) !important;
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100% / 0.86),
       0 10px 22px -20px hsl(214 54% 48% / 0.14) !important;
   }
 
   :root:not(.dark) .form-dialog-shell :where(input, textarea, [role="combobox"], [data-slot="select-trigger"])::placeholder {
-    color: hsl(219 24% 62%) !important;
+    color: hsl(219 18% 52%) !important;
   }
 
   :root:not(.dark) .form-dialog-shell .bg-background,
